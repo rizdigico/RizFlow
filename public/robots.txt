@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rizflow.ai/sitemap.xml

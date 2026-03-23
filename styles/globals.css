@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Montserrat', system-ui, sans-serif;
+
+  /* Brand colors */
+  --color-navy: #1A2B4C;
+  --color-navy-light: #243660;
+  --color-navy-dark: #111D35;
+
+  --color-teal: #2ECC71;
+  --color-teal-light: #4ED989;
+  --color-teal-dark: #25A35A;
+  --color-teal-foreground: #ffffff;
+
+  --color-gold: #F1C40F;
+  --color-gold-light: #F4D03F;
+  --color-gold-dark: #D4AC0D;
+
+  /* Shadows */
+  --shadow-soft: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  --shadow-glow: 0 0 20px rgba(46,204,113,0.3);
+  --shadow-glow-lg: 0 0 40px rgba(46,204,113,0.2);
+
+  /* Animations */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-slow: pulse-slow 4s cubic-bezier(0.4,0,0.6,1) infinite;
+  --animate-fade-in: fadeIn 0.6s ease-out;
+  --animate-slide-up: slideUp 0.5s ease-out;
+
+  /* Keyframes */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-slate-200, #e2e8f0);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white text-slate-800 antialiased;
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+  ::selection {
+    background-color: color-mix(in srgb, #2ECC71 20%, transparent);
+    color: #1A2B4C;
+  }
+  :focus-visible {
+    outline: 2px solid #2ECC71;
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(to right, #2ECC71, #4ED989);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .bg-grid {
+    background-image: radial-gradient(circle, rgba(46,204,113,0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+  .container-width {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  .shadow-glow-lg {
+    box-shadow: var(--shadow-glow-lg);
+  }
+  .animate-float {
+    animation: var(--animate-float);
+  }
+  .animate-pulse-slow {
+    animation: var(--animate-pulse-slow);
+  }
+  .animate-fade-in {
+    animation: var(--animate-fade-in);
+  }
+  .animate-slide-up {
+    animation: var(--animate-slide-up);
+  }
+}
