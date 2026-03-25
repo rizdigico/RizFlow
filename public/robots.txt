@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://rizflow.ai/sitemap.xml
+Disallow: /thank-you
+Sitemap: https://rizflow.co/sitemap.xml

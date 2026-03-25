@@ -1,0 +1,61 @@
+
+C:\Agency\AgencyWebsite\rizflow-website\src\components\animations\FlowingMesh.tsx
+  8:46  error  'parallax' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Agency\AgencyWebsite\rizflow-website\src\components\layout\Footer.tsx
+  2:10  error  'BoltIcon' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Agency\AgencyWebsite\rizflow-website\src\components\layout\Header.tsx
+   3:32  error  'BoltIcon' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  24:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Agency\AgencyWebsite\rizflow-website\src\components\layout\Header.tsx:24:5
+  22 |
+  23 |   useEffect(() => {
+> 24 |     setIsOpen(false)
+     |     ^^^^^^^^^ Avoid calling setState() directly within an effect
+  25 |   }, [location])
+  26 |
+  27 |   const isActive = (href: string) => location.pathname === href  react-hooks/set-state-in-effect
+
+C:\Agency\AgencyWebsite\rizflow-website\src\components\sections\CTAStrip.tsx
+   4:10  error  'cn' is defined but never used                @typescript-eslint/no-unused-vars
+  10:28  error  'variant' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Agency\AgencyWebsite\rizflow-website\src\components\sections\FeaturesGrid.tsx
+  60:10  error  Parsing error: Identifier expected
+
+C:\Agency\AgencyWebsite\rizflow-website\src\components\sections\Hero.tsx
+  10:10  error  'cn' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Agency\AgencyWebsite\rizflow-website\src\components\ui\Checkbox.tsx
+  11:27  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Agency\AgencyWebsite\rizflow-website\src\components\ui\Checkbox.tsx:11:27
+   9 | const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
+  10 |   ({ className, label, error, id, ...props }, ref) => {
+> 11 |     const checkId = id || Math.random().toString(36).slice(2)
+     |                           ^^^^^^^^^^^^^ Cannot call impure function
+  12 |     return (
+  13 |       <div className="flex flex-col gap-1">
+  14 |         <label htmlFor={checkId} className="flex items-start gap-3 cursor-pointer group">  react-hooks/purity
+
+C:\Agency\AgencyWebsite\rizflow-website\src\hooks\useFlowingAnimation.ts
+  1:10  error  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+  1:21  error  'useRef' is defined but never used     @typescript-eslint/no-unused-vars
+  1:29  error  'useState' is defined but never used   @typescript-eslint/no-unused-vars
+  2:10  error  'motion' is defined but never used     @typescript-eslint/no-unused-vars
+
+C:\Agency\AgencyWebsite\rizflow-website\src\pages\About.tsx
+  2:10  error  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 14 problems (14 errors, 0 warnings)
+

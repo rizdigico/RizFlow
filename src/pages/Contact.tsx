@@ -3,19 +3,25 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { EnvelopeIcon, CalendarDaysIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
-import { Input } from '@/components/ui/Input'
-import { Textarea } from '@/components/ui/Textarea'
 import { Button } from '@/components/ui/Button'
-import { Container } from '@/components/layout/Container'
-import { Badge } from '@/components/ui/Badge'
-import { FORMSPREE_ENDPOINT, CALENDLY_LINK, SOCIAL_LINKS, SITE_URL } from '@/lib/constants'
+import { CheckCircleIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline'
+import { FORMSPREE_ENDPOINT, SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
 import { sanitizeInput } from '@/lib/utils'
+
+const contactBreadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Contact', item: `${SITE_URL}/contact` },
+  ],
+}
 
 const schema = z.object({
   name: z.string().min(2, 'Name required'),
   email: z.string().email('Valid email required'),
-  message: z.string().min(10, 'Message must be at least 10 characters').max(2000),
+  company: z.string().min(2, 'Company name required'),
+  message: z.string().min(10, 'Please provide some details').max(2000),
 })
 type FormData = z.infer<typeof schema>
 
@@ -35,8 +41,9 @@ export function Contact() {
         body: JSON.stringify({
           name: sanitizeInput(data.name),
           email: sanitizeInput(data.email),
+          company: sanitizeInput(data.company),
           message: sanitizeInput(data.message, 2000),
-          _subject: `Contact from ${data.name}`,
+          _subject: `Contact / Audit Request from ${data.company}`,
         }),
       })
     }
@@ -46,125 +53,154 @@ export function Contact() {
   return (
     <>
       <Helmet>
-        <title>Contact RizFlow — Get in Touch | RizFlow</title>
-        <meta
-          name="description"
-          content="Reach out to RizFlow. Chat about AI operations for your agency, ask a question, or book your free audit directly."
-        />
+        <title>Contact RizFlow — Get in Touch with Singapore's AI Operations Agency</title>
+        <meta name="description" content="Reach out to RizFlow, Singapore's agentic AI operations agency. Request an audit, ask a question, or book a call. We reply within 24 hours." />
+        <meta name="keywords" content="contact RizFlow, AI operations agency contact Singapore, agentic AI agency inquiry, book AI operations audit" />
+        <link rel="canonical" href={`${SITE_URL}/contact`} />
+        <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/contact`} />
+        <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/contact`} />
+        <meta property="og:title" content="Contact RizFlow — Get in Touch with Singapore's AI Operations Agency" />
+        <meta property="og:description" content="Request a free audit or send us a message. RizFlow replies within 24 hours. Based in Singapore, serving SEA agencies." />
+        <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
+        <meta property="og:site_name" content="RizFlow" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact RizFlow — AI Operations Agency Singapore" />
+        <meta name="twitter:description" content="Request a free audit or get in touch. RizFlow replies within 24 hours." />
+        <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
+        <script type="application/ld+json">{JSON.stringify(contactBreadcrumb)}</script>
       </Helmet>
 
-      <section className="pt-32 pb-24 bg-slate-50 min-h-screen">
-        <Container>
-          <div className="text-center mb-14">
-            <Badge variant="teal" className="mb-4">Get in Touch</Badge>
-            <h1 className="text-5xl font-bold font-heading text-navy mb-4">Let's Talk</h1>
-            <p className="text-xl text-slate-500 max-w-xl mx-auto">
-              Questions about RizFlow? Want to explore if we're the right fit? Reach out — we
-              reply within 24 hours.
-            </p>
-          </div>
+      <section className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden bg-[#050A14] bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px]">
+        {/* Ambient glows */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[800px] h-[600px] md:h-[800px] bg-teal-500/10 rounded-full blur-[120px]" />
+          <div className="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[800px] h-[600px] md:h-[800px] bg-cyan-500/10 rounded-full blur-[120px]" />
+        </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 max-w-4xl mx-auto">
-            {/* Contact info */}
-            <div className="space-y-5">
-              <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-soft flex gap-4">
-                <div className="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <EnvelopeIcon className="w-6 h-6 text-teal" />
+        <div className="container-width relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Contact info */}
+            <div className="space-y-8">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-sm border border-teal-500/30 bg-teal-500/10 text-teal-400 text-xs font-mono uppercase tracking-widest">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+                  Terminal Request
                 </div>
-                <div>
-                  <h3 className="font-semibold text-navy font-heading mb-1">Email</h3>
-                  <a
-                    href="mailto:hello@rizflow.ai"
-                    className="text-teal hover:underline text-sm"
-                  >
-                    hello@rizflow.ai
-                  </a>
-                  <p className="text-slate-400 text-xs mt-0.5">We reply within 24 hours</p>
+                <h1 className="text-5xl lg:text-6xl font-bold font-heading text-white mb-6 leading-tight flex items-center gap-3">
+                  Let's Talk
+                  <span className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse inline-block"></span>
+                </h1>
+                <div className="space-y-3 text-slate-400 font-mono text-sm">
+                  <p>{'>'} Questions about RizFlow? Want to explore if we're the right fit?</p>
+                  <p>{'>'} Reach out — we reply within 24 hours.</p>
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-soft flex gap-4">
-                <div className="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <CalendarDaysIcon className="w-6 h-6 text-yellow-600" />
+              <div className="space-y-4 bg-[#0A0F1A]/80 backdrop-blur-md border border-white/5 p-6 rounded-xl">
+                <h3 className="text-cyan-400 font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span>
+                  Network Status
+                </h3>
+                <div className="flex items-center gap-4 text-slate-300">
+                  <div className="w-10 h-10 rounded-sm bg-[#050A14] flex items-center justify-center border border-teal-500/30 shadow-[0_0_15px_rgba(0,229,255,0.1)]">
+                    <EnvelopeIcon className="w-5 h-5 text-teal-400" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-teal-500 font-mono uppercase tracking-widest mb-0.5">Email Protocol</p>
+                    <p className="text-sm font-mono text-white">rizdigi.co@gmail.com</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-navy font-heading mb-2">Book a Call</h3>
-                  <a href={CALENDLY_LINK} target="_blank" rel="noopener noreferrer">
-                    <Button variant="primary" size="sm">
-                      Schedule Free Audit
-                    </Button>
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-soft">
-                <h3 className="font-semibold text-navy font-heading mb-3">Follow Along</h3>
-                <div className="flex gap-4">
-                  <a
-                    href={SOCIAL_LINKS.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-slate-600 hover:text-teal transition-colors font-medium"
-                  >
-                    LinkedIn ↗
-                  </a>
-                  <a
-                    href={SOCIAL_LINKS.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-slate-600 hover:text-teal transition-colors font-medium"
-                  >
-                    Twitter/X ↗
-                  </a>
+                <div className="flex items-center gap-4 text-slate-300">
+                  <div className="w-10 h-10 rounded-sm bg-[#050A14] flex items-center justify-center border border-teal-500/30 shadow-[0_0_15px_rgba(0,229,255,0.1)]">
+                    <MapPinIcon className="w-5 h-5 text-teal-400" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-teal-500 font-mono uppercase tracking-widest mb-0.5">Physical Node</p>
+                    <p className="text-sm font-mono text-white">Singapore, SEA</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Form */}
-            <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-soft">
+            {/* Right: Form card */}
+            <div className="bg-[#0A0F1A]/95 backdrop-blur-3xl border border-teal-500/30 rounded-2xl p-8 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative">
+              <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/50 to-transparent" />
+              <h2 className="text-xl font-bold font-heading text-white mb-6 flex items-center gap-2">
+                <span className="text-teal-400 font-mono">{'>'}</span> Request an Audit or Contact Us
+              </h2>
+
               {submitted ? (
-                <div className="text-center py-10">
-                  <CheckCircleIcon className="w-12 h-12 text-teal mx-auto mb-4" />
-                  <h3 className="text-xl font-bold font-heading text-navy mb-2">Message Sent!</h3>
-                  <p className="text-slate-500">We'll get back to you within 24 hours.</p>
+                <div className="text-center py-10 border border-teal-500/20 bg-[#050A14] rounded-lg">
+                  <div className="w-16 h-16 bg-teal-500/10 rounded-sm border border-teal-500/30 flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+                    <CheckCircleIcon className="w-8 h-8 text-teal-400" />
+                  </div>
+                  <h3 className="text-xl font-bold font-mono text-white mb-2 uppercase tracking-wide">Request Transmitted</h3>
+                  <p className="text-teal-400/80 font-mono text-sm">Awaiting system response (ETA 24h).</p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                  <Input
-                    label="Your Name"
-                    placeholder="Jane Smith"
-                    error={errors.name?.message}
-                    {...register('name')}
-                  />
-                  <Input
-                    label="Email Address"
-                    type="email"
-                    placeholder="jane@agency.com"
-                    error={errors.email?.message}
-                    {...register('email')}
-                  />
-                  <Textarea
-                    label="Your Message"
-                    placeholder="Tell us about your agency and what you'd like help with..."
-                    error={errors.message?.message}
-                    className="min-h-[140px]"
-                    {...register('message')}
-                  />
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Full Name</label>
+                    <input
+                      placeholder="Jane Smith"
+                      className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
+                      {...register('name')}
+                    />
+                    {errors.name && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.name.message}</p>}
+                  </div>
+                  
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Business Email</label>
+                    <input
+                      type="email"
+                      placeholder="jane@agency.com"
+                      className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
+                      {...register('email')}
+                    />
+                    {errors.email && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.email.message}</p>}
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Company Name</label>
+                    <input
+                      placeholder="Acme Agency"
+                      className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
+                      {...register('company')}
+                    />
+                    {errors.company && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.company.message}</p>}
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-mono text-teal-400 uppercase tracking-widest block">
+                      Project Details / Audit Request
+                    </label>
+                    <textarea
+                      placeholder="Tell us about your agency and what you'd like help with..."
+                      className="w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 py-3 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none min-h-[100px] resize-none"
+                      {...register('message')}
+                    />
+                    {errors.message && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.message.message}</p>}
+                  </div>
+
                   <Button
                     type="submit"
-                    variant="primary"
+                    variant="cta"
                     size="lg"
-                    className="w-full"
+                    className="w-full font-mono uppercase tracking-widest"
                     isLoading={isSubmitting}
                   >
-                    Send Message
+                    Initialize Request
                   </Button>
+                  <p className="text-xs text-teal-500/60 font-mono text-center uppercase tracking-wider">
+                    By submitting, you agree to our{' '}
+                    <a href="/privacy-terms" className="text-teal-400 hover:underline">Privacy Policy</a>
+                  </p>
                 </form>
               )}
             </div>
           </div>
-        </Container>
+        </div>
       </section>
     </>
   )

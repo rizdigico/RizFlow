@@ -8,9 +8,9 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Card({ className, variant = 'default', hover = false, children, ...props }: CardProps) {
   const variants = {
-    default: 'bg-white border border-slate-100 shadow-soft',
-    elevated: 'bg-white shadow-lg border border-slate-50',
-    bordered: 'bg-white border-2 border-teal/30',
+    default: 'bg-navy-900/50 backdrop-blur-sm border border-white/5 shadow-soft',
+    elevated: 'bg-navy-800/80 shadow-2xl border border-white/10',
+    bordered: 'bg-navy-900/50 border-2 border-teal/30',
     navy: 'bg-navy text-white border border-navy-light',
   }
   return (

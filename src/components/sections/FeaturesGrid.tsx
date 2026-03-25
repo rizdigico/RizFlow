@@ -6,7 +6,9 @@ import {
   ChatBubbleLeftRightIcon,
   ShieldCheckIcon,
 } from '@heroicons/react/24/outline'
+import { motion } from 'framer-motion'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
+import { useMeshPulse } from '@/hooks/useMeshPulse'
 import { cn } from '@/lib/utils'
 
 const features = [
@@ -14,98 +16,168 @@ const features = [
     Icon: InboxIcon,
     title: 'Client Intake Agent',
     desc: 'Automates lead capture, qualification scoring, and onboarding sequences. New clients get instant, personalised responses 24/7.',
-    color: 'teal',
   },
   {
     Icon: ClipboardDocumentCheckIcon,
     title: 'Project Tracking Agent',
     desc: 'Real-time task assignment, deadline tracking, and proactive status updates sent automatically. Never miss a milestone again.',
-    color: 'navy',
   },
   {
     Icon: UserGroupIcon,
     title: 'Resource Allocation Agent',
     desc: 'Smart matching of team talent to projects based on skills, capacity, and deadlines. Eliminate the scheduling spreadsheet.',
-    color: 'teal',
   },
   {
     Icon: BanknotesIcon,
     title: 'Invoice Generation Agent',
     desc: 'Auto-billing on milestone completion, payment reminders, and revenue forecasting. Cash flow on autopilot.',
-    color: 'gold',
   },
   {
     Icon: ChatBubbleLeftRightIcon,
     title: 'Communication Agent',
     desc: 'Drafts and sends status emails, schedules meetings, and collects client feedback — all matching your tone of voice.',
-    color: 'teal',
   },
   {
     Icon: ShieldCheckIcon,
     title: 'Quality Assurance Agent',
     desc: 'Template compliance, file-naming conventions, and version control checks before anything goes to a client.',
-    color: 'navy',
   },
 ]
 
-type ColorKey = 'teal' | 'navy' | 'gold'
-const colorMap: Record<ColorKey, { bg: string; icon: string; border: string }> = {
-  teal: { bg: 'bg-teal/10', icon: 'text-teal', border: 'hover:border-teal/30' },
-  navy: { bg: 'bg-navy/10', icon: 'text-navy', border: 'hover:border-navy/20' },
-  gold: { bg: 'bg-gold/10', icon: 'text-yellow-600', border: 'hover:border-gold/40' },
-}
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
 export function FeaturesGrid() {
   const { ref, isVisible } = useScrollAnimation()
 
   return (
-    <section className="section-padding bg-slate-50">
-      <div className="container-width">
-        <div
-          ref={ref}
-          className={cn(
-            'text-center mb-14 transition-all duration-700',
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          )}
-        >
-          <span className="text-sm font-semibold text-teal uppercase tracking-widest font-heading">
-            6 Specialised Agents
-          </span>
-          <h2 className="mt-3 text-4xl md:text-5xl font-bold font-heading text-navy">
-            Your Autonomous Operations Team
-          </h2>
-          <p className="mt-4 text-xl text-slate-500 max-w-2xl mx-auto">
-            Each agent is purpose-built for a specific part of your agency's operations — working
-            in concert, 24 hours a day.
-          </p>
+    <section id="agents" className="relative section-padding">
+      {/* Teal topographic wave decoration */}
+      <WaveDecoration className="absolute top-0 right-0 w-[600px] h-[400px] opacity-10" />
+      <WaveDecoration className="absolute bottom-0 left-0 w-[500px] h-[350px] opacity-10 rotate-180" />
+
+      <div className="container-width relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div ref={ref} className="text-center max-w-3xl mx-auto mb-20">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl md:text-5xl font-bold mb-6 text-white"
+          >
+            Capabilities that drive <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">growth</span>.
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-lg text-slate-400"
+          >
+            We don't just implement technology; we architect competitive advantages. 
+            Discover the tools we use to transform your operational efficiency.
+          </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, i) => {
-            const c = colorMap[feature.color as ColorKey]
-            return (
-              <div
-                key={i}
-                className={cn(
-                  'group bg-white rounded-2xl p-6 border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-default',
-                  c.border
-                )}
-              >
-                <div
-                  className={cn(
-                    'w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110',
-                    c.bg
-                  )}
-                >
-                  <feature.Icon className={cn('w-6 h-6', c.icon)} />
-                </div>
-                <h3 className="text-lg font-semibold font-heading text-navy mb-2">{feature.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{feature.desc}</p>
-              </div>
-            )
-          })}
-        </div>
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {features.map((feature, i) => (
+            <FeatureCard key={i} feature={feature} index={i} />
+          ))}
+        </motion.div>
       </div>
     </section>
+  )
+}
+
+interface FeatureCardProps {
+  feature: (typeof features)[0]
+  index: number
+}
+
+function FeatureCard({ feature, index }: FeatureCardProps) {
+  const pulseProps = useMeshPulse()
+
+  return (
+    <motion.div
+      className="group relative bg-navy-900/40 backdrop-blur-md rounded-2xl p-7 border border-white/5 shadow-2xl hover:border-teal-500/30 cursor-default overflow-hidden transition-all duration-500"
+      variants={{
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+      }}
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+    >
+      {/* Animated mesh background pulse */}
+      <motion.div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(45, 212, 191, 0.08) 0%, transparent 70%)',
+        }}
+        animate={pulseProps.animate}
+        transition={pulseProps.transition}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 space-y-4">
+        <motion.div
+          className="w-12 h-12 rounded-xl border border-white/10 flex items-center justify-center bg-navy-800/50 group-hover:border-teal-500/50 group-hover:bg-teal-500/10 transition-colors duration-500 relative"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+        >
+          {/* Subtle glow behind icon */}
+          <div className="absolute inset-0 bg-teal-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          
+          <motion.div
+            whileHover={{ rotate: 12 }}
+            transition={{ duration: 0.4 }}
+            className="relative z-10"
+          >
+            <feature.Icon className="w-6 h-6 text-teal-400" />
+          </motion.div>
+        </motion.div>
+
+        <div>
+          <motion.h3
+            className="text-xl font-semibold font-heading text-white group-hover:text-teal-300 transition-colors duration-300 mb-2"
+            initial={{ opacity: 0.9 }}
+            whileHover={{ opacity: 1 }}
+          >
+            {feature.title}
+          </motion.h3>
+
+          <motion.p
+            className="text-slate-400 text-sm leading-relaxed"
+            initial={{ opacity: 0.8 }}
+            whileHover={{ opacity: 1 }}
+          >
+            {feature.desc}
+          </motion.p>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+function WaveDecoration({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      <path d="M600,50 C500,80 400,20 300,60 C200,100 100,30 0,70" stroke="#4FA0B4" strokeWidth="1.2" opacity="0.5" />
+      <path d="M600,100 C500,130 400,70 300,110 C200,150 100,80 0,120" stroke="#4FA0B4" strokeWidth="1.2" opacity="0.4" />
+      <path d="M600,150 C500,180 400,120 300,160 C200,200 100,130 0,170" stroke="#4FA0B4" strokeWidth="1.2" opacity="0.35" />
+      <path d="M600,200 C500,230 380,160 280,205 C180,250 80,180 0,220" stroke="#4FA0B4" strokeWidth="1.2" opacity="0.3" />
+      <path d="M600,250 C490,275 370,205 265,250 C160,295 60,225 0,268" stroke="#4FA0B4" strokeWidth="1" opacity="0.25" />
+      <path d="M600,300 C480,320 360,255 255,298 C150,340 50,272 0,315" stroke="#4FA0B4" strokeWidth="1" opacity="0.2" />
+      <path d="M600,350 C470,365 350,300 245,345 C140,388 40,318 0,362" stroke="#4FA0B4" strokeWidth="1" opacity="0.15" />
+    </svg>
   )
 }

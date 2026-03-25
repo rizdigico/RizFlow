@@ -1,16 +1,14 @@
-import { CheckIcon, StarIcon } from '@heroicons/react/24/solid'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { cn } from '@/lib/utils'
 
 const plans = [
   {
-    name: 'Starter',
+    name: 'Starter Node',
     price: '1,800',
-    tagline: 'For agencies up to 15 people',
-    description: 'Core automation to reclaim your time and streamline daily operations.',
+    tagline: 'Base operations for < 15 personnel',
+    description: 'Core automation protocol to reclaim compute time and streamline daily operations.',
     features: [
       'Client Intake Agent',
       'Project Tracking Agent',
@@ -20,46 +18,49 @@ const plans = [
       'Email support',
       'Up to 3 integrations',
     ],
-    cta: 'Start with Starter',
+    cta: 'INITIALIZE STARTER',
     highlighted: false,
+    status: 'ONLINE',
   },
   {
-    name: 'Professional',
+    name: 'Pro Agent Stack',
     price: '3,000',
-    tagline: 'For agencies 15–40 people',
-    description: 'Full automation suite with advanced analytics and client communications.',
+    tagline: 'Advanced cluster for 15–40 personnel',
+    description: 'Full automation suite with predictive analytics and autonomous client communications.',
     features: [
-      'Everything in Starter',
+      'Everything in Starter Node',
       'Communication Agent',
       'Quality Assurance Agent',
       'Revenue forecasting',
       'Custom workflow builder',
       'Analytics dashboard',
-      'Priority support',
+      'Priority protocol support',
       'Up to 8 integrations',
-      'Monthly strategy call',
+      'Monthly strategy sync',
     ],
-    cta: 'Get Started — Best Value',
+    cta: 'DEPLOY PRO STACK',
     highlighted: true,
+    status: 'RECOMMENDED',
   },
   {
-    name: 'Enterprise',
+    name: 'Enterprise Grid',
     price: '4,500',
-    tagline: 'For agencies 40+ people',
-    description: 'Full-scale automation with white-label options and API access.',
+    tagline: 'Distributed architecture for 40+ personnel',
+    description: 'Full-scale automation with white-label portals and raw API access.',
     features: [
-      'Everything in Professional',
+      'Everything in Pro Stack',
       'Strategic ops planning',
       'Client success agent',
       'Financial forecasting',
       'White-label portal',
-      'API access',
+      'Direct API access',
       'Unlimited integrations',
-      'Dedicated success manager',
-      'Quarterly business review',
+      'Dedicated deployment manager',
+      'Quarterly system review',
     ],
-    cta: 'Contact for Enterprise',
+    cta: 'CONTACT SALES',
     highlighted: false,
+    status: 'CUSTOM',
   },
 ]
 
@@ -67,102 +68,96 @@ export function PricingTable() {
   const { ref, isVisible } = useScrollAnimation()
 
   return (
-    <section className="section-padding bg-white">
-      <div className="container-width">
-        <div
-          ref={ref}
-          className={cn(
-            'text-center mb-14 transition-all duration-700',
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          )}
-        >
-          <span className="text-sm font-semibold text-teal uppercase tracking-widest font-heading">
-            Transparent Pricing
-          </span>
-          <h2 className="mt-3 text-4xl md:text-5xl font-bold font-heading text-navy">
-            Simple, Predictable Pricing
+    <section className="relative section-padding bg-transparent overflow-visible">
+      {/* Premium ambient glow background - subtle since it's shared now */}
+      <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-teal-900/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="container-width relative z-10">
+        <div ref={ref} className={cn('text-center mb-16 transition-all duration-700', isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
+          <div className="inline-flex items-center justify-center gap-2 mb-4">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span className="text-sm font-semibold text-cyan-400 uppercase tracking-widest font-mono">
+              Server Tiers
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-4 drop-shadow-[0_0_15px_rgba(0,229,255,0.2)]">
+            Predictable Runtime Allocation
           </h2>
-          <p className="mt-4 text-xl text-slate-500 max-w-2xl mx-auto">
-            No setup fees. No per-seat charges. Cancel anytime. Start with a free audit.
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto font-mono text-sm">
+            No provisioning fees. No per-seat limits. Terminate sequence anytime.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 items-stretch">
           {plans.map((plan) => (
-            <div
-              key={plan.name}
+            <div 
+              key={plan.name} 
               className={cn(
-                'relative rounded-2xl p-8 flex flex-col transition-all duration-300',
-                plan.highlighted
-                  ? 'bg-navy text-white shadow-2xl scale-[1.02] border-2 border-teal/40'
-                  : 'bg-white border-2 border-slate-100 hover:border-teal/30 hover:shadow-lg'
+                'relative rounded-xl p-8 flex flex-col transition-all duration-500',
+                plan.highlighted 
+                  ? 'bg-[#0A0F1A]/95 backdrop-blur-3xl text-white shadow-[0_0_30px_rgba(0,229,255,0.3)] scale-[1.02] border-2 border-teal-400/50 z-10' 
+                  : 'bg-[#0A0F1A]/80 backdrop-blur-xl border border-teal-500/20 hover:border-teal-500/50 hover:shadow-[0_0_30px_rgba(0,229,255,0.1)]'
               )}
             >
+              {/* Internal overflow container for animations */}
+              <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
+                {plan.highlighted && (
+                  <div 
+                    className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-50" 
+                    style={{ animation: 'slideRight 3s ease-in-out infinite' }} 
+                  />
+                )}
+              </div>
+              
               {plan.highlighted && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <Badge variant="teal" className="px-4 py-1.5 shadow-lg">
-                    <StarIcon className="w-3 h-3 mr-1" /> Most Popular
-                  </Badge>
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
+                  <div className="flex items-center gap-2 px-4 py-1.5 bg-[#050A14] border border-teal-400/50 rounded-full shadow-[0_0_20px_rgba(0,229,255,0.4)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                    <span className="text-[10px] font-mono text-teal-300 uppercase tracking-widest font-bold">
+                      {plan.status}
+                    </span>
+                  </div>
                 </div>
               )}
 
-              <div className="mb-8">
-                <h3
-                  className={cn(
-                    'text-xl font-bold font-heading mb-1',
-                    plan.highlighted ? 'text-white' : 'text-navy'
-                  )}
-                >
+              <div className="mb-8 mt-2">
+                <h3 className={cn('text-2xl font-bold font-mono tracking-tight mb-2', plan.highlighted ? 'text-white drop-shadow-[0_0_10px_rgba(0,229,255,0.5)]' : 'text-slate-200')}>
                   {plan.name}
                 </h3>
-                <p className={cn('text-sm mb-4', plan.highlighted ? 'text-slate-300' : 'text-slate-500')}>
+                <p className="text-xs font-mono text-slate-400 tracking-widest uppercase mb-6 h-8">
                   {plan.tagline}
                 </p>
-                <div className="flex items-baseline gap-1 mb-3">
-                  <span className={cn('text-sm font-medium', plan.highlighted ? 'text-slate-300' : 'text-slate-400')}>
-                    SGD
-                  </span>
-                  <span
-                    className={cn(
-                      'text-5xl font-black font-heading',
-                      plan.highlighted ? 'text-white' : 'text-navy'
-                    )}
-                  >
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-sm font-mono text-teal-500/80 uppercase">SGD</span>
+                  <span className="text-5xl font-black font-heading text-white tracking-tighter">
                     ${plan.price}
                   </span>
-                  <span className={cn('text-sm', plan.highlighted ? 'text-slate-400' : 'text-slate-400')}>
-                    /month
-                  </span>
+                  <span className="text-sm font-mono text-slate-500">/mo</span>
                 </div>
-                <p className={cn('text-sm leading-relaxed', plan.highlighted ? 'text-slate-300' : 'text-slate-500')}>
+                <p className="text-sm font-mono leading-relaxed text-slate-400">
                   {plan.description}
                 </p>
               </div>
 
-              <ul className="space-y-3 flex-1 mb-8">
+              <div className="h-[1px] w-full bg-teal-500/10 mb-8" />
+
+              <ul className="space-y-4 flex-1 mb-8">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
-                    <div
-                      className={cn(
-                        'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5',
-                        plan.highlighted ? 'bg-teal/20' : 'bg-teal/10'
-                      )}
-                    >
-                      <CheckIcon className="w-3 h-3 text-teal" />
-                    </div>
-                    <span className={cn('text-sm', plan.highlighted ? 'text-slate-200' : 'text-slate-600')}>
-                      {feature}
+                    <span className="text-emerald-400 font-mono text-sm mt-0.5 font-bold">
+                      [x]
                     </span>
+                    <span className="text-sm font-mono text-slate-300 opacity-90">{feature}</span>
                   </li>
                 ))}
               </ul>
 
-              <Link to="/audit">
-                <Button
-                  variant={plan.highlighted ? 'gold' : 'outline'}
+              <Link to="/audit" className="w-full block mt-auto">
+                <Button 
+                  variant={plan.highlighted ? 'cta' : 'outline'} 
                   className={cn(
-                    'w-full',
-                    !plan.highlighted && 'border-navy text-navy hover:bg-navy hover:text-white'
+                    'w-full font-mono uppercase tracking-widest text-sm',
+                    !plan.highlighted && 'border-teal-500/30 text-teal-400 hover:bg-teal-500/10 hover:border-teal-400/50'
                   )}
                 >
                   {plan.cta}
@@ -170,24 +165,6 @@ export function PricingTable() {
               </Link>
             </div>
           ))}
-        </div>
-
-        {/* Add-ons */}
-        <div className="mt-16 bg-slate-50 rounded-2xl p-8">
-          <h3 className="text-xl font-bold font-heading text-navy mb-6 text-center">Add-On Services</h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { name: 'Custom Agent Development', price: '$150/hr' },
-              { name: 'Advanced Integration', price: '$1,000–$3,000' },
-              { name: 'Team Training Workshop', price: '$500/session' },
-              { name: 'Process Consulting', price: '$200/hr' },
-            ].map((addon) => (
-              <div key={addon.name} className="bg-white rounded-xl p-4 border border-slate-100 text-center shadow-soft">
-                <p className="text-sm font-medium text-navy mb-1">{addon.name}</p>
-                <p className="text-teal font-semibold text-sm">{addon.price}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </section>

@@ -1,13 +1,10 @@
 import { useState, type ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { CheckCircleIcon, CalendarDaysIcon } from '@heroicons/react/24/outline'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Select } from '@/components/ui/Select'
-import { Checkbox } from '@/components/ui/Checkbox'
-import { FORMSPREE_ENDPOINT, CALENDLY_LINK } from '@/lib/constants'
+import { FORMSPREE_ENDPOINT } from '@/lib/constants'
 import { sanitizeInput, cn } from '@/lib/utils'
 
 const schema = z.object({
@@ -37,17 +34,17 @@ const referralOptions = [
 ]
 
 const consentLabel: ReactNode = (
-  <span>
+  <span className="font-mono text-[10px] sm:text-xs text-slate-300 leading-tight">
     I agree to RizFlow's{' '}
-    <a href="/privacy" className="text-teal hover:underline">
+    <a href="/privacy-terms" className="text-teal-400 hover:underline">
       Privacy Policy
     </a>{' '}
-    and consent to being contacted about my audit request.
+    and consent to being contacted.
   </span>
 )
 
 export function AuditForm({ className }: { className?: string }) {
-  const [submitted, setSubmitted] = useState(false)
+  const navigate = useNavigate()
   const [serverError, setServerError] = useState('')
 
   const {
@@ -79,103 +76,116 @@ export function AuditForm({ className }: { className?: string }) {
         })
         if (!res.ok) throw new Error('Submission failed')
       }
-      setSubmitted(true)
+      navigate('/thank-you')
     } catch {
-      setServerError('Something went wrong. Please try again or email us at hello@rizflow.ai')
+      setServerError('System Error: Submission failed. Try again or email rizdigi.co@gmail.com')
     }
-  }
-
-  if (submitted) {
-    return (
-      <div className={cn('text-center py-10 px-6', className)}>
-        <div className="w-16 h-16 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-5">
-          <CheckCircleIcon className="w-9 h-9 text-teal" />
-        </div>
-        <h3 className="text-2xl font-bold font-heading text-navy mb-3">You're booked in!</h3>
-        <p className="text-slate-600 mb-8 max-w-md mx-auto">
-          Thanks for reaching out. Schedule your free 30-minute Operational Audit call below —
-          we'll come prepared with insights specific to your agency.
-        </p>
-        <a
-          href={CALENDLY_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 bg-teal text-white font-semibold px-8 py-4 rounded-xl hover:bg-teal-dark transition-all duration-200 shadow-soft hover:shadow-glow"
-        >
-          <CalendarDaysIcon className="w-5 h-5" />
-          Schedule Your Audit Call
-        </a>
-        <p className="text-xs text-slate-400 mt-4">Opens Calendly — pick a time that works for you</p>
-      </div>
-    )
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-5', className)} noValidate>
       <div className="grid sm:grid-cols-2 gap-5">
-        <Input
-          label="Your Full Name"
-          placeholder="Jane Smith"
-          error={errors.name?.message}
-          {...register('name')}
-        />
-        <Input
-          label="Agency Name"
-          placeholder="Acme Digital Agency"
-          error={errors.agency?.message}
-          {...register('agency')}
-        />
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Your Full Name</label>
+          <input
+            placeholder="Jane Smith"
+            className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
+            {...register('name')}
+          />
+          {errors.name && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.name.message}</p>}
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Agency Name</label>
+          <input
+            placeholder="Acme Digital Agency"
+            className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
+            {...register('agency')}
+          />
+          {errors.agency && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.agency.message}</p>}
+        </div>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5">
-        <Input
-          label="Agency Website"
-          placeholder="https://youragency.com"
-          type="url"
-          error={errors.website?.message}
-          {...register('website')}
-        />
-        <Input
-          label="Email Address"
-          placeholder="jane@youragency.com"
-          type="email"
-          error={errors.email?.message}
-          {...register('email')}
-        />
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Agency Website</label>
+          <input
+            placeholder="https://youragency.com"
+            type="url"
+            className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
+            {...register('website')}
+          />
+          {errors.website && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.website.message}</p>}
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Email Address</label>
+          <input
+            placeholder="jane@youragency.com"
+            type="email"
+            className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
+            {...register('email')}
+          />
+          {errors.email && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.email.message}</p>}
+        </div>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5">
-        <Input
-          label="Phone Number (optional)"
-          placeholder="+65 9123 4567"
-          type="tel"
-          {...register('phone')}
-        />
-        <Select
-          label="How did you hear about us?"
-          options={referralOptions}
-          {...register('referral')}
-        />
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Phone (Optional)</label>
+          <input
+            placeholder="+65 9123 4567"
+            type="tel"
+            className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
+            {...register('phone')}
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Referral Source</label>
+          <div className="relative">
+            <select
+              className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm appearance-none transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
+              {...register('referral')}
+            >
+              {referralOptions.map((o) => (
+                <option key={o.value} value={o.value} className="bg-[#050A14] text-white">
+                  {o.label}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-teal-500">
+              ▼
+            </div>
+          </div>
+        </div>
       </div>
 
-      <Checkbox
-        label={consentLabel}
-        error={errors.consent?.message}
-        {...register('consent')}
-      />
+      <div className="flex items-start gap-3 mt-4">
+        <div className="flex items-center h-5">
+          <input
+            type="checkbox"
+            className="w-4 h-4 rounded-sm border border-teal-500/30 bg-[#050A14] text-teal-500 focus:ring-cyan-400/20 focus:ring-offset-0 focus:ring-1 transition-all"
+            {...register('consent')}
+          />
+        </div>
+        <div className="flex flex-col">
+          <label className="text-sm font-mono">{consentLabel}</label>
+          {errors.consent && <p className="text-xs text-red-400 font-mono mt-1 flex items-center gap-1"><span>{'>'}</span> {errors.consent.message}</p>}
+        </div>
+      </div>
 
       {serverError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
+        <div className="bg-red-500/10 border border-red-500/30 text-red-400 font-mono text-xs uppercase tracking-wider px-4 py-3 rounded-sm flex items-center gap-2">
+          <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></span>
           {serverError}
         </div>
       )}
 
-      <Button type="submit" variant="primary" size="lg" className="w-full" isLoading={isSubmitting}>
-        {isSubmitting ? 'Submitting...' : 'Request My Free Operational Audit'}
+      <Button type="submit" variant="cta" size="lg" className="w-full font-mono uppercase tracking-widest mt-4" isLoading={isSubmitting}>
+        {isSubmitting ? 'Processing...' : 'Execute Audit Request'}
       </Button>
 
-      <p className="text-xs text-slate-400 text-center">
-        🔒 Your data is encrypted and never shared. PDPA compliant.
+      <p className="text-xs font-mono text-teal-500/60 text-center uppercase tracking-wider flex items-center justify-center gap-2 mt-4">
+        <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+        Encrypted & PDPA Compliant
       </p>
     </form>
   )

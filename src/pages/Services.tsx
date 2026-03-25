@@ -2,28 +2,39 @@ import { Helmet } from 'react-helmet-async'
 import { PricingTable } from '@/components/sections/PricingTable'
 import { CTAStrip } from '@/components/sections/CTAStrip'
 import { Container } from '@/components/layout/Container'
-import { Badge } from '@/components/ui/Badge'
-import { SITE_URL } from '@/lib/constants'
+import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
+import { FlowingMesh } from '@/components/animations/FlowingMesh'
 
 const process = [
-  { step: '01', title: 'Discovery Call', desc: 'Free 30-min audit to map your current workflows and identify automation opportunities.' },
-  { step: '02', title: 'Proposal & Sign-off', desc: 'Custom implementation plan with clear scope, timeline, and expected ROI — delivered within 48 hours.' },
-  { step: '03', title: 'Agent Configuration', desc: 'Our team builds and configures your agent stack, connects your tools, and tests all workflows.' },
-  { step: '04', title: 'Team Onboarding', desc: 'Live walkthrough with your team. We ensure everyone knows how to work alongside the agents.' },
-  { step: '05', title: 'Go Live & Monitor', desc: 'Agents go live. We monitor closely for the first 2 weeks and fine-tune based on real performance.' },
-  { step: '06', title: 'Ongoing Optimisation', desc: 'Monthly reviews to add new automations, adjust to workflow changes, and push more hours back to you.' },
+  { step: '01', title: 'DISCOVERY PROTOCOL', desc: 'Free 30-min audit to map your current workflows and identify automation opportunities.', status: 'INITIATING' },
+  { step: '02', title: 'PROPOSAL COMPILATION', desc: 'Custom implementation plan with clear scope, timeline, and expected ROI — delivered within 48 hours.', status: 'AWAITING AUTH' },
+  { step: '03', title: 'AGENT CONFIGURATION', desc: 'Our team builds and configures your agent stack, connects your tools, and tests all workflows.', status: 'DEPLOYING' },
+  { step: '04', title: 'TEAM SYNCHRONIZATION', desc: 'Live walkthrough with your team. We ensure everyone knows how to work alongside the agents.', status: 'SYNCING' },
+  { step: '05', title: 'GO LIVE & MONITOR', desc: 'Agents go live. We monitor closely for the first 2 weeks and fine-tune based on real performance.', status: 'ACTIVE' },
+  { step: '06', title: 'RECURSIVE OPTIMIZATION', desc: 'Monthly reviews to add new automations, adjust to workflow changes, and push more hours back to you.', status: 'OPTIMIZING' },
 ]
+
+const servicesBreadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Services & Pricing', item: `${SITE_URL}/services` },
+  ],
+}
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
   serviceType: 'AI Operations Automation',
-  provider: { '@type': 'Organization', name: 'RizFlow' },
-  areaServed: 'Southeast Asia',
+  name: 'Agentic AI Operations for Agencies',
+  provider: { '@type': 'Organization', name: 'RizFlow', url: SITE_URL },
+  areaServed: ['Singapore', 'Malaysia', 'Indonesia', 'Philippines', 'Thailand'],
+  description: 'RizFlow builds and manages agentic AI systems that automate agency operations — email triage, client onboarding, invoicing, reporting, and CRM updates.',
   offers: [
-    { '@type': 'Offer', name: 'Starter', price: '1800', priceCurrency: 'SGD' },
-    { '@type': 'Offer', name: 'Professional', price: '3000', priceCurrency: 'SGD' },
-    { '@type': 'Offer', name: 'Enterprise', price: '4500', priceCurrency: 'SGD' },
+    { '@type': 'Offer', name: 'Starter Node', price: '1800', priceCurrency: 'SGD', description: 'AI operations starter plan for small agencies with 5-10 team members' },
+    { '@type': 'Offer', name: 'Pro Agent Stack', price: '3000', priceCurrency: 'SGD', description: 'Full AI agent stack for agencies with 10-20 team members' },
+    { '@type': 'Offer', name: 'Enterprise Grid', price: '4500', priceCurrency: 'SGD', description: 'Enterprise-grade AI operations for agencies with 20-25+ team members' },
   ],
 }
 
@@ -31,62 +42,113 @@ export function Services() {
   return (
     <>
       <Helmet>
-        <title>Services & Pricing — AI Operations Plans | RizFlow</title>
-        <meta
-          name="description"
-          content="RizFlow's Starter ($1,800), Professional ($3,000), and Enterprise ($4,500) plans. AI-powered operations for agencies of every size in Singapore and SEA."
-        />
+        <title>Services & Pricing — AI Operations Plans for Agencies | RizFlow Singapore</title>
+        <meta name="description" content="RizFlow's AI operations plans: Starter Node ($1,800/mo), Pro Agent Stack ($3,000/mo), Enterprise Grid ($4,500/mo). Agentic AI workflow automation for agencies in Singapore and SEA." />
+        <meta name="keywords" content="AI operations pricing, agentic AI agency plans, AI automation for service businesses, AI workflow automation for agencies Singapore, agency AI operations packages" />
+        <link rel="canonical" href={`${SITE_URL}/services`} />
+        <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/services`} />
+        <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/services`} />
+        <meta property="og:title" content="Services & Pricing — AI Operations Plans for Agencies | RizFlow Singapore" />
+        <meta property="og:description" content="Agentic AI operations plans for service-based agencies. From $1,800/mo for AI-automated email, onboarding, invoicing, and CRM." />
+        <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
+        <meta property="og:site_name" content="RizFlow" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AI Operations Pricing & Plans | RizFlow" />
+        <meta name="twitter:description" content="From $1,800/mo. Agentic AI operations for agencies in Singapore and SEA. Automate your manual work." />
+        <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
+        <script type="application/ld+json">{JSON.stringify(servicesBreadcrumb)}</script>
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+        <style>{`
+          @keyframes slideRight {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+        `}</style>
       </Helmet>
 
-      <section className="pt-32 pb-16 bg-navy relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-20" />
-        <Container className="relative z-10 text-center">
-          <Badge variant="teal" className="mb-4">Plans & Pricing</Badge>
-          <h1 className="text-5xl md:text-6xl font-bold font-heading text-white mb-4 leading-tight">
-            Choose Your{' '}
-            <span className="text-gradient">Automation Level</span>
-          </h1>
-          <p className="text-xl text-slate-300 max-w-xl mx-auto">
-            Transparent pricing. No hidden fees. Start with a free audit — commit only when
-            you're confident in the ROI.
-          </p>
-        </Container>
-      </section>
+      <div className="relative bg-[#050A14] w-full overflow-hidden">
+        {/* Shared Animated flowing mesh background */}
+        <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
+          <FlowingMesh opacity={0.6} />
+        </div>
 
-      <PricingTable />
+        {/* Shared Cyberpunk Grid pattern overlay */}
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
-      {/* Implementation Process */}
-      <section className="section-padding bg-slate-50">
-        <Container>
-          <div className="text-center mb-14">
-            <span className="text-sm font-semibold text-teal uppercase tracking-widest font-heading">
-              Implementation
-            </span>
-            <h2 className="mt-3 text-4xl font-bold font-heading text-navy">
-              How We Get You Running
-            </h2>
-            <p className="mt-4 text-xl text-slate-500 max-w-xl mx-auto">
-              A structured 6-step process from first call to full deployment.
+        {/* Hero */}
+        <section className="pt-44 pb-24 relative flex items-center">
+          <Container className="relative z-10 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-500/30 bg-[#0A0F1A]/80 backdrop-blur-md mb-8 shadow-[0_0_15px_rgba(0,229,255,0.15)]">
+              <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+              <span className="text-xs font-mono text-teal-400 tracking-widest uppercase">Pricing Architecture</span>
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold font-heading text-white mb-6 leading-tight drop-shadow-[0_0_20px_rgba(0,229,255,0.3)]">
+              Select Your <span className="text-teal-400">Agent Stack</span>
+            </h1>
+            <p className="text-xl text-slate-400 max-w-xl mx-auto font-mono text-sm tracking-wide">
+              &gt; Transparent provisioning. No hidden runtime fees. 
+              Commit when you're confident in the system ROI.
             </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {process.map((p) => (
-              <div
-                key={p.step}
-                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-soft hover:shadow-md transition-shadow"
-              >
-                <span className="text-5xl font-black text-slate-100 font-heading block mb-3 leading-none">
-                  {p.step}
+          </Container>
+        </section>
+
+        <div className="relative z-10">
+          <PricingTable />
+        </div>
+
+        {/* Deployment Pipeline */}
+        <section className="py-24 relative">
+          <Container className="relative z-10">
+            <div className="text-center mb-20">
+              <div className="inline-flex items-center justify-center gap-2 mb-4">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="text-sm font-semibold text-cyan-400 uppercase tracking-widest font-mono">
+                  Deployment Pipeline
                 </span>
-                <h3 className="text-lg font-semibold font-heading text-navy mb-2">{p.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{p.desc}</p>
               </div>
-            ))}
-          </div>
-        </Container>
-      </section>
+              <h2 className="mt-3 text-4xl md:text-5xl font-bold font-heading text-white drop-shadow-[0_0_15px_rgba(0,229,255,0.2)]">
+                Initialization Sequence
+              </h2>
+              <p className="mt-6 text-slate-400 max-w-xl mx-auto font-mono text-sm tracking-wide">
+                &gt; Standardized 6-phase deployment protocol. From initial handshake to autonomous runtime.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+              {process.map((p) => (
+                <div
+                  key={p.step}
+                  className="group relative bg-[#0A0F1A]/80 backdrop-blur-3xl rounded-xl p-10 border border-white/5 hover:border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_30px_rgba(0,229,255,0.2)] transition-all duration-500 overflow-hidden"
+                >
+                  {/* Scanning line animation */}
+                  <div 
+                    className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-0 group-hover:opacity-100" 
+                    style={{ animation: 'slideRight 2s ease-in-out infinite' }}
+                  />
+                  
+                  <div className="flex justify-between items-start mb-8">
+                    <span className="text-4xl font-black text-teal-500/20 font-mono tracking-tighter">
+                      {p.step}
+                    </span>
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded bg-[#050A14] border border-teal-500/30">
+                      <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                      <span className="text-[10px] font-mono text-teal-400 tracking-widest uppercase font-bold">{p.status}</span>
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold text-white mb-4 font-mono tracking-tight group-hover:text-teal-300 transition-colors">
+                    {p.title}
+                  </h3>
+                  <p className="text-slate-400 text-sm leading-relaxed font-mono opacity-80 border-l border-teal-500/20 pl-4">
+                    {p.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Container>
+        </section>
+      </div>
 
       <CTAStrip />
     </>

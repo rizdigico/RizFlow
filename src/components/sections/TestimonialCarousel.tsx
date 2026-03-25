@@ -1,130 +1,183 @@
-import { useState, useEffect } from 'react'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
-import { Avatar } from '@/components/ui/Avatar'
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { motion } from 'framer-motion'
+import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { cn } from '@/lib/utils'
 
-const testimonials = [
+const caseStudies = [
   {
-    quote:
-      'RizFlow cut our ops workload by 18 hours a week. We finally have time to focus on client strategy instead of chasing approvals and sending status emails.',
-    name: 'Sarah Tan',
-    title: 'Founder',
-    company: 'Pixel & Co. Digital Agency',
-    location: 'Singapore',
-    initials: 'ST',
-    savings: '18 hrs/week saved',
+    title: 'Scaling Agency X: From Manual to Autonomous Operations',
+    before: [
+      'Disconnected workflows, manual coordination',
+      'Manual data entry, high operational costs',
+      'Inconsistent client communication',
+    ],
+    after: [
+      '60% reduction in manual tasks',
+      '5× increase in client capacity',
+      'Streamlined autonomous processes',
+    ],
+    cta: 'Read More',
   },
   {
-    quote:
-      'The Invoice Generation Agent alone paid for the entire subscription in the first month. Our billing cycle went from 2 weeks to same-day.',
-    name: 'Marcus Lim',
-    title: 'Operations Manager',
-    company: 'GrowthLab SEA',
-    location: 'Kuala Lumpur',
-    initials: 'ML',
-    savings: '2× faster billing',
-  },
-  {
-    quote:
-      'I was skeptical of AI tools after being burned before. But RizFlow connected to our existing Asana and HubSpot setup seamlessly — zero disruption.',
-    name: 'Priya Nair',
-    title: 'CEO',
-    company: 'BrandForward Consulting',
-    location: 'Singapore',
-    initials: 'PN',
-    savings: 'Zero setup friction',
+    title: 'Optimising Client Y: Achieving Hyper-Personalised Outreach',
+    before: [
+      'Generic campaigns, low engagement',
+      'Manual lead scoring, scattered analytics',
+      'Slow response time to inbound leads',
+    ],
+    after: [
+      '40% increase in conversion rate',
+      'Real-time performance tracking',
+      'AI-driven engagement at scale',
+    ],
+    cta: 'Read More',
   },
 ]
 
 export function TestimonialCarousel() {
-  const [active, setActive] = useState(0)
-
-  useEffect(() => {
-    const timer = setInterval(
-      () => setActive((prev) => (prev + 1) % testimonials.length),
-      5500
-    )
-    return () => clearInterval(timer)
-  }, [])
-
-  const prev = () => setActive((active - 1 + testimonials.length) % testimonials.length)
-  const next = () => setActive((active + 1) % testimonials.length)
-  const t = testimonials[active]
+  const { ref, isVisible } = useScrollAnimation()
 
   return (
-    <section className="section-padding bg-navy overflow-hidden">
-      <div className="container-width">
-        <div className="text-center mb-12">
-          <span className="text-sm font-semibold text-teal uppercase tracking-widest font-heading">
-            What Founders Say
-          </span>
-          <h2 className="mt-3 text-4xl md:text-5xl font-bold font-heading text-white">
-            Real Results, Real Agencies
+    <section className="relative section-padding overflow-hidden bg-black border-y border-white/5">
+      {/* Teal organic blob decorations */}
+      <motion.div className="absolute -top-20 -left-20 w-64 h-64" animate={{ y: [0, 10, 0] }} transition={{ duration: 4, repeat: Infinity }}>
+        <BlobDecoration className="text-teal opacity-20" />
+      </motion.div>
+      <motion.div className="absolute top-10 left-40 w-32 h-32 rotate-45" animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity }}>
+        <BlobDecoration className="text-teal opacity-15" />
+      </motion.div>
+      <motion.div className="absolute -bottom-16 -right-16 w-72 h-72 rotate-12" animate={{ y: [0, 15, 0] }} transition={{ duration: 6, repeat: Infinity }}>
+        <BlobDecoration className="text-teal opacity-20" />
+      </motion.div>
+      <motion.div className="absolute bottom-20 right-48 w-40 h-40 -rotate-30" animate={{ y: [0, -12, 0] }} transition={{ duration: 4.5, repeat: Infinity }}>
+        <BlobDecoration className="text-teal opacity-15" />
+      </motion.div>
+
+      <div className="container-width relative z-10">
+        <div
+          ref={ref}
+          className={cn(
+            'text-center mb-14 transition-all duration-700',
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          )}
+        >
+          <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-4">
+            Success Stories
           </h2>
+          <p className="text-lg text-slate-500 max-w-xl mx-auto">
+            Witness how agentic AI transforms businesses. Our partners' growth journeys, visualized.
+          </p>
         </div>
 
-        <div className="relative max-w-4xl mx-auto">
-          <div className="bg-navy-light border border-white/10 rounded-3xl p-8 md:p-12 min-h-[260px]">
-            <svg
-              className="w-10 h-10 text-teal/30 mb-4"
-              fill="currentColor"
-              viewBox="0 0 32 32"
-              aria-hidden="true"
+        <motion.div
+          className="space-y-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.05,
+              },
+            },
+          }}
+        >
+          {caseStudies.map((study, i) => (
+            <motion.div
+              key={i}
+              className="bg-navy-900/50 backdrop-blur-md rounded-2xl border border-white/5 p-8 shadow-soft hover:shadow-lg hover:border-teal-500/30 transition-all duration-300"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+              }}
+              whileHover={{ y: -2, transition: { duration: 0.2 } }}
             >
-              <path d="M10 8C6.686 8 4 10.686 4 14v10h10V14H7a3 3 0 016 0v-6zm18 0c-3.314 0-6 2.686-6 6v10h10V14h-7a3 3 0 016 0v-6z" />
-            </svg>
-            <blockquote className="text-white text-xl leading-relaxed mb-8 font-light italic">
-              "{t.quote}"
-            </blockquote>
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-4">
-                <Avatar size="md" fallback={t.initials} className="border-2 border-teal/30" />
+              <motion.h3
+                className="text-xl font-bold font-heading text-white mb-6 hover:text-teal transition-colors duration-300"
+                whileHover={{ x: 4 }}
+              >
+                {study.title}
+              </motion.h3>
+              <div className="grid md:grid-cols-[1fr_80px_1fr] gap-4 items-center">
+                {/* Before */}
                 <div>
-                  <p className="text-white font-semibold">{t.name}</p>
-                  <p className="text-slate-400 text-sm">
-                    {t.title}, {t.company}
-                  </p>
-                  <p className="text-slate-500 text-xs">{t.location}</p>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Before</p>
+                  <ul className="space-y-2">
+                    {study.before.map((item, j) => (
+                      <li key={j} className="flex items-start gap-2.5 text-sm text-slate-400">
+                        <span className="w-1.5 h-1.5 rounded-full bg-slate-600 mt-1.5 flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Arrow path */}
+                <div className="flex items-center justify-center">
+                  <FlowArrow />
+                </div>
+
+                {/* After */}
+                <div>
+                  <p className="text-xs font-semibold text-teal uppercase tracking-widest mb-3">After</p>
+                  <ul className="space-y-2">
+                    {study.after.map((item, j) => (
+                      <li key={j} className="flex items-start gap-2.5 text-sm text-white font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-teal mt-1.5 flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-              <div className="bg-teal/10 border border-teal/20 rounded-xl px-4 py-2 text-center">
-                <p className="text-teal font-bold text-sm">{t.savings}</p>
-              </div>
-            </div>
-          </div>
 
-          {/* Controls */}
-          <div className="flex items-center justify-center gap-6 mt-8">
-            <button
-              onClick={prev}
-              className="w-10 h-10 rounded-full border border-white/20 text-white hover:border-teal hover:text-teal transition-colors flex items-center justify-center"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
-            <div className="flex gap-2">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActive(i)}
-                  className={cn(
-                    'h-2 rounded-full transition-all duration-300',
-                    i === active ? 'bg-teal w-6' : 'bg-white/30 hover:bg-white/50 w-2'
-                  )}
-                  aria-label={`Testimonial ${i + 1}`}
-                />
-              ))}
-            </div>
-            <button
-              onClick={next}
-              className="w-10 h-10 rounded-full border border-white/20 text-white hover:border-teal hover:text-teal transition-colors flex items-center justify-center"
-              aria-label="Next testimonial"
-            >
-              <ChevronRightIcon className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
+              <div className="mt-6 pt-5 border-t border-white/10">
+                <button className="inline-flex items-center gap-1.5 text-teal text-sm font-semibold hover:gap-2.5 transition-all duration-200">
+                  {study.cta}
+                  <ArrowRightIcon className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
+  )
+}
+
+function FlowArrow() {
+  return (
+    <motion.svg
+      viewBox="0 0 60 80"
+      className="w-14 h-20"
+      fill="none"
+      aria-hidden="true"
+      initial={{ opacity: 0.6 }}
+      whileHover={{ opacity: 1 }}
+    >
+      <motion.path
+        d="M30,5 C10,25 50,40 30,60 L30,75"
+        stroke="#4FA0B4"
+        strokeWidth="2"
+        strokeDasharray="4 3"
+        strokeLinecap="round"
+        animate={{ strokeOpacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      />
+      <path d="M22,68 L30,78 L38,68" stroke="#4FA0B4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <motion.circle cx="30" cy="5" r="4" fill="#4FA0B4" opacity="0.3" animate={{ r: [4, 6, 4] }} transition={{ duration: 1.5, repeat: Infinity }} />
+      <circle cx="30" cy="5" r="2" fill="#4FA0B4" />
+    </motion.svg>
+  )
+}
+
+function BlobDecoration({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className={cn('fill-current', className)} aria-hidden="true">
+      <path d="M42.7,-62.9C50.9,-50.4,50.1,-32.3,53.8,-16.1C57.5,0.1,65.7,14.4,64.3,28.2C62.9,42,51.8,55.3,38.1,63.5C24.4,71.7,8.1,74.8,-8.4,73.1C-24.9,71.4,-41.6,64.9,-54.4,53.6C-67.2,42.3,-76.1,26.2,-76.9,9.9C-77.7,-6.4,-70.4,-22.9,-61.3,-36.8C-52.2,-50.7,-41.3,-62,-28.4,-73.1C-15.5,-84.2,-0.6,-95.1,12.9,-92.9C26.4,-90.7,34.5,-75.4,42.7,-62.9Z" transform="translate(100 100)" />
+    </svg>
   )
 }

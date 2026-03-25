@@ -1,76 +1,103 @@
 import { Helmet } from 'react-helmet-async'
+import { useRef } from 'react'
+import { motion } from 'framer-motion'
 import { Hero } from '@/components/sections/Hero'
 import { SocialProofLogos } from '@/components/sections/SocialProofLogos'
 import { HowItWorks } from '@/components/sections/HowItWorks'
 import { FeaturesGrid } from '@/components/sections/FeaturesGrid'
-import { TestimonialCarousel } from '@/components/sections/TestimonialCarousel'
-import { PricingTable } from '@/components/sections/PricingTable'
-import { CTAStrip } from '@/components/sections/CTAStrip'
-import { FAQAccordion } from '@/components/sections/FAQAccordion'
+import { FlowingMesh } from '@/components/animations/FlowingMesh'
+import { useParallaxScroll } from '@/hooks/useFlowingAnimation'
 import { Container } from '@/components/layout/Container'
 import { SEO_DEFAULTS, SITE_URL } from '@/lib/constants'
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: 'RizFlow',
-  description: SEO_DEFAULTS.description,
-  url: SITE_URL,
-  address: {
-    '@type': 'PostalAddress',
-    addressCountry: 'SG',
-    addressLocality: 'Singapore',
-  },
-  areaServed: ['Singapore', 'Malaysia', 'Indonesia', 'Philippines', 'Thailand'],
-  sameAs: [
-    'https://linkedin.com/company/rizflow',
-    'https://twitter.com/rizflow',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+      name: 'RizFlow',
+      url: SITE_URL,
+      logo: `${SITE_URL}/agency-logo-square.png`,
+      foundingDate: '2026',
+      founder: { '@type': 'Person', name: 'Aariz Arfan' },
+      description: 'RizFlow builds and manages agentic AI systems for service-based agencies, saving founders 10-20 hours per week on manual operations.',
+      address: { '@type': 'PostalAddress', addressCountry: 'SG', addressLocality: 'Singapore' },
+      contactPoint: { '@type': 'ContactPoint', email: 'rizdigi.co@gmail.com', contactType: 'customer service' },
+      sameAs: [
+        'https://www.linkedin.com/in/aariz-arfan/',
+        'https://www.instagram.com/rizflow.ai/',
+        'https://www.tiktok.com/@rizflow.ai',
+      ],
+    },
+    {
+      '@type': 'ProfessionalService',
+      '@id': `${SITE_URL}/#business`,
+      name: 'RizFlow',
+      url: SITE_URL,
+      priceRange: '$$$$',
+      description: 'Agentic AI operations agency based in Singapore. We automate email triage, client onboarding, invoicing, reporting, and CRM updates for service-based agencies.',
+      address: { '@type': 'PostalAddress', addressCountry: 'SG', addressLocality: 'Singapore' },
+      areaServed: ['Singapore', 'Malaysia', 'Indonesia', 'Philippines', 'Thailand'],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'AI Operations Plans',
+        itemListElement: [
+          { '@type': 'Offer', name: 'Starter Node', price: '1800', priceCurrency: 'SGD', description: 'AI operations starter plan for small agencies' },
+          { '@type': 'Offer', name: 'Pro Agent Stack', price: '3000', priceCurrency: 'SGD', description: 'Full AI agent stack for growing agencies' },
+          { '@type': 'Offer', name: 'Enterprise Grid', price: '4500', priceCurrency: 'SGD', description: 'Enterprise-grade AI operations for large agencies' },
+        ],
+      },
+    },
   ],
 }
 
 export function Home() {
+  const meshRef = useRef<HTMLDivElement>(null)
+  const parallaxProps = useParallaxScroll(0.5)
+
   return (
     <>
       <Helmet>
-        <title>{SEO_DEFAULTS.title}</title>
-        <meta name="description" content={SEO_DEFAULTS.description} />
-        <meta property="og:title" content={SEO_DEFAULTS.title} />
-        <meta property="og:description" content={SEO_DEFAULTS.description} />
-        <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
+        <title>RizFlow | AI Operations Agency for Service-Based Agencies in Singapore</title>
+        <meta name="description" content="RizFlow is Singapore's agentic AI operations agency. We save agency founders 10-20 hrs/week by automating email triage, client onboarding, invoicing, and CRM updates with AI agent teams." />
+        <meta name="keywords" content="AI operations agency, agentic AI for agencies, AI automation for service businesses, AI operations Singapore, automated agency operations, AI workflow automation for agencies, hands-free AI operations, AI agent teams for businesses" />
+        <link rel="canonical" href={SITE_URL} />
+        <link rel="alternate" hrefLang="en-SG" href={SITE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={SITE_URL} />
+        <meta property="og:title" content="RizFlow | AI Operations Agency for Service-Based Agencies in Singapore" />
+        <meta property="og:description" content="RizFlow is Singapore's agentic AI operations agency. Save 10-20 hrs/week with AI agent teams that automate your manual ops." />
+        <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
+        <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={SEO_DEFAULTS.title} />
-        <meta name="twitter:description" content={SEO_DEFAULTS.description} />
+        <meta name="twitter:title" content="RizFlow | AI Operations Agency for Service-Based Agencies in Singapore" />
+        <meta name="twitter:description" content="Singapore's agentic AI operations agency. Save 10-20 hrs/week automating your agency's manual work." />
+        <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <Hero />
+      <div className="relative bg-navy-dark w-full overflow-hidden">
+        {/* Shared Animated flowing mesh background */}
+        <motion.div
+          ref={meshRef}
+          className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none"
+          style={parallaxProps.y ? { y: parallaxProps.y } : {}}
+        >
+          <FlowingMesh opacity={0.6} parallax={true} />
+        </motion.div>
+
+        {/* Shared Grid pattern overlay */}
+        <div className="absolute inset-0 z-0 bg-[url('/grid.svg')] bg-[length:32px_32px] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0)_80%)] opacity-10 pointer-events-none" />
+
+        <div className="relative z-10 w-full">
+          <Hero />
+          <HowItWorks />
+          <FeaturesGrid />
+        </div>
+      </div>
+
       <SocialProofLogos />
-      <HowItWorks />
-      <FeaturesGrid />
-      <TestimonialCarousel />
-      <PricingTable />
-
-      {/* FAQ snippet */}
-      <section className="section-padding bg-slate-50">
-        <Container tight>
-          <div className="text-center mb-12">
-            <span className="text-sm font-semibold text-teal uppercase tracking-widest font-heading">
-              FAQ
-            </span>
-            <h2 className="mt-3 text-4xl font-bold font-heading text-navy">Common Questions</h2>
-          </div>
-          <FAQAccordion limit={4} />
-          <div className="text-center mt-8">
-            <a href="/faq" className="text-teal font-medium hover:underline text-sm">
-              View all questions →
-            </a>
-          </div>
-        </Container>
-      </section>
-
-      <CTAStrip />
     </>
   )
 }
