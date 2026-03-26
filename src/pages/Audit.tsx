@@ -71,10 +71,10 @@ export function Audit() {
               </p>
 
               <div className="space-y-4 mb-10 bg-[#0A0F1A]/80 backdrop-blur-md border border-white/5 p-6 rounded-xl">
-                <h3 className="text-xs font-mono text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+                <h2 className="text-xs font-mono text-cyan-400 uppercase tracking-widest flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span>
                   Output Protocol: What You'll Get
-                </h3>
+                </h2>
                 {benefits.map((b) => (
                   <div key={b} className="flex items-center gap-3">
                     <div className="w-6 h-6 rounded-sm bg-[#050A14] flex items-center justify-center flex-shrink-0 border border-teal-500/30 shadow-[0_0_10px_rgba(0,229,255,0.1)]">

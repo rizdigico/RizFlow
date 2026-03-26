@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /thank-you
+Disallow: /admin/
+Disallow: /api/
 Sitemap: https://rizflow.co/sitemap.xml

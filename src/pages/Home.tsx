@@ -59,20 +59,20 @@ export function Home() {
   return (
     <>
       <Helmet>
-        <title>RizFlow | AI Operations Agency for Service-Based Agencies in Singapore</title>
-        <meta name="description" content="RizFlow is Singapore's agentic AI operations agency. We save agency founders 10-20 hrs/week by automating email triage, client onboarding, invoicing, and CRM updates with AI agent teams." />
-        <meta name="keywords" content="AI operations agency, agentic AI for agencies, AI automation for service businesses, AI operations Singapore, automated agency operations, AI workflow automation for agencies, hands-free AI operations, AI agent teams for businesses" />
+        <title>RizFlow | AI Operations Agency for Service-Based Agencies</title>
+        <meta name="description" content="RizFlow builds and manages agentic AI systems that save service agency founders 10-20 hours/week. Hands-free AI operations for 5-25 person agencies in Singapore." />
+        <meta name="keywords" content="AI operations agency, agentic AI for agencies, AI automation Singapore, automated agency operations, hands-free AI operations" />
         <link rel="canonical" href={SITE_URL} />
         <link rel="alternate" hrefLang="en-SG" href={SITE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={SITE_URL} />
-        <meta property="og:title" content="RizFlow | AI Operations Agency for Service-Based Agencies in Singapore" />
-        <meta property="og:description" content="RizFlow is Singapore's agentic AI operations agency. Save 10-20 hrs/week with AI agent teams that automate your manual ops." />
+        <meta property="og:title" content="RizFlow | AI Operations Agency for Service-Based Agencies" />
+        <meta property="og:description" content="RizFlow builds and manages agentic AI systems that save service agency founders 10-20 hours/week. Hands-free AI operations for 5-25 person agencies in Singapore." />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="RizFlow | AI Operations Agency for Service-Based Agencies in Singapore" />
-        <meta name="twitter:description" content="Singapore's agentic AI operations agency. Save 10-20 hrs/week automating your agency's manual work." />
+        <meta name="twitter:title" content="RizFlow | AI Operations Agency for Service-Based Agencies" />
+        <meta name="twitter:description" content="RizFlow builds and manages agentic AI systems that save service agency founders 10-20 hours/week. Hands-free AI operations for 5-25 person agencies in Singapore." />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>

@@ -54,20 +54,20 @@ export function Blog() {
   return (
     <>
       <Helmet>
-        <title>Blog — AI Operations Insights for Agencies | RizFlow Singapore</title>
-        <meta name="description" content="Actionable guides on agentic AI, agency automation, and AI operations for service-based businesses in Singapore and SEA. Written by the RizFlow team." />
-        <meta name="keywords" content="AI operations blog, agentic AI for agencies, agency automation guide, AI workflow automation, Singapore AI agency blog" />
+        <title>AI Operations Insights for Agencies | RizFlow Blog</title>
+        <meta name="description" content="Expert insights on agentic AI, agency automation, and running your service business on autopilot. From the RizFlow team." />
+        <meta name="keywords" content="AI operations blog, agency automation tips, agentic AI insights" />
         <link rel="canonical" href={`${SITE_URL}/blog`} />
         <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/blog`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/blog`} />
-        <meta property="og:title" content="Blog — AI Operations Insights for Agencies | RizFlow" />
-        <meta property="og:description" content="Actionable guides on agentic AI and agency automation from Singapore's AI operations agency." />
+        <meta property="og:title" content="AI Operations Insights for Agencies | RizFlow Blog" />
+        <meta property="og:description" content="Expert insights on agentic AI, agency automation, and running your service business on autopilot. From the RizFlow team." />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="RizFlow Blog — AI Operations for Agencies" />
-        <meta name="twitter:description" content="Guides on agentic AI, agency automation, and AI operations from Singapore." />
+        <meta name="twitter:title" content="AI Operations Insights for Agencies | RizFlow Blog" />
+        <meta name="twitter:description" content="Expert insights on agentic AI, agency automation, and running your service business on autopilot." />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(blogBreadcrumb)}</script>
       </Helmet>

@@ -42,20 +42,20 @@ export function Services() {
   return (
     <>
       <Helmet>
-        <title>Services & Pricing — AI Operations Plans for Agencies | RizFlow Singapore</title>
-        <meta name="description" content="RizFlow's AI operations plans: Starter Node ($1,800/mo), Pro Agent Stack ($3,000/mo), Enterprise Grid ($4,500/mo). Agentic AI workflow automation for agencies in Singapore and SEA." />
-        <meta name="keywords" content="AI operations pricing, agentic AI agency plans, AI automation for service businesses, AI workflow automation for agencies Singapore, agency AI operations packages" />
+        <title>AI Operations Services | RizFlow</title>
+        <meta name="description" content="Explore RizFlow's AI operations packages for service agencies. From core automation to full autonomous ops — agentic AI that handles email, CRM, invoicing, and reporting." />
+        <meta name="keywords" content="AI operations services, agentic AI packages, AI automation for agencies, automated CRM, AI invoicing, agency operations" />
         <link rel="canonical" href={`${SITE_URL}/services`} />
         <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/services`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/services`} />
-        <meta property="og:title" content="Services & Pricing — AI Operations Plans for Agencies | RizFlow Singapore" />
-        <meta property="og:description" content="Agentic AI operations plans for service-based agencies. From $1,800/mo for AI-automated email, onboarding, invoicing, and CRM." />
+        <meta property="og:title" content="AI Operations Services | RizFlow" />
+        <meta property="og:description" content="Explore RizFlow's AI operations packages for service agencies. From core automation to full autonomous ops — agentic AI that handles email, CRM, invoicing, and reporting." />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="AI Operations Pricing & Plans | RizFlow" />
-        <meta name="twitter:description" content="From $1,800/mo. Agentic AI operations for agencies in Singapore and SEA. Automate your manual work." />
+        <meta name="twitter:title" content="AI Operations Services | RizFlow" />
+        <meta name="twitter:description" content="Explore RizFlow's AI operations packages for service agencies. From core automation to full autonomous ops." />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(servicesBreadcrumb)}</script>
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>

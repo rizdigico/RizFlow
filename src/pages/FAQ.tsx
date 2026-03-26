@@ -61,20 +61,20 @@ export function FAQ() {
   return (
     <>
       <Helmet>
-        <title>FAQ — AI Operations Questions Answered | RizFlow Singapore</title>
-        <meta name="description" content="Answers to common questions about RizFlow's agentic AI operations platform — pricing, data security, onboarding timeline, tool integrations, and cancellation policy." />
-        <meta name="keywords" content="RizFlow FAQ, AI operations questions, agentic AI agency FAQ, AI automation pricing FAQ, agency automation Singapore questions" />
+        <title>Frequently Asked Questions | RizFlow AI Operations</title>
+        <meta name="description" content="Answers to common questions about RizFlow's agentic AI operations for service agencies. Pricing, security, how it works, and more." />
+        <meta name="keywords" content="AI operations FAQ, agentic AI questions, RizFlow pricing FAQ" />
         <link rel="canonical" href={`${SITE_URL}/faq`} />
         <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/faq`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/faq`} />
-        <meta property="og:title" content="FAQ — AI Operations Questions Answered | RizFlow" />
-        <meta property="og:description" content="Common questions about RizFlow's agentic AI operations: pricing, security, setup time, integrations, and more." />
+        <meta property="og:title" content="Frequently Asked Questions | RizFlow AI Operations" />
+        <meta property="og:description" content="Answers to common questions about RizFlow's agentic AI operations for service agencies. Pricing, security, how it works, and more." />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="FAQ — AI Operations Questions | RizFlow" />
-        <meta name="twitter:description" content="Everything you need to know about RizFlow's agentic AI operations platform for agencies." />
+        <meta name="twitter:title" content="Frequently Asked Questions | RizFlow AI Operations" />
+        <meta name="twitter:description" content="Answers to common questions about RizFlow's agentic AI operations for service agencies." />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(faqBreadcrumb)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>

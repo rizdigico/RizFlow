@@ -53,20 +53,20 @@ export function Contact() {
   return (
     <>
       <Helmet>
-        <title>Contact RizFlow — Get in Touch with Singapore's AI Operations Agency</title>
-        <meta name="description" content="Reach out to RizFlow, Singapore's agentic AI operations agency. Request an audit, ask a question, or book a call. We reply within 24 hours." />
-        <meta name="keywords" content="contact RizFlow, AI operations agency contact Singapore, agentic AI agency inquiry, book AI operations audit" />
+        <title>Get Started with AI Operations | Contact RizFlow</title>
+        <meta name="description" content="Ready to automate your agency? Book a free strategy call with RizFlow. We'll map your workflows and show you what agentic AI can do." />
+        <meta name="keywords" content="contact RizFlow, AI operations consultation, agency automation strategy call" />
         <link rel="canonical" href={`${SITE_URL}/contact`} />
         <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/contact`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/contact`} />
-        <meta property="og:title" content="Contact RizFlow — Get in Touch with Singapore's AI Operations Agency" />
-        <meta property="og:description" content="Request a free audit or send us a message. RizFlow replies within 24 hours. Based in Singapore, serving SEA agencies." />
+        <meta property="og:title" content="Get Started with AI Operations | Contact RizFlow" />
+        <meta property="og:description" content="Ready to automate your agency? Book a free strategy call with RizFlow. We'll map your workflows and show you what agentic AI can do." />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact RizFlow — AI Operations Agency Singapore" />
-        <meta name="twitter:description" content="Request a free audit or get in touch. RizFlow replies within 24 hours." />
+        <meta name="twitter:title" content="Get Started with AI Operations | Contact RizFlow" />
+        <meta name="twitter:description" content="Ready to automate your agency? Book a free strategy call with RizFlow." />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(contactBreadcrumb)}</script>
       </Helmet>
@@ -98,10 +98,10 @@ export function Contact() {
               </div>
 
               <div className="space-y-4 bg-[#0A0F1A]/80 backdrop-blur-md border border-white/5 p-6 rounded-xl">
-                <h3 className="text-cyan-400 font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                <h2 className="text-cyan-400 font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span>
                   Network Status
-                </h3>
+                </h2>
                 <div className="flex items-center gap-4 text-slate-300">
                   <div className="w-10 h-10 rounded-sm bg-[#050A14] flex items-center justify-center border border-teal-500/30 shadow-[0_0_15px_rgba(0,229,255,0.1)]">
                     <EnvelopeIcon className="w-5 h-5 text-teal-400" />

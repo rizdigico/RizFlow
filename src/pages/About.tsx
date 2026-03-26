@@ -35,20 +35,20 @@ export function About() {
   return (
     <>
       <Helmet>
-        <title>About Aariz Arfan & RizFlow — Founder Story | AI Operations Agency Singapore</title>
-        <meta name="description" content="Meet Aariz Arfan, the Singapore-based founder of RizFlow. Learn how he built an agentic AI operations platform for service-based agencies while still studying." />
-        <meta name="keywords" content="RizFlow founder, Aariz Arfan, AI operations agency Singapore, about RizFlow, agentic AI agency story" />
+        <title>About RizFlow — AI Ops Agency in Singapore</title>
+        <meta name="description" content="RizFlow is a Singapore-based AI operations agency founded by Aariz Arfan. We build agentic AI systems that run agency operations on autopilot." />
+        <meta name="keywords" content="RizFlow about, AI operations Singapore, agentic AI agency founder, Aariz Arfan" />
         <link rel="canonical" href={`${SITE_URL}/about`} />
         <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/about`} />
         <meta property="og:type" content="profile" />
         <meta property="og:url" content={`${SITE_URL}/about`} />
-        <meta property="og:title" content="About Aariz Arfan & RizFlow — Founder Story | AI Operations Agency Singapore" />
-        <meta property="og:description" content="Meet Aariz Arfan, the Singapore-based founder of RizFlow. Learn how he built an agentic AI operations platform for service-based agencies." />
+        <meta property="og:title" content="About RizFlow — AI Ops Agency in Singapore" />
+        <meta property="og:description" content="RizFlow is a Singapore-based AI operations agency founded by Aariz Arfan. We build agentic AI systems that run agency operations on autopilot." />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="About Aariz Arfan & RizFlow — Founder Story" />
-        <meta name="twitter:description" content="How a Singapore student built an agentic AI operations platform for agencies. The RizFlow origin story." />
+        <meta name="twitter:title" content="About RizFlow — AI Ops Agency in Singapore" />
+        <meta name="twitter:description" content="RizFlow is a Singapore-based AI operations agency founded by Aariz Arfan. We build agentic AI systems that run agency operations on autopilot." />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(aboutBreadcrumb)}</script>
         <script type="application/ld+json">{JSON.stringify(founderSchema)}</script>
