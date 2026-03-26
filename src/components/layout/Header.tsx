@@ -107,7 +107,7 @@ export function Header() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="md:hidden bg-gradient-to-b from-white to-slate-50 border-t border-teal/10 shadow-lg"
+            className="md:hidden bg-[#0A0F1A] border-t border-teal-500/20 shadow-lg"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -139,8 +139,8 @@ export function Header() {
                       className={cn(
                         'px-4 py-3 rounded-lg text-sm font-medium transition-colors block',
                         isActive(link.href)
-                          ? 'text-teal bg-teal/10'
-                          : 'text-slate-700 hover:bg-slate-100 hover:text-navy'
+                          ? 'text-teal-400 bg-teal-500/10'
+                          : 'text-slate-300 hover:bg-white/5 hover:text-white'
                       )}
                     >
                       {link.label}

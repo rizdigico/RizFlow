@@ -133,11 +133,10 @@ export function ThankYou() {
                 </span>
               </div>
               <div className="p-2 bg-white rounded-b-xl w-full">
-                {/* Wrap iframe in white bg to match calendly default or leave as is */}
                 <iframe
                   src={`${CALENDLY_LINK}?embed=true`}
-                  className="w-full"
-                  style={{ height: '850px', border: 'none', minWidth: '100%' }}
+                  className="w-full h-[600px] sm:h-[700px] md:h-[850px]"
+                  style={{ border: 'none', minWidth: '100%' }}
                   title="Book your free audit call"
                   loading="lazy"
                 />

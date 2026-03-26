@@ -51,14 +51,14 @@ export function Audit() {
         </div>
 
         <Container className="relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
             {/* Left — Info */}
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-sm border border-teal-500/30 bg-teal-500/10 text-teal-400 text-xs font-mono uppercase tracking-widest">
                 <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
                 System Ping: 100% Free · No Commitment
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6 leading-tight flex items-center gap-3">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading text-white mb-6 leading-tight flex items-center gap-3">
                 Get Your Free
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400 drop-shadow-[0_0_15px_rgba(0,229,255,0.3)]">Operational Audit</span>
@@ -98,7 +98,7 @@ export function Audit() {
             </div>
 
             {/* Right — Form */}
-            <div className="bg-[#0A0F1A]/95 backdrop-blur-3xl border border-teal-500/30 rounded-2xl p-8 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative">
+            <div className="bg-[#0A0F1A]/95 backdrop-blur-3xl border border-teal-500/30 rounded-2xl p-5 sm:p-8 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative">
               <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/50 to-transparent" />
               <h2 className="text-xl font-bold font-heading text-white mb-6 flex items-center gap-2">
                 <span className="text-teal-400 font-mono">{'>'}</span> Request Your Audit

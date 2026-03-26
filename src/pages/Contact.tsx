@@ -79,7 +79,7 @@ export function Contact() {
         </div>
 
         <div className="container-width relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Left: Contact info */}
             <div className="space-y-8">
               <div>
@@ -87,7 +87,7 @@ export function Contact() {
                   <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
                   Terminal Request
                 </div>
-                <h1 className="text-5xl lg:text-6xl font-bold font-heading text-white mb-6 leading-tight flex items-center gap-3">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold font-heading text-white mb-6 leading-tight flex items-center gap-3">
                   Let's Talk
                   <span className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse inline-block"></span>
                 </h1>
@@ -124,7 +124,7 @@ export function Contact() {
             </div>
 
             {/* Right: Form card */}
-            <div className="bg-[#0A0F1A]/95 backdrop-blur-3xl border border-teal-500/30 rounded-2xl p-8 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative">
+            <div className="bg-[#0A0F1A]/95 backdrop-blur-3xl border border-teal-500/30 rounded-2xl p-5 sm:p-8 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative">
               <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/50 to-transparent" />
               <h2 className="text-xl font-bold font-heading text-white mb-6 flex items-center gap-2">
                 <span className="text-teal-400 font-mono">{'>'}</span> Request an Audit or Contact Us

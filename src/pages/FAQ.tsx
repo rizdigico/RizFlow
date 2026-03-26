@@ -104,7 +104,7 @@ export function FAQ() {
               <span className="font-mono text-teal-400 uppercase tracking-widest text-sm mb-4 block">
                 [ SYS_QUERY_INTERFACE ]
               </span>
-              <h1 className="text-5xl md:text-6xl font-bold font-heading text-white leading-tight drop-shadow-[0_0_15px_rgba(45,212,191,0.2)]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white leading-tight drop-shadow-[0_0_15px_rgba(45,212,191,0.2)]">
                 Knowledge Base
               </h1>
             </div>
@@ -135,7 +135,7 @@ function FAQItem({ question, answer, defaultOpen = false }: { question: string; 
     >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-6 py-5 text-left gap-4"
+        className="w-full flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 text-left gap-4"
         aria-expanded={open}
       >
         <div className="flex items-start gap-3">

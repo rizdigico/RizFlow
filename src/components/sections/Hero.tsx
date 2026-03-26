@@ -16,7 +16,7 @@ export function Hero() {
 
       <div className="container-width relative z-10 py-20 lg:py-32">
         <motion.div
-          className="grid lg:grid-cols-2 gap-16 items-center"
+          className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center"
           initial="hidden"
           animate="visible"
           variants={ANIMATION_VARIANTS.staggerContainer}
@@ -34,13 +34,13 @@ export function Hero() {
             </motion.div>
 
             <motion.div className="space-y-6" variants={ANIMATION_VARIANTS.fadeIn}>
-               <h1 className="text-5xl lg:text-7xl font-bold font-heading text-white leading-[1.1] tracking-tight text-shadow-glow">
+               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold font-heading text-white leading-[1.1] tracking-tight text-shadow-glow">
                 Scale Operations with <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal via-white to-gold animate-gradient-x drop-shadow-[0_0_20px_rgba(0,229,255,0.3)]">
                   Agentic AI
                 </span>
               </h1>
-              <p className="text-xl text-slate-300 leading-relaxed max-w-lg font-light">
+              <p className="text-base sm:text-xl text-slate-300 leading-relaxed max-w-lg font-light">
                 Deploy orchestrated AI agents to autonomously handle client intake, tracking, invoicing, and comms. Scale your agency effortlessly.
               </p>
             </motion.div>

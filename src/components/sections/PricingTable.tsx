@@ -93,9 +93,9 @@ export function PricingTable() {
             <div 
               key={plan.name} 
               className={cn(
-                'relative rounded-xl p-8 flex flex-col transition-all duration-500',
+                'relative rounded-xl p-5 sm:p-8 flex flex-col transition-all duration-500',
                 plan.highlighted 
-                  ? 'bg-[#0A0F1A]/95 backdrop-blur-3xl text-white shadow-[0_0_30px_rgba(0,229,255,0.3)] scale-[1.02] border-2 border-teal-400/50 z-10' 
+                  ? 'bg-[#0A0F1A]/95 backdrop-blur-3xl text-white shadow-[0_0_30px_rgba(0,229,255,0.3)] sm:scale-[1.02] border-2 border-teal-400/50 z-10'
                   : 'bg-[#0A0F1A]/80 backdrop-blur-xl border border-teal-500/20 hover:border-teal-500/50 hover:shadow-[0_0_30px_rgba(0,229,255,0.1)]'
               )}
             >
@@ -129,7 +129,7 @@ export function PricingTable() {
                 </p>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-sm font-mono text-teal-500/80 uppercase">SGD</span>
-                  <span className="text-5xl font-black font-heading text-white tracking-tighter">
+                  <span className="text-4xl sm:text-5xl font-black font-heading text-white tracking-tighter">
                     ${plan.price}
                   </span>
                   <span className="text-sm font-mono text-slate-500">/mo</span>

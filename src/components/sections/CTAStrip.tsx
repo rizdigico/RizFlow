@@ -15,7 +15,7 @@ export function CTAStrip({ variant = 'navy' }: CTAStripProps) {
       <div className="container-width relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10 text-center lg:text-left">
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold font-heading text-white leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading text-white leading-tight">
               Stop Trading Time for Money.
               <br />
               <span className="text-gradient">
@@ -32,7 +32,7 @@ export function CTAStrip({ variant = 'navy' }: CTAStripProps) {
               <Button
                 size="lg"
                 variant="cta"
-                className="group min-w-56"
+                className="group w-full sm:w-auto sm:min-w-56"
               >
                 <CalendarDaysIcon className="w-5 h-5 mr-2" />
                 Get Free Operational Audit

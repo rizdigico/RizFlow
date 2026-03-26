@@ -94,7 +94,7 @@ export function HowItWorks() {
                 <div className="hidden md:block absolute top-12 left-[60%] w-[80%] border-t border-dashed border-white/10" />
               )}
               
-              <div className="relative bg-navy-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-8 h-full flex flex-col hover:border-teal/30 transition-colors duration-300">
+              <div className="relative bg-navy-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-5 sm:p-8 h-full flex flex-col hover:border-teal/30 transition-colors duration-300">
                 <div className="flex items-center gap-4 mb-6 relative z-10">
                   <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center border border-teal/20 group-hover:bg-teal/20 transition-colors duration-300 shadow-[0_0_15px_rgba(45,212,191,0.2)]">
                     <step.Icon className="w-6 h-6 text-teal-400" />

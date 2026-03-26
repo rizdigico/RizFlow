@@ -26,7 +26,7 @@ export function Footer() {
       <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
       <Container className="relative">
         <div className="pt-16 pb-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
             {/* Brand */}
             <div className="lg:col-span-2">
               <Link to="/" className="flex items-center gap-3 mb-4 group w-fit">

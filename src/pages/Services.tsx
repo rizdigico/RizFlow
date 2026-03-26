@@ -77,13 +77,13 @@ export function Services() {
         <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
         {/* Hero */}
-        <section className="pt-44 pb-24 relative flex items-center">
+        <section className="pt-28 md:pt-36 lg:pt-44 pb-16 md:pb-24 relative flex items-center">
           <Container className="relative z-10 text-center">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-500/30 bg-[#0A0F1A]/80 backdrop-blur-md mb-8 shadow-[0_0_15px_rgba(0,229,255,0.15)]">
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
               <span className="text-xs font-mono text-teal-400 tracking-widest uppercase">Pricing Architecture</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold font-heading text-white mb-6 leading-tight drop-shadow-[0_0_20px_rgba(0,229,255,0.3)]">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white mb-6 leading-tight drop-shadow-[0_0_20px_rgba(0,229,255,0.3)]">
               Select Your <span className="text-teal-400">Agent Stack</span>
             </h1>
             <p className="text-xl text-slate-400 max-w-xl mx-auto font-mono text-sm tracking-wide">
@@ -119,7 +119,7 @@ export function Services() {
               {process.map((p) => (
                 <div
                   key={p.step}
-                  className="group relative bg-[#0A0F1A]/80 backdrop-blur-3xl rounded-xl p-10 border border-white/5 hover:border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_30px_rgba(0,229,255,0.2)] transition-all duration-500 overflow-hidden"
+                  className="group relative bg-[#0A0F1A]/80 backdrop-blur-3xl rounded-xl p-6 md:p-10 border border-white/5 hover:border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_30px_rgba(0,229,255,0.2)] transition-all duration-500 overflow-hidden"
                 >
                   {/* Scanning line animation */}
                   <div 

@@ -64,7 +64,7 @@ export function About() {
         <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(circle_at_center,white,transparent_90%)] pointer-events-none" />
 
         {/* Hero */}
-        <section className="pt-40 pb-24 relative flex items-center">
+        <section className="pt-28 md:pt-36 lg:pt-40 pb-16 md:pb-24 relative flex items-center">
           <Container className="relative z-10 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0A0F1A]/80 border border-teal-500/30 rounded-md mb-6 shadow-[0_0_15px_rgba(0,229,255,0.1)] backdrop-blur-md">
               <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
@@ -72,7 +72,7 @@ export function About() {
                 Origin Story
               </span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold font-heading text-white mb-6 leading-tight drop-shadow-[0_0_15px_rgba(0,229,255,0.2)]">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white mb-6 leading-tight drop-shadow-[0_0_15px_rgba(0,229,255,0.2)]">
               Built by an Agency Operator,
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">For Agency Operators</span>
@@ -108,7 +108,7 @@ export function About() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
               {/* Mission */}
-              <div className="bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-xl p-10 border border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_40px_rgba(0,229,255,0.1)] hover:border-teal-400/50 transition-all duration-300 group relative overflow-hidden">
+              <div className="bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-xl p-6 md:p-10 border border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_40px_rgba(0,229,255,0.1)] hover:border-teal-400/50 transition-all duration-300 group relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="font-mono text-teal-500/50 text-xs mb-4 uppercase tracking-widest">
                   [ Directive 01 ]
@@ -124,7 +124,7 @@ export function About() {
               </div>
 
               {/* Vision */}
-              <div className="bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-xl p-10 border border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_40px_rgba(0,229,255,0.1)] hover:border-teal-400/50 transition-all duration-300 group relative overflow-hidden">
+              <div className="bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-xl p-6 md:p-10 border border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_40px_rgba(0,229,255,0.1)] hover:border-teal-400/50 transition-all duration-300 group relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="font-mono text-teal-500/50 text-xs mb-4 uppercase tracking-widest">
                   [ Directive 02 ]
@@ -140,7 +140,7 @@ export function About() {
               </div>
 
               {/* Transparency */}
-              <div className="md:col-span-2 bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-xl p-10 lg:p-12 border border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_40px_rgba(0,229,255,0.1)] hover:border-teal-400/50 transition-all duration-300 group relative overflow-hidden">
+              <div className="md:col-span-2 bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-xl p-6 md:p-10 lg:p-12 border border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_40px_rgba(0,229,255,0.1)] hover:border-teal-400/50 transition-all duration-300 group relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/5 blur-[100px] rounded-full group-hover:bg-teal-500/10 transition-colors pointer-events-none" />
                 
@@ -191,7 +191,7 @@ export function About() {
               {timeline.map((item, index) => (
                 <div 
                   key={item.year} 
-                  className="flex flex-col sm:flex-row items-start gap-8 p-8 bg-[#0A0F1A]/40 backdrop-blur-sm border border-white/5 hover:border-teal-500/30 rounded-xl transition-all duration-300 group relative"
+                  className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8 p-5 sm:p-8 bg-[#0A0F1A]/40 backdrop-blur-sm border border-white/5 hover:border-teal-500/30 rounded-xl transition-all duration-300 group relative"
                 >
                   <div className="flex items-center gap-4 sm:w-48 flex-shrink-0 pt-1">
                     <span className="text-teal-500/40 group-hover:text-teal-400 transition-colors text-sm">
