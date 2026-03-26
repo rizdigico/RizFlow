@@ -18,7 +18,7 @@ const jsonLd = {
       '@id': `${SITE_URL}/#organization`,
       name: 'RizFlow',
       url: SITE_URL,
-      logo: `${SITE_URL}/agency-logo-square.png`,
+      logo: `${SITE_URL}/og-banner.png`,
       foundingDate: '2026',
       founder: { '@type': 'Person', name: 'Aariz Arfan' },
       description: 'RizFlow builds and manages agentic AI systems for service-based agencies, saving founders 10-20 hours per week on manual operations.',

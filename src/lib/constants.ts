@@ -21,5 +21,5 @@ export const SEO_DEFAULTS = {
   title: 'RizFlow – AI Operations for Service-Based Agencies | Save 10-20 hrs/week',
   description:
     "Discover how RizFlow's agentic AI saves agency founders 10-20 hrs/week on manual work. Free Operational Audit. Based in Singapore, serving SEA.",
-  ogImage: `${SITE_URL}/agency-logo-square.png`,
+  ogImage: `${SITE_URL}/og-banner.png`,
 }
