@@ -13,18 +13,14 @@ const schema = z.object({
   website: z
     .string()
     .optional()
-    .transform(val => {
-      if (!val || val.trim() === '') return ''
-      const trimmed = val.trim()
-      if (!/^[a-zA-Z][\w+\-.]*:\/\//.test(trimmed)) return `https://${trimmed}`
-      return trimmed
-    })
     .refine(val => {
-      if (!val) return true
+      if (!val || val.trim() === '') return true
+      let url = val.trim()
+      if (!/^[a-zA-Z][\w+\-.]*:\/\//.test(url)) url = `https://${url}`
       try {
-        const url = new URL(val)
+        const parsed = new URL(url)
         const blocked = ['javascript:', 'data:', 'vbscript:', 'file:', 'blob:']
-        return !blocked.includes(url.protocol.toLowerCase())
+        return !blocked.includes(parsed.protocol.toLowerCase())
       } catch {
         return false
       }
@@ -72,10 +68,14 @@ export function AuditForm({ className }: { className?: string }) {
   const onSubmit = async (data: FormData) => {
     setServerError('')
     try {
+      const rawWebsite = data.website?.trim() || ''
+      const normalizedWebsite = rawWebsite && !/^[a-zA-Z][\w+\-.]*:\/\//.test(rawWebsite)
+        ? `https://${rawWebsite}`
+        : rawWebsite
       const payload = {
         name: sanitizeInput(data.name),
         agency: sanitizeInput(data.agency),
-        website: sanitizeInput(data.website || ''),
+        website: sanitizeInput(normalizedWebsite),
         email: sanitizeInput(data.email),
         phone: sanitizeInput(data.phone || ''),
         referral: data.referral || '',
