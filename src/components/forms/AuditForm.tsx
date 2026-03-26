@@ -12,9 +12,23 @@ const schema = z.object({
   agency: z.string().min(2, 'Agency name required').max(100),
   website: z
     .string()
-    .url('Enter a valid URL (e.g. https://yoursite.com)')
-    .or(z.literal(''))
-    .optional(),
+    .optional()
+    .transform(val => {
+      if (!val || val.trim() === '') return ''
+      const trimmed = val.trim()
+      if (!/^[a-zA-Z][\w+\-.]*:\/\//.test(trimmed)) return `https://${trimmed}`
+      return trimmed
+    })
+    .refine(val => {
+      if (!val) return true
+      try {
+        const url = new URL(val)
+        const blocked = ['javascript:', 'data:', 'vbscript:', 'file:', 'blob:']
+        return !blocked.includes(url.protocol.toLowerCase())
+      } catch {
+        return false
+      }
+    }, 'Enter a valid URL (e.g. yoursite.com or https://yoursite.com)'),
   email: z.string().email('Enter a valid email address'),
   phone: z.string().max(20).optional(),
   referral: z.string().optional(),
@@ -109,8 +123,8 @@ export function AuditForm({ className }: { className?: string }) {
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Agency Website</label>
           <input
-            placeholder="https://youragency.com"
-            type="url"
+            placeholder="youragency.com or https://youragency.com"
+            type="text"
             className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
             {...register('website')}
           />
