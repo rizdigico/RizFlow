@@ -80,6 +80,7 @@ export function AuditForm({ className }: { className?: string }) {
         email: sanitizeInput(data.email),
         phone: sanitizeInput(data.phone || ''),
         referral: data.referral || '',
+        consent: data.consent,
       }
 
       const res = await fetch(AUDIT_WEBHOOK, {
