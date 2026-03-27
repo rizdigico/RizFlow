@@ -83,12 +83,12 @@ export function AuditForm({ className }: { className?: string }) {
         consent: data.consent,
       }
 
-      const res = await fetch(AUDIT_WEBHOOK, {
+      await fetch(AUDIT_WEBHOOK, {
         method: 'POST',
+        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
-      if (!res.ok) throw new Error('Submission failed')
       navigate('/thank-you')
     } catch {
       setServerError('System Error: Submission failed. Try again or email rizdigi.co@gmail.com')

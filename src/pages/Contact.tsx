@@ -39,8 +39,9 @@ export function Contact() {
   const onSubmit = async (data: FormData) => {
     setServerError('')
     try {
-      const res = await fetch(CONTACT_WEBHOOK, {
+      await fetch(CONTACT_WEBHOOK, {
         method: 'POST',
+        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: sanitizeInput(data.name),
@@ -49,7 +50,6 @@ export function Contact() {
           message: sanitizeInput(data.message, 2000),
         }),
       })
-      if (!res.ok) throw new Error('Submission failed')
       setSubmitted(true)
     } catch {
       setServerError('System Error: Submission failed. Try again or email rizdigi.co@gmail.com')
