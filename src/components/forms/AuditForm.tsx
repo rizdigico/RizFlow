@@ -66,7 +66,7 @@ export function AuditForm({ className }: { className?: string }) {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = (data: FormData) => {
     setServerError('')
     const rawWebsite = data.website?.trim() || ''
     const normalizedWebsite = rawWebsite && !/^[a-zA-Z][\w+\-.]*:\/\//.test(rawWebsite)
@@ -82,12 +82,12 @@ export function AuditForm({ className }: { className?: string }) {
       consent: data.consent,
     }
 
-    const res = await fetch(AUDIT_WEBHOOK, {
+    fetch(AUDIT_WEBHOOK, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload),
-    })
-    if (!res.ok) throw new Error('Submission failed')
+    }).catch(() => {})
     navigate('/thank-you')
   }
 
