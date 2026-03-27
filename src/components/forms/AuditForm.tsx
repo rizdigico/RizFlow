@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/Button'
 import { sanitizeInput, cn } from '@/lib/utils'
 
-const AUDIT_WEBHOOK = 'https://fin-dramatic-camel-tide.trycloudflare.com/webhook/audit'
+const AUDIT_WEBHOOK = 'https://riz-flow-mc-db.vercel.app/api/webhook/audit'
 
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
@@ -82,14 +82,12 @@ export function AuditForm({ className }: { className?: string }) {
       consent: data.consent,
     }
 
-    // Fire and forget — don't block navigation on webhook response
-    fetch(AUDIT_WEBHOOK, {
+    const res = await fetch(AUDIT_WEBHOOK, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
-    }).catch(() => {})
-
+    })
+    if (!res.ok) throw new Error('Submission failed')
     navigate('/thank-you')
   }
 

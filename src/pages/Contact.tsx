@@ -8,7 +8,7 @@ import { CheckCircleIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/o
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
 import { sanitizeInput } from '@/lib/utils'
 
-const CONTACT_WEBHOOK = 'https://fin-dramatic-camel-tide.trycloudflare.com/webhook/contact'
+const CONTACT_WEBHOOK = 'https://riz-flow-mc-db.vercel.app/api/webhook/contact'
 
 const contactBreadcrumb = {
   '@context': 'https://schema.org',
@@ -37,20 +37,22 @@ export function Contact() {
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = async (data: FormData) => {
-    // Fire and forget — don't block success on webhook response
-    fetch(CONTACT_WEBHOOK, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        name: sanitizeInput(data.name),
-        email: sanitizeInput(data.email),
-        company: sanitizeInput(data.company),
-        message: sanitizeInput(data.message, 2000),
-      }),
-    }).catch(() => {})
-
-    setSubmitted(true)
+    try {
+      const res = await fetch(CONTACT_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: sanitizeInput(data.name),
+          email: sanitizeInput(data.email),
+          company: sanitizeInput(data.company),
+          message: sanitizeInput(data.message, 2000),
+        }),
+      })
+      if (!res.ok) throw new Error('Submission failed')
+      setSubmitted(true)
+    } catch {
+      setServerError('System Error: Submission failed. Please try again.')
+    }
   }
 
   return (
