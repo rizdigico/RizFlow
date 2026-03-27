@@ -86,7 +86,7 @@ export function AuditForm({ className }: { className?: string }) {
       await fetch(AUDIT_WEBHOOK, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload),
       })
       navigate('/thank-you')
