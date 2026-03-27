@@ -4,8 +4,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '@/components/ui/Button'
-import { FORMSPREE_ENDPOINT } from '@/lib/constants'
 import { sanitizeInput, cn } from '@/lib/utils'
+
+const AUDIT_WEBHOOK = 'https://trade-participant-whom-shield.trycloudflare.com/webhook/audit'
 
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
@@ -79,17 +80,14 @@ export function AuditForm({ className }: { className?: string }) {
         email: sanitizeInput(data.email),
         phone: sanitizeInput(data.phone || ''),
         referral: data.referral || '',
-        _subject: `New Audit Request from ${data.agency}`,
       }
 
-      if (FORMSPREE_ENDPOINT) {
-        const res = await fetch(FORMSPREE_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(payload),
-        })
-        if (!res.ok) throw new Error('Submission failed')
-      }
+      const res = await fetch(AUDIT_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) throw new Error('Submission failed')
       navigate('/thank-you')
     } catch {
       setServerError('System Error: Submission failed. Try again or email rizdigi.co@gmail.com')

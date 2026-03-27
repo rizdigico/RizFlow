@@ -5,8 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '@/components/ui/Button'
 import { CheckCircleIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline'
-import { FORMSPREE_ENDPOINT, SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
+import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
 import { sanitizeInput } from '@/lib/utils'
+
+const CONTACT_WEBHOOK = 'https://trade-participant-whom-shield.trycloudflare.com/webhook/contact'
 
 const contactBreadcrumb = {
   '@context': 'https://schema.org',
@@ -27,6 +29,7 @@ type FormData = z.infer<typeof schema>
 
 export function Contact() {
   const [submitted, setSubmitted] = useState(false)
+  const [serverError, setServerError] = useState('')
   const {
     register,
     handleSubmit,
@@ -34,20 +37,23 @@ export function Contact() {
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = async (data: FormData) => {
-    if (FORMSPREE_ENDPOINT) {
-      await fetch(FORMSPREE_ENDPOINT, {
+    setServerError('')
+    try {
+      const res = await fetch(CONTACT_WEBHOOK, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: sanitizeInput(data.name),
           email: sanitizeInput(data.email),
           company: sanitizeInput(data.company),
           message: sanitizeInput(data.message, 2000),
-          _subject: `Contact / Audit Request from ${data.company}`,
         }),
       })
+      if (!res.ok) throw new Error('Submission failed')
+      setSubmitted(true)
+    } catch {
+      setServerError('System Error: Submission failed. Try again or email rizdigi.co@gmail.com')
     }
-    setSubmitted(true)
   }
 
   return (
@@ -183,6 +189,12 @@ export function Contact() {
                     {errors.message && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.message.message}</p>}
                   </div>
 
+                  {serverError && (
+                    <div className="bg-red-500/10 border border-red-500/30 text-red-400 font-mono text-xs uppercase tracking-wider px-4 py-3 rounded-sm flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></span>
+                      {serverError}
+                    </div>
+                  )}
                   <Button
                     type="submit"
                     variant="cta"
