@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/Button'
 import { sanitizeInput, cn } from '@/lib/utils'
 
-const AUDIT_WEBHOOK = 'https://trade-participant-whom-shield.trycloudflare.com/webhook/audit'
+const AUDIT_WEBHOOK = 'https://fin-dramatic-camel-tide.trycloudflare.com/webhook/audit'
 
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),

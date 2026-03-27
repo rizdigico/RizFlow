@@ -8,7 +8,7 @@ import { CheckCircleIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/o
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
 import { sanitizeInput } from '@/lib/utils'
 
-const CONTACT_WEBHOOK = 'https://trade-participant-whom-shield.trycloudflare.com/webhook/contact'
+const CONTACT_WEBHOOK = 'https://fin-dramatic-camel-tide.trycloudflare.com/webhook/contact'
 
 const contactBreadcrumb = {
   '@context': 'https://schema.org',
