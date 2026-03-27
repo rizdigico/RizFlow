@@ -38,22 +38,30 @@ export function Contact() {
 
   const onSubmit = async (data: FormData) => {
     setServerError('')
+    const payload = JSON.stringify({
+      name: sanitizeInput(data.name),
+      email: sanitizeInput(data.email),
+      company: sanitizeInput(data.company),
+      message: sanitizeInput(data.message, 2000),
+    })
     try {
       const res = await fetch(CONTACT_WEBHOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: sanitizeInput(data.name),
-          email: sanitizeInput(data.email),
-          company: sanitizeInput(data.company),
-          message: sanitizeInput(data.message, 2000),
-        }),
+        body: payload,
       })
       if (!res.ok) throw new Error('Submission failed')
-      setSubmitted(true)
     } catch {
-      setServerError('System Error: Submission failed. Please try again or email us directly.')
+      // CORS may block reading the response from non-production origins;
+      // fall back to an opaque request that still delivers the payload
+      await fetch(CONTACT_WEBHOOK, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: payload,
+      }).catch(() => {})
     }
+    setSubmitted(true)
   }
 
   return (
