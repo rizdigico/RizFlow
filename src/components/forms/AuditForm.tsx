@@ -68,31 +68,29 @@ export function AuditForm({ className }: { className?: string }) {
 
   const onSubmit = async (data: FormData) => {
     setServerError('')
-    try {
-      const rawWebsite = data.website?.trim() || ''
-      const normalizedWebsite = rawWebsite && !/^[a-zA-Z][\w+\-.]*:\/\//.test(rawWebsite)
-        ? `https://${rawWebsite}`
-        : rawWebsite
-      const payload = {
-        name: sanitizeInput(data.name),
-        agency: sanitizeInput(data.agency),
-        website: sanitizeInput(normalizedWebsite),
-        email: sanitizeInput(data.email),
-        phone: sanitizeInput(data.phone || ''),
-        referral: data.referral || '',
-        consent: data.consent,
-      }
-
-      await fetch(AUDIT_WEBHOOK, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload),
-      })
-      navigate('/thank-you')
-    } catch {
-      setServerError('System Error: Submission failed. Try again or email rizdigi.co@gmail.com')
+    const rawWebsite = data.website?.trim() || ''
+    const normalizedWebsite = rawWebsite && !/^[a-zA-Z][\w+\-.]*:\/\//.test(rawWebsite)
+      ? `https://${rawWebsite}`
+      : rawWebsite
+    const payload = {
+      name: sanitizeInput(data.name),
+      agency: sanitizeInput(data.agency),
+      website: sanitizeInput(normalizedWebsite),
+      email: sanitizeInput(data.email),
+      phone: sanitizeInput(data.phone || ''),
+      referral: data.referral || '',
+      consent: data.consent,
     }
+
+    // Fire and forget — don't block navigation on webhook response
+    fetch(AUDIT_WEBHOOK, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload),
+    }).catch(() => {})
+
+    navigate('/thank-you')
   }
 
   return (

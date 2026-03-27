@@ -37,23 +37,20 @@ export function Contact() {
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = async (data: FormData) => {
-    setServerError('')
-    try {
-      await fetch(CONTACT_WEBHOOK, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          name: sanitizeInput(data.name),
-          email: sanitizeInput(data.email),
-          company: sanitizeInput(data.company),
-          message: sanitizeInput(data.message, 2000),
-        }),
-      })
-      setSubmitted(true)
-    } catch {
-      setServerError('System Error: Submission failed. Try again or email rizdigi.co@gmail.com')
-    }
+    // Fire and forget — don't block success on webhook response
+    fetch(CONTACT_WEBHOOK, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        name: sanitizeInput(data.name),
+        email: sanitizeInput(data.email),
+        company: sanitizeInput(data.company),
+        message: sanitizeInput(data.message, 2000),
+      }),
+    }).catch(() => {})
+
+    setSubmitted(true)
   }
 
   return (
