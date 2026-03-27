@@ -66,7 +66,7 @@ export function AuditForm({ className }: { className?: string }) {
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     setServerError('')
     const rawWebsite = data.website?.trim() || ''
     const normalizedWebsite = rawWebsite && !/^[a-zA-Z][\w+\-.]*:\/\//.test(rawWebsite)
@@ -82,13 +82,17 @@ export function AuditForm({ className }: { className?: string }) {
       consent: data.consent,
     }
 
-    fetch(AUDIT_WEBHOOK, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload),
-    }).catch(() => {})
-    navigate('/thank-you')
+    try {
+      const res = await fetch(AUDIT_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) throw new Error('Submission failed')
+      navigate('/thank-you')
+    } catch {
+      setServerError('System Error: Submission failed. Please try again or email us directly.')
+    }
   }
 
   return (
