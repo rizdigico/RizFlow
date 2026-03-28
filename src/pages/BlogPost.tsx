@@ -1,11 +1,11 @@
 import { Helmet } from 'react-helmet-async'
 import { useParams, Link } from 'react-router-dom'
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
-import { blogPostsMeta } from './Blog'
+import { getBlogPost } from '@/data/blog-posts'
 
 export function BlogPost() {
   const { slug } = useParams<{ slug: string }>()
-  const post = slug ? blogPostsMeta[slug] : null
+  const post = slug ? getBlogPost(slug) : undefined
 
   if (!post) {
     return (
@@ -29,12 +29,12 @@ export function BlogPost() {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: post.title.replace(' | RizFlow', ''),
+    headline: post.title,
     description: post.description,
     url: `${SITE_URL}/blog/${slug}`,
-    datePublished: post.published,
-    dateModified: post.published,
-    author: { '@type': 'Person', name: 'Aariz Arfan', url: `${SITE_URL}/about` },
+    datePublished: post.date,
+    dateModified: post.date,
+    author: { '@type': 'Person', name: post.author, url: `${SITE_URL}/about` },
     publisher: { '@type': 'Organization', name: 'RizFlow', url: SITE_URL, logo: `${SITE_URL}/agency-logo-square.png` },
     image: SEO_DEFAULTS.ogImage,
   }
@@ -45,26 +45,26 @@ export function BlogPost() {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
       { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
-      { '@type': 'ListItem', position: 3, name: post.title.replace(' | RizFlow', ''), item: `${SITE_URL}/blog/${slug}` },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE_URL}/blog/${slug}` },
     ],
   }
 
   return (
     <>
       <Helmet>
-        <title>{post.title}</title>
+        <title>{post.title} | RizFlow</title>
         <meta name="description" content={post.description} />
         <meta name="keywords" content={post.keywords} />
         <link rel="canonical" href={`${SITE_URL}/blog/${slug}`} />
         <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/blog/${slug}`} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`${SITE_URL}/blog/${slug}`} />
-        <meta property="og:title" content={post.title} />
+        <meta property="og:title" content={`${post.title} | RizFlow`} />
         <meta property="og:description" content={post.description} />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:title" content={`${post.title} | RizFlow`} />
         <meta name="twitter:description" content={post.description} />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(breadcrumb)}</script>
@@ -76,25 +76,79 @@ export function BlogPost() {
           <Link to="/blog" className="inline-flex items-center gap-2 text-teal-400 font-mono text-xs uppercase tracking-widest mb-8 hover:text-teal-300 transition-colors">
             ← Back to Blog
           </Link>
-          <p className="text-xs font-mono text-teal-500 uppercase tracking-widest mb-4">{post.published}</p>
-          <h1 className="text-3xl md:text-4xl font-bold font-heading text-white mb-6 leading-tight">
-            {post.title.replace(' | RizFlow', '')}
-          </h1>
-          <p className="text-slate-400 font-mono text-sm leading-relaxed mb-12">{post.description}</p>
 
-          <div className="bg-[#0A0F1A]/80 border border-teal-500/20 rounded-xl p-8 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-sm border border-teal-500/30 bg-teal-500/10 text-teal-400 text-xs font-mono uppercase tracking-widest">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-              Coming Soon
+          {/* Post header */}
+          <div className="mb-12">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <p className="text-xs font-mono text-teal-500 uppercase tracking-widest">{post.date}</p>
+              <span className="text-slate-600">·</span>
+              <p className="text-xs font-mono text-slate-500">{post.readingTime}</p>
             </div>
-            <p className="text-slate-400 font-mono text-sm mb-6">{'>'} Full article coming soon. In the meantime, book your free audit.</p>
-            <Link
-              to="/audit"
-              className="inline-flex items-center gap-2 bg-teal-500/20 border border-teal-400 text-teal-400 uppercase tracking-widest text-xs px-6 py-3 rounded hover:bg-teal-400 hover:text-[#050A14] transition-all duration-300"
-            >
-              Get Free Operational Audit
-            </Link>
+            <h1 className="text-3xl md:text-4xl font-bold font-heading text-white mb-4 leading-tight">
+              {post.title}
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 mb-4">
+              <p className="text-sm text-slate-400 font-mono">By {post.author}</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border border-teal-500/20 text-teal-500/70"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
+
+          {/* Post content */}
+          {post.content ? (
+            <article className="prose prose-invert prose-teal max-w-none
+              prose-headings:font-heading prose-headings:text-white prose-headings:font-bold
+              prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
+              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+              prose-p:text-slate-300 prose-p:leading-relaxed prose-p:mb-4 prose-p:font-mono prose-p:text-sm
+              prose-strong:text-white prose-strong:font-semibold
+              prose-em:text-slate-200
+              prose-ul:text-slate-300 prose-ul:font-mono prose-ul:text-sm prose-ul:space-y-2 prose-ul:mb-6
+              prose-ol:text-slate-300 prose-ol:font-mono prose-ol:text-sm prose-ol:space-y-2 prose-ol:mb-6
+              prose-li:text-slate-300
+              prose-a:text-teal-400 prose-a:no-underline hover:prose-a:text-teal-300
+            ">
+              {post.content}
+            </article>
+          ) : (
+            <div className="bg-[#0A0F1A]/80 border border-teal-500/20 rounded-xl p-8 text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-sm border border-teal-500/30 bg-teal-500/10 text-teal-400 text-xs font-mono uppercase tracking-widest">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                Coming Soon
+              </div>
+              <p className="text-slate-400 font-mono text-sm mb-6">{'>'} Full article coming soon. In the meantime, book your free audit.</p>
+              <Link
+                to="/audit"
+                className="inline-flex items-center gap-2 bg-teal-500/20 border border-teal-400 text-teal-400 uppercase tracking-widest text-xs px-6 py-3 rounded hover:bg-teal-400 hover:text-[#050A14] transition-all duration-300"
+              >
+                Get Free Operational Audit
+              </Link>
+            </div>
+          )}
+
+          {/* Bottom CTA */}
+          {post.content && (
+            <div className="mt-16 pt-8 border-t border-teal-500/20">
+              <div className="bg-[#0A0F1A]/80 border border-teal-500/20 rounded-xl p-8 text-center">
+                <p className="text-white font-heading font-bold text-xl mb-2">Ready to automate your agency operations?</p>
+                <p className="text-slate-400 font-mono text-sm mb-6">{'>'} See exactly how much time you can save with a free operational audit.</p>
+                <Link
+                  to="/audit"
+                  className="inline-flex items-center gap-2 bg-teal-500/20 border border-teal-400 text-teal-400 uppercase tracking-widest text-xs px-6 py-3 rounded hover:bg-teal-400 hover:text-[#050A14] transition-all duration-300"
+                >
+                  Get Free Operational Audit
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </>

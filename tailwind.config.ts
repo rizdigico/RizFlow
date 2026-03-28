@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss'
 import plugin from 'tailwindcss/plugin'
+import typography from '@tailwindcss/typography'
 
 const config: Config = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -98,6 +99,7 @@ const config: Config = {
     },
   },
   plugins: [
+    typography,
     plugin(function ({ addUtilities }) {
       const meshSvg = (gridSize: number, opacity: number, colorHex: string = '%2306B6D4') => {
         const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${gridSize}' height='${gridSize}'><path d='M ${gridSize} 0 L 0 0 0 ${gridSize}' fill='none' stroke='${colorHex}' stroke-width='1' stroke-opacity='${opacity}'/></svg>`
