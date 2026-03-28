@@ -50,18 +50,11 @@ export function Contact() {
         headers: { 'Content-Type': 'application/json' },
         body: payload,
       })
-      if (!res.ok) throw new Error('Submission failed')
+      if (!res.ok) throw new Error('Server error')
+      setSubmitted(true)
     } catch {
-      // CORS may block reading the response from non-production origins;
-      // fall back to an opaque request that still delivers the payload
-      await fetch(CONTACT_WEBHOOK, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: payload,
-      }).catch(() => {})
+      setServerError('System Error: Submission failed. Please try again or email us directly.')
     }
-    setSubmitted(true)
   }
 
   return (

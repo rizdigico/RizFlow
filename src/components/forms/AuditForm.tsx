@@ -82,25 +82,17 @@ export function AuditForm({ className }: { className?: string }) {
       consent: data.consent,
     }
 
-    const body = JSON.stringify(payload)
     try {
       const res = await fetch(AUDIT_WEBHOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body,
+        body: JSON.stringify(payload),
       })
-      if (!res.ok) throw new Error('Submission failed')
+      if (!res.ok) throw new Error('Server error')
+      navigate('/thank-you')
     } catch {
-      // CORS may block reading the response from non-production origins;
-      // fall back to an opaque request that still delivers the payload
-      await fetch(AUDIT_WEBHOOK, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body,
-      }).catch(() => {})
+      setServerError('System Error: Submission failed. Please try again or email us directly.')
     }
-    navigate('/thank-you')
   }
 
   return (
