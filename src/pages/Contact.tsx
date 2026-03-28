@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '@/components/ui/Button'
-import { CheckCircleIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon, EnvelopeIcon, MapPinIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline'
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
 import { sanitizeInput } from '@/lib/utils'
 
@@ -115,6 +115,15 @@ export function Contact() {
                   <div>
                     <p className="text-[10px] text-teal-500 font-mono uppercase tracking-widest mb-0.5">Email Protocol</p>
                     <p className="text-sm font-mono text-white">rizdigi.co@gmail.com</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-slate-300">
+                  <div className="w-10 h-10 rounded-sm bg-[#050A14] flex items-center justify-center border border-teal-500/30 shadow-[0_0_15px_rgba(0,229,255,0.1)]">
+                    <ChatBubbleLeftEllipsisIcon className="w-5 h-5 text-teal-400" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-teal-500 font-mono uppercase tracking-widest mb-0.5">Voice Protocol</p>
+                    <p className="text-sm font-mono text-white">+65 9181-7631</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 text-slate-300">

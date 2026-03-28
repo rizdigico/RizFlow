@@ -1,9 +1,15 @@
 import { Helmet } from 'react-helmet-async'
 import { useParams, Link } from 'react-router-dom'
+import { useRef } from 'react'
+import { motion } from 'framer-motion'
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
 import { getBlogPost } from '@/data/blog-posts'
+import { FlowingMesh } from '@/components/animations/FlowingMesh'
+import { useParallaxScroll } from '@/hooks/useFlowingAnimation'
 
 export function BlogPost() {
+  const meshRef = useRef<HTMLDivElement>(null)
+  const parallaxProps = useParallaxScroll(0.5)
   const { slug } = useParams<{ slug: string }>()
   const post = slug ? getBlogPost(slug) : undefined
 
@@ -71,7 +77,19 @@ export function BlogPost() {
         <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
       </Helmet>
 
-      <section className="relative min-h-screen pt-32 pb-24 bg-[#050A14] bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px]">
+      <div className="relative min-h-screen pt-32 pb-24 bg-[#050A14] w-full overflow-hidden">
+        {/* Shared Animated flowing mesh background */}
+        <motion.div
+          ref={meshRef}
+          className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none"
+          style={parallaxProps.y ? { y: parallaxProps.y } : {}}
+        >
+          <FlowingMesh opacity={0.6} parallax={true} />
+        </motion.div>
+
+        {/* Shared Grid pattern overlay */}
+        <div className="absolute inset-0 z-0 bg-[url('/grid.svg')] bg-[length:32px_32px] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0)_80%)] opacity-10 pointer-events-none" />
+
         <div className="container-width relative z-10 max-w-3xl mx-auto px-4">
           <Link to="/blog" className="inline-flex items-center gap-2 text-teal-400 font-mono text-xs uppercase tracking-widest mb-8 hover:text-teal-300 transition-colors">
             ← Back to Blog
@@ -106,14 +124,14 @@ export function BlogPost() {
           {post.content ? (
             <article className="prose prose-invert prose-teal max-w-none
               prose-headings:font-heading prose-headings:text-white prose-headings:font-bold
-              prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
-              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-              prose-p:text-slate-300 prose-p:leading-relaxed prose-p:mb-4 prose-p:font-mono prose-p:text-sm
+              prose-h2:text-3xl prose-h2:mt-24 prose-h2:mb-12
+              prose-h3:text-2xl prose-h3:mt-16 prose-h3:mb-8
+              prose-p:text-slate-200 prose-p:leading-[2.2] prose-p:mb-12 prose-p:text-lg prose-p:font-sans
               prose-strong:text-white prose-strong:font-semibold
               prose-em:text-slate-200
-              prose-ul:text-slate-300 prose-ul:font-mono prose-ul:text-sm prose-ul:space-y-2 prose-ul:mb-6
-              prose-ol:text-slate-300 prose-ol:font-mono prose-ol:text-sm prose-ol:space-y-2 prose-ol:mb-6
-              prose-li:text-slate-300
+              prose-ul:text-slate-200 prose-ul:text-lg prose-ul:font-sans prose-ul:leading-[2.2] prose-ul:space-y-6 prose-ul:mb-12
+              prose-ol:text-slate-200 prose-ol:text-lg prose-ol:font-sans prose-ol:leading-[2.2] prose-ol:space-y-6 prose-ol:mb-12
+              prose-li:text-slate-200
               prose-a:text-teal-400 prose-a:no-underline hover:prose-a:text-teal-300
             ">
               {post.content}
@@ -150,7 +168,7 @@ export function BlogPost() {
             </div>
           )}
         </div>
-      </section>
+      </div>
     </>
   )
 }

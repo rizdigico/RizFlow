@@ -1,7 +1,11 @@
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
+import { useRef } from 'react'
+import { motion } from 'framer-motion'
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
 import { blogPosts } from '@/data/blog-posts'
+import { FlowingMesh } from '@/components/animations/FlowingMesh'
+import { useParallaxScroll } from '@/hooks/useFlowingAnimation'
 
 const blogBreadcrumb = {
   '@context': 'https://schema.org',
@@ -13,6 +17,9 @@ const blogBreadcrumb = {
 }
 
 export function Blog() {
+  const meshRef = useRef<HTMLDivElement>(null)
+  const parallaxProps = useParallaxScroll(0.5)
+
   return (
     <>
       <Helmet>
@@ -34,12 +41,24 @@ export function Blog() {
         <script type="application/ld+json">{JSON.stringify(blogBreadcrumb)}</script>
       </Helmet>
 
-      <section className="relative min-h-screen pt-32 pb-24 bg-[#050A14] bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px]">
+      <div className="relative min-h-screen pt-32 pb-24 bg-[#050A14] w-full overflow-hidden">
+        {/* Shared Animated flowing mesh background */}
+        <motion.div
+          ref={meshRef}
+          className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none"
+          style={parallaxProps.y ? { y: parallaxProps.y } : {}}
+        >
+          <FlowingMesh opacity={0.6} parallax={true} />
+        </motion.div>
+
+        {/* Shared Grid pattern overlay */}
+        <div className="absolute inset-0 z-0 bg-[url('/grid.svg')] bg-[length:32px_32px] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0)_80%)] opacity-10 pointer-events-none" />
+
         <div className="container-width relative z-10 max-w-4xl mx-auto px-4">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-sm border border-teal-500/30 bg-teal-500/10 text-teal-400 text-xs font-mono uppercase tracking-widest">
               <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-              Knowledge Base
+              Insights
             </div>
             <h1 className="text-4xl md:text-5xl font-bold font-heading text-white mb-4 leading-tight">
               AI Operations Blog
@@ -64,7 +83,7 @@ export function Blog() {
                   <p className="text-xs font-mono text-slate-500">{post.author}</p>
                 </div>
                 <h2 className="text-lg font-bold text-white group-hover:text-teal-300 transition-colors mb-2">{post.title}</h2>
-                <p className="text-sm text-slate-400 font-mono line-clamp-2 mb-3">{post.excerpt}</p>
+                <p className="text-base text-slate-300 font-sans leading-relaxed line-clamp-2 mb-4">{post.excerpt}</p>
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map((tag) => (
                     <span
@@ -79,7 +98,7 @@ export function Blog() {
             ))}
           </div>
         </div>
-      </section>
+      </div>
     </>
   )
 }

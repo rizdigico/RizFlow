@@ -123,7 +123,7 @@ const privacyPolicy: TabContent = {
       content: [
         'For questions, requests, or concerns regarding this Privacy Policy, please contact:',
         '• Email: rizdigi.co@gmail.com',
-        '• Phone: +65 xxxx xxxx (if applicable)',
+        '• Phone: +65 9181-7631',
       ],
     },
   ],
