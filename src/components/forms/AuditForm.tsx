@@ -83,12 +83,12 @@ export function AuditForm({ className }: { className?: string }) {
     }
 
     try {
-      await fetch(AUDIT_WEBHOOK, {
+      const res = await fetch(AUDIT_WEBHOOK, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
+      if (!res.ok) throw new Error('Server error')
       navigate('/thank-you')
     } catch {
       setServerError('System Error: Submission failed. Please try again or email us directly.')
