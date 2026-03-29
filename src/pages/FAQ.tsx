@@ -14,7 +14,7 @@ const faqs = [
   {
     question: 'What is the typical onboarding timeline?',
     answer:
-      'Most agencies are fully live within 48 hours of kickoff. The process includes a 30-minute strategy call, workflow mapping session, and agent configuration. Your team is up and running with full support.',
+      'Most agencies are fully live within 1-2 weeks of kickoff. The process includes a 30-minute strategy call, workflow mapping session, and agent configuration. Your team is up and running with full support.',
   },
   {
     question: 'Is my data secure and compliant?',

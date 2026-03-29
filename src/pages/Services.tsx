@@ -7,7 +7,7 @@ import { FlowingMesh } from '@/components/animations/FlowingMesh'
 
 const process = [
   { step: '01', title: 'DISCOVERY PROTOCOL', desc: 'Free 30-min audit to map your current workflows and identify automation opportunities.', status: 'INITIATING' },
-  { step: '02', title: 'PROPOSAL COMPILATION', desc: 'Custom implementation plan with clear scope, timeline, and expected ROI — delivered within 48 hours.', status: 'AWAITING AUTH' },
+  { step: '02', title: 'PROPOSAL COMPILATION', desc: 'Custom implementation plan with clear scope, timeline, and expected ROI — delivered within 1-2 weeks.', status: 'AWAITING AUTH' },
   { step: '03', title: 'AGENT CONFIGURATION', desc: 'Our team builds and configures your agent stack, connects your tools, and tests all workflows.', status: 'DEPLOYING' },
   { step: '04', title: 'TEAM SYNCHRONIZATION', desc: 'Live walkthrough with your team. We ensure everyone knows how to work alongside the agents.', status: 'SYNCING' },
   { step: '05', title: 'GO LIVE & MONITOR', desc: 'Agents go live. We monitor closely for the first 2 weeks and fine-tune based on real performance.', status: 'ACTIVE' },

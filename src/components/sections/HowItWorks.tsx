@@ -56,7 +56,7 @@ const steps = [
     number: '02',
     Icon: CpuChipIcon,
     title: 'Deploy',
-    description: 'Our AI agents are configured and seamlessly integrated into your existing tools. No rip-and-replace. Your team is live within 48 hours.',
+    description: 'Our AI agents are configured and seamlessly integrated into your existing tools. No rip-and-replace. Your team is live within 1-2 weeks.',
     cta: 'See Integrations',
     ctaHref: '#integrations',
     visual: <DeployCard />,

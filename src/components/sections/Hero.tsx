@@ -73,7 +73,7 @@ export function Hero() {
 
             {/* Trust indicators */}
             <motion.div className="flex flex-wrap items-center gap-6 pt-6 border-t border-white/10" variants={ANIMATION_VARIANTS.fadeIn}>
-              {['PDPA compliant', 'Bank-Grade Security', 'Live in 48 Hours'].map((item, i) => (
+              {['PDPA compliant', 'Bank-Grade Security', 'Live in 1-2 Weeks'].map((item, i) => (
                 <motion.div
                   key={item}
                   className="flex items-center gap-2 text-slate-300 text-sm font-medium"
