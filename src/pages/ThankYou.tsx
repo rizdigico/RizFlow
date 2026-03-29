@@ -146,8 +146,8 @@ export function ThankYou() {
 
           <div className="text-center mt-12 font-mono text-xs text-slate-600 uppercase tracking-widest">
             <span className="opacity-50">Support_Channel: </span>
-            <a href="mailto:rizdigi.co@gmail.com" className="text-teal-400/70 hover:text-teal-400 transition-colors">
-              rizdigi.co@gmail.com
+            <a href="mailto:main@rizflow.co" className="text-teal-400/70 hover:text-teal-400 transition-colors">
+              main@rizflow.co
             </a>
           </div>
         </div>

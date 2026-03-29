@@ -122,7 +122,7 @@ const privacyPolicy: TabContent = {
       title: '1.11 Contact Us',
       content: [
         'For questions, requests, or concerns regarding this Privacy Policy, please contact:',
-        '• Email: rizdigi.co@gmail.com',
+        '• Email: main@rizflow.co',
         '• Phone: +65 9181-7631',
       ],
     },

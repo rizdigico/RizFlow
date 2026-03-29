@@ -23,7 +23,7 @@ const jsonLd = {
       founder: { '@type': 'Person', name: 'Aariz Arfan' },
       description: 'RizFlow builds and manages agentic AI systems for service-based agencies, saving founders 10-20 hours per week on manual operations.',
       address: { '@type': 'PostalAddress', addressCountry: 'SG', addressLocality: 'Singapore' },
-      contactPoint: { '@type': 'ContactPoint', email: 'rizdigi.co@gmail.com', contactType: 'customer service' },
+      contactPoint: { '@type': 'ContactPoint', email: 'main@rizflow.co', contactType: 'customer service' },
       sameAs: [
         'https://www.linkedin.com/in/aariz-arfan/',
         'https://www.instagram.com/rizflow.ai/',

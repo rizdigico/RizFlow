@@ -114,7 +114,7 @@ export function Contact() {
                   </div>
                   <div>
                     <p className="text-[10px] text-teal-500 font-mono uppercase tracking-widest mb-0.5">Email Protocol</p>
-                    <p className="text-sm font-mono text-white">rizdigi.co@gmail.com</p>
+                    <p className="text-sm font-mono text-white">main@rizflow.co</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 text-slate-300">
