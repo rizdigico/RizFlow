@@ -43,9 +43,9 @@ const jsonLd = {
         '@type': 'OfferCatalog',
         name: 'AI Operations Plans',
         itemListElement: [
-          { '@type': 'Offer', name: 'Starter Node', price: '1800', priceCurrency: 'SGD', description: 'AI operations starter plan for small agencies' },
-          { '@type': 'Offer', name: 'Pro Agent Stack', price: '3000', priceCurrency: 'SGD', description: 'Full AI agent stack for growing agencies' },
-          { '@type': 'Offer', name: 'Enterprise Grid', price: '4500', priceCurrency: 'SGD', description: 'Enterprise-grade AI operations for large agencies' },
+          { '@type': 'Offer', name: 'Starter Node', description: 'AI operations starter plan for small agencies' },
+          { '@type': 'Offer', name: 'Pro Agent Stack', description: 'Full AI agent stack for growing agencies' },
+          { '@type': 'Offer', name: 'Enterprise Grid', description: 'Enterprise-grade AI operations for large agencies' },
         ],
       },
     },

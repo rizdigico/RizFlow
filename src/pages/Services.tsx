@@ -32,10 +32,9 @@ const jsonLd = {
   areaServed: ['Singapore', 'Malaysia', 'Indonesia', 'Philippines', 'Thailand'],
   description: 'RizFlow builds and manages agentic AI systems that automate agency operations — email triage, client onboarding, invoicing, reporting, and CRM updates.',
   offers: [
-    { '@type': 'Offer', name: 'Starter Node', price: '1800', priceCurrency: 'SGD', description: 'AI operations starter plan for small agencies with 5-10 team members' },
-    { '@type': 'Offer', name: 'Pro Agent Stack', price: '3000', priceCurrency: 'SGD', description: 'Full AI agent stack for agencies with 10-20 team members' },
-    { '@type': 'Offer', name: 'Enterprise Grid', price: '4500', priceCurrency: 'SGD', description: 'Enterprise-grade AI operations for agencies with 20-25+ team members' },
-  ],
+    { '@type': 'Offer', name: 'Starter Node', description: 'AI operations starter plan for small agencies with 5-10 team members' },
+    { '@type': 'Offer', name: 'Pro Agent Stack', description: 'Full AI agent stack for agencies with 10-20 team members' },
+    { '@type': 'Offer', name: 'Enterprise Grid', description: 'Enterprise-grade AI operations for agencies with 20-25+ team members' },  ],
 }
 
 export function Services() {

@@ -84,7 +84,7 @@ export function PricingTable() {
             Predictable Runtime Allocation
           </h2>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto font-mono text-sm">
-            No provisioning fees. No per-seat limits. Terminate sequence anytime.
+            Custom solutions & pricing to fit your agency's needs.
           </p>
         </div>
 
@@ -128,11 +128,9 @@ export function PricingTable() {
                   {plan.tagline}
                 </p>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-sm font-mono text-teal-500/80 uppercase">SGD</span>
                   <span className="text-4xl sm:text-5xl font-black font-heading text-white tracking-tighter">
-                    ${plan.price}
+                    Custom
                   </span>
-                  <span className="text-sm font-mono text-slate-500">/mo</span>
                 </div>
                 <p className="text-sm font-mono leading-relaxed text-slate-400">
                   {plan.description}
