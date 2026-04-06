@@ -59,20 +59,20 @@ export function Home() {
   return (
     <>
       <Helmet>
-        <title>RizFlow | Agentic-AI operations for Agencies</title>
-        <meta name="description" content="RizFlow builds and manages agentic AI systems that save service agency founders 15-25 hours/week. Hands-free AI operations for 5-25 person agencies in Singapore." />
+        <title>RizFlow | Agentic-AI operations for SME's</title>
+        <meta name="description" content="RizFlow builds and manages agentic AI systems that save agency & business founders 15-25 hours/week. Hands-free AI operations for 5-25 person teams in Singapore." />
         <meta name="keywords" content="AI operations agency, agentic AI for agencies, AI automation Singapore, automated agency operations, hands-free AI operations" />
         <link rel="canonical" href={SITE_URL} />
         <link rel="alternate" hrefLang="en-SG" href={SITE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={SITE_URL} />
-        <meta property="og:title" content="RizFlow | Agentic-AI operations for Agencies" />
-        <meta property="og:description" content="RizFlow builds and manages agentic AI systems that save service agency founders 15-25 hours/week. Hands-free AI operations for 5-25 person agencies in Singapore." />
+        <meta property="og:title" content="RizFlow | Agentic-AI operations for SME's" />
+        <meta property="og:description" content="RizFlow builds and manages agentic AI systems that save agency & business founders 15-25 hours/week. Hands-free AI operations for 5-25 person teams in Singapore." />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="RizFlow | Agentic-AI operations for Agencies" />
-        <meta name="twitter:description" content="RizFlow builds and manages agentic AI systems that save service agency founders 15-25 hours/week. Hands-free AI operations for 5-25 person agencies in Singapore." />
+        <meta name="twitter:title" content="RizFlow | Agentic-AI operations for SME's" />
+        <meta name="twitter:description" content="RizFlow builds and manages agentic AI systems that save agency & business founders 15-25 hours/week. Hands-free AI operations for 5-25 person teams in Singapore." />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
