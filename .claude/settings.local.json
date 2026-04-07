@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)",
+      "Bash(node_modules/.bin/tsc -b)",
+      "Bash(node_modules/.bin/vite build:*)",
+      "Bash(cmd.exe /c \"npm run build\")",
+      "Bash(powershell.exe -Command \"Copy-Item 'C:\\\\Users\\\\aariz\\\\OneDrive\\\\Pictures\\\\Screenshots\\\\metadata logo\\\\new metadata logo \\(replace with this\\).png' 'C:\\\\Agency\\\\AgencyWebsite\\\\public\\\\og-banner.png'\")",
+      "Bash(powershell.exe -Command \"Copy-Item 'C:\\\\Users\\\\aariz\\\\OneDrive\\\\Pictures\\\\Screenshots\\\\metadata logo\\\\compressed metadata logo.png' 'C:\\\\Agency\\\\AgencyWebsite\\\\public\\\\og-banner.png' -Force\")",
+      "Bash(powershell.exe -Command \"Get-Process -Name node -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep 2; cd 'C:\\\\Agency\\\\AgencyWebsite'; npx vite --port 3000\" 2>&1)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(curl:*)",
+      "Bash(python3 -m json.tool)",
+      "Read(//c/Agency//**)",
+      "Read(//c/Users/aariz//**)",
+      "Bash(find /c/Agency/AgencyWebsite2/src -name webhook* -o -name *webhook*)",
+      "Bash(find /c/Agency/AgencyWebsite2/src -name *.ts -o -name *.tsx)",
+      "Bash(xargs grep:*)",
+      "Bash(gh repo:*)",
+      "Bash(git -C /c/Users/aariz/Documents/The-System/frontend remote -v)",
+      "Bash(git:*)",
+      "Skill(update-config)"
+    ]
+  }
+}
