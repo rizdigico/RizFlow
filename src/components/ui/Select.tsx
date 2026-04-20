@@ -1,20 +1,23 @@
-import { forwardRef, type SelectHTMLAttributes } from 'react'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import { cn } from '@/lib/utils'
+import { forwardRef, type SelectHTMLAttributes } from "react";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { cn } from "@/lib/utils";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
-  label?: string
-  error?: string
-  options: { value: string; label: string }[]
+  label?: string;
+  error?: string;
+  options: { value: string; label: string }[];
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, label, error, options, id, ...props }, ref) => {
-    const selectId = id || label?.toLowerCase().replace(/\s+/g, '-')
+    const selectId = id || label?.toLowerCase().replace(/\s+/g, "-");
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={selectId} className="text-sm font-medium text-slate-700">
+          <label
+            htmlFor={selectId}
+            className="text-sm font-medium text-slate-700"
+          >
             {label}
           </label>
         )}
@@ -23,11 +26,11 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={selectId}
             className={cn(
-              'h-11 w-full rounded-lg border border-slate-200 bg-white pl-4 pr-10 text-slate-800 text-sm appearance-none',
-              'transition-all duration-150 outline-none',
-              'focus:border-teal focus:ring-2 focus:ring-teal/20',
-              error && 'border-red-400',
-              className
+              "h-11 w-full rounded-lg border border-slate-200 bg-white pl-4 pr-10 text-slate-800 text-sm appearance-none",
+              "transition-all duration-150 outline-none",
+              "focus:border-teal focus:ring-2 focus:ring-teal/20",
+              error && "border-red-400",
+              className,
             )}
             {...props}
           >
@@ -41,8 +44,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         </div>
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
-    )
-  }
-)
-Select.displayName = 'Select'
-export { Select }
+    );
+  },
+);
+Select.displayName = "Select";
+export { Select };

@@ -1,57 +1,104 @@
-import { Helmet } from 'react-helmet-async'
-import { FounderProfile } from '@/components/sections/FounderProfile'
-import { Container } from '@/components/layout/Container'
-import { FlowingMesh } from '@/components/animations/FlowingMesh'
-import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
+import { Helmet } from "react-helmet-async";
+import { FounderProfile } from "@/components/sections/FounderProfile";
+import { Container } from "@/components/layout/Container";
+import { FlowingMesh } from "@/components/animations/FlowingMesh";
+import { SITE_URL, SEO_DEFAULTS } from "@/lib/constants";
 
 const aboutBreadcrumb = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-    { '@type': 'ListItem', position: 2, name: 'About', item: `${SITE_URL}/about` },
+    { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "About",
+      item: `${SITE_URL}/about`,
+    },
   ],
-}
+};
 
 const founderSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Aariz Arfan',
-  jobTitle: 'Founder & CEO',
-  worksFor: { '@type': 'Organization', name: 'RizFlow', url: SITE_URL },
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Aariz Arfan",
+  jobTitle: "Founder & CEO",
+  worksFor: { "@type": "Organization", name: "RizFlow", url: SITE_URL },
   url: `${SITE_URL}/about`,
-  sameAs: ['https://www.linkedin.com/in/aariz-arfan/'],
-}
+  sameAs: ["https://www.linkedin.com/in/aariz-arfan/"],
+};
 
 const timeline = [
-  { year: '2024', event: 'Discovered & learnt about the full potential of AI while using it to study in Senior high. Scored multiple distinctions & got into my dream course.' },
-  { year: 'Early 2025', event: 'Started automating workflows with Zapier, N8N and custom scripts. Saved 12-20 hours personally.' },
-  { year: 'Late 2025', event: 'Discovered LLMs could handle nuanced ops tasks. Started utilising & building AI agents.' },
-  { year: 'Early 2026', event: 'Ran first paid pilot with an agency. Validated the core product. RizFlow was born.' },
-  { year: 'Now', event: 'Aiming to serve agencies across SEA. Building while studying — proving it can be done.' },
-]
+  {
+    year: "2024",
+    event:
+      "Discovered & learnt about the full potential of AI while using it to study in Senior high. Scored multiple distinctions & got into my dream course.",
+  },
+  {
+    year: "Early 2025",
+    event:
+      "Started automating workflows with Zapier, N8N and custom scripts. Saved 12-20 hours personally.",
+  },
+  {
+    year: "Late 2025",
+    event:
+      "Discovered LLMs could handle nuanced ops tasks. Started utilising & building AI agents.",
+  },
+  {
+    year: "Early 2026",
+    event:
+      "Ran first paid pilot with a business. Validated the core product. RizFlow was born.",
+  },
+  {
+    year: "Now",
+    event:
+      "Aiming to serve businesses & SMEs across SEA. Building while studying — proving it can be done.",
+  },
+];
 
 export function About() {
   return (
     <>
       <Helmet>
-        <title>About RizFlow — AI Ops Agency in Singapore</title>
-        <meta name="description" content="RizFlow is a Singapore-based AI operations agency founded by Aariz Arfan. We build agentic AI systems that run agency operations on autopilot." />
-        <meta name="keywords" content="RizFlow about, AI operations Singapore, agentic AI agency founder, Aariz Arfan" />
+        <title>About RizFlow — Custom Agentic-AI for Businesses & SMEs</title>
+        <meta
+          name="description"
+          content="RizFlow builds custom agentic-AI systems for businesses and SMEs. Founded by Aariz Arfan in Singapore — we tailor AI agents to your specific workflows so you can run your business from your phone."
+        />
+        <meta
+          name="keywords"
+          content="RizFlow about, custom AI agents Singapore, agentic AI for businesses, SME automation, Aariz Arfan"
+        />
         <link rel="canonical" href={`${SITE_URL}/about`} />
         <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/about`} />
         <meta property="og:type" content="profile" />
         <meta property="og:url" content={`${SITE_URL}/about`} />
-        <meta property="og:title" content="About RizFlow — AI Ops Agency in Singapore" />
-        <meta property="og:description" content="RizFlow is a Singapore-based AI operations agency founded by Aariz Arfan. We build agentic AI systems that run agency operations on autopilot." />
+        <meta
+          property="og:title"
+          content="About RizFlow — Custom Agentic-AI for Businesses & SMEs"
+        />
+        <meta
+          property="og:description"
+          content="RizFlow builds custom agentic-AI systems for businesses and SMEs. Founded by Aariz Arfan in Singapore — we tailor AI agents to your specific workflows so you can run your business from your phone."
+        />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="About RizFlow — AI Ops Agency in Singapore" />
-        <meta name="twitter:description" content="RizFlow is a Singapore-based AI operations agency founded by Aariz Arfan. We build agentic AI systems that run agency operations on autopilot." />
+        <meta
+          name="twitter:title"
+          content="About RizFlow — Custom Agentic-AI for Businesses & SMEs"
+        />
+        <meta
+          name="twitter:description"
+          content="RizFlow builds custom agentic-AI systems for businesses and SMEs. Founded by Aariz Arfan in Singapore."
+        />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
-        <script type="application/ld+json">{JSON.stringify(aboutBreadcrumb)}</script>
-        <script type="application/ld+json">{JSON.stringify(founderSchema)}</script>
+        <script type="application/ld+json">
+          {JSON.stringify(aboutBreadcrumb)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(founderSchema)}
+        </script>
       </Helmet>
 
       <div className="relative bg-[#050A14] w-full overflow-hidden">
@@ -73,12 +120,17 @@ export function About() {
               </span>
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white mb-6 leading-tight drop-shadow-[0_0_15px_rgba(0,229,255,0.2)]">
-              Built by an Agency Operator,
+              Built for Business Owners,
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">For Agency Operators</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">
+                By a Business Owner
+              </span>
             </h1>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto font-mono text-sm tracking-wide leading-relaxed">
-              &gt; RizFlow started with a simple frustration: too much time on operations, not enough on the work that actually moves the needle.
+              &gt; RizFlow started with a simple frustration: too much time on
+              operations, not enough on growing the business. So I built AI
+              agents that handle the work — and let you run everything from your
+              phone.
             </p>
           </Container>
         </section>
@@ -118,8 +170,9 @@ export function About() {
                   <span className="text-2xl opacity-80 ml-1">🎯</span>
                 </h3>
                 <p className="text-slate-400 leading-relaxed font-mono text-sm">
-                  To free agency founders from the tyranny of operational overhead — so they can
-                  reinvest their time in strategy, creativity, and the work that only humans can do.
+                  To free business owners from operational overhead — so they
+                  can reinvest their time in strategy, growth, and the work that
+                  only humans can do.
                 </p>
               </div>
 
@@ -134,8 +187,9 @@ export function About() {
                   <span className="text-2xl opacity-80 ml-1">🔭</span>
                 </h3>
                 <p className="text-slate-400 leading-relaxed font-mono text-sm">
-                  A Southeast Asia where every service business — regardless of team size — has
-                  access to enterprise-grade AI operations. The playing field, levelled.
+                  A Southeast Asia where every business — regardless of size or
+                  industry — has access to custom agentic-AI systems. The
+                  playing field, levelled.
                 </p>
               </div>
 
@@ -143,7 +197,7 @@ export function About() {
               <div className="md:col-span-2 bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-xl p-6 md:p-10 lg:p-12 border border-teal-500/30 shadow-[0_0_30px_rgba(0,229,255,0.05)] hover:shadow-[0_0_40px_rgba(0,229,255,0.1)] hover:border-teal-400/50 transition-all duration-300 group relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/5 blur-[100px] rounded-full group-hover:bg-teal-500/10 transition-colors pointer-events-none" />
-                
+
                 <div className="relative z-10">
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
                     <div>
@@ -165,10 +219,16 @@ export function About() {
 
                   <div className="grid md:grid-cols-2 gap-8 lg:gap-12 font-mono text-sm text-slate-300">
                     <p className="leading-relaxed border-l border-teal-500/20 pl-6">
-                      &gt; RizFlow is founder-led and bootstrapped. I'm building this while completing my studies — practicing exactly what I preach: doing more with less, and using AI to bridge the gap.
+                      &gt; RizFlow is founder-led and bootstrapped. I'm building
+                      this while completing my studies — practicing exactly what
+                      I preach: doing more with less, and using AI to bridge the
+                      gap.
                     </p>
                     <p className="leading-relaxed text-slate-400 border-l border-teal-500/20 pl-6">
-                      &gt; Every system built for clients is first tested internally. The Communication Agent handles my email. The Project Tracking Agent manages client deliverables. I know these tools work because I depend on them daily.
+                      &gt; Every system built for clients is first tested
+                      internally. The Communication Agent handles my email. The
+                      Workflow & Tracking Agent manages deliverables. I know
+                      these agents work because I depend on them daily.
                     </p>
                   </div>
                 </div>
@@ -189,17 +249,17 @@ export function About() {
 
             <div className="font-mono max-w-4xl mx-auto space-y-6">
               {timeline.map((item, index) => (
-                <div 
-                  key={item.year} 
+                <div
+                  key={item.year}
                   className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8 p-5 sm:p-8 bg-[#0A0F1A]/40 backdrop-blur-sm border border-white/5 hover:border-teal-500/30 rounded-xl transition-all duration-300 group relative"
                 >
                   <div className="flex items-center gap-4 sm:w-48 flex-shrink-0 pt-1">
                     <span className="text-teal-500/40 group-hover:text-teal-400 transition-colors text-sm">
-                      {String(index + 1).padStart(2, '0')}
+                      {String(index + 1).padStart(2, "0")}
                     </span>
                     <div className="h-[1px] flex-1 bg-teal-500/20 group-hover:bg-teal-500/50 transition-colors hidden sm:block" />
                   </div>
-                  
+
                   <div className="flex-1">
                     <div className="inline-flex items-center gap-2 mb-3">
                       <span className="text-cyan-400 font-bold tracking-wider text-sm uppercase">
@@ -221,5 +281,5 @@ export function About() {
         </section>
       </div>
     </>
-  )
+  );
 }

@@ -1,24 +1,24 @@
-import { Fragment, type ReactNode } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import { cn } from '@/lib/utils'
+import { Fragment, type ReactNode } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { cn } from "@/lib/utils";
 
 interface DropdownItem {
-  label: string
-  href?: string
-  onClick?: () => void
-  icon?: ReactNode
+  label: string;
+  href?: string;
+  onClick?: () => void;
+  icon?: ReactNode;
 }
 
 interface DropdownProps {
-  trigger: string | ReactNode
-  items: DropdownItem[]
-  className?: string
+  trigger: string | ReactNode;
+  items: DropdownItem[];
+  className?: string;
 }
 
 export function Dropdown({ trigger, items, className }: DropdownProps) {
   return (
-    <Menu as="div" className={cn('relative inline-block', className)}>
+    <Menu as="div" className={cn("relative inline-block", className)}>
       <Menu.Button className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-navy hover:text-teal transition-colors rounded-lg hover:bg-slate-50">
         {trigger}
         <ChevronDownIcon className="w-4 h-4" />
@@ -40,8 +40,8 @@ export function Dropdown({ trigger, items, className }: DropdownProps) {
                   <button
                     onClick={item.onClick}
                     className={cn(
-                      'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm',
-                      active ? 'bg-teal/5 text-teal' : 'text-slate-700'
+                      "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm",
+                      active ? "bg-teal/5 text-teal" : "text-slate-700",
                     )}
                   >
                     {item.icon}
@@ -54,5 +54,5 @@ export function Dropdown({ trigger, items, className }: DropdownProps) {
         </Menu.Items>
       </Transition>
     </Menu>
-  )
+  );
 }

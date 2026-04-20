@@ -5,44 +5,45 @@ import {
   BanknotesIcon,
   ChatBubbleLeftRightIcon,
   ShieldCheckIcon,
-} from '@heroicons/react/24/outline'
-import { motion } from 'framer-motion'
-import { useScrollAnimation } from '@/hooks/useScrollAnimation'
-import { useMeshPulse } from '@/hooks/useMeshPulse'
-import { cn } from '@/lib/utils'
+  Cog6ToothIcon,
+} from "@heroicons/react/24/outline";
+import { motion } from "framer-motion";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useMeshPulse } from "@/hooks/useMeshPulse";
+import { cn } from "@/lib/utils";
 
 const features = [
   {
     Icon: InboxIcon,
-    title: 'Client Intake Agent',
-    desc: 'Automates lead capture, qualification scoring, and onboarding sequences. New clients get instant, personalised responses 24/7.',
+    title: "Customer Intake Agent",
+    desc: "Auto-qualifies leads, captures enquiries, and handles onboarding. New customers get instant, personalized responses 24/7 — no leads slip through.",
   },
   {
     Icon: ClipboardDocumentCheckIcon,
-    title: 'Project Tracking Agent',
-    desc: 'Real-time task assignment, deadline tracking, and proactive status updates sent automatically. Never miss a milestone again.',
+    title: "Workflow & Tracking Agent",
+    desc: "Real-time task assignment, deadline tracking, and proactive status updates sent automatically. Never miss a milestone or delivery again.",
   },
   {
     Icon: UserGroupIcon,
-    title: 'Resource Allocation Agent',
-    desc: 'Smart matching of team talent to projects based on skills, capacity, and deadlines. Eliminate the scheduling spreadsheet.',
+    title: "Scheduling & Allocation Agent",
+    desc: "Smart matching of resources to jobs based on skills, capacity, and deadlines. Eliminate the scheduling spreadsheet and manual coordination.",
   },
   {
     Icon: BanknotesIcon,
-    title: 'Invoice Generation Agent',
-    desc: 'Auto-billing on milestone completion, payment reminders, and revenue forecasting. Cash flow on autopilot.',
+    title: "Billing & Finance Agent",
+    desc: "Auto-billing, payment reminders, expense tracking, and revenue forecasting. Your cash flow runs on autopilot.",
   },
   {
     Icon: ChatBubbleLeftRightIcon,
-    title: 'Communication Agent',
-    desc: 'Drafts and sends status emails, schedules meetings, and collects client feedback — all matching your tone of voice.',
+    title: "Communication Agent",
+    desc: "Drafts and sends status updates, schedules meetings, and handles customer follow-ups — all matching your brand tone.",
   },
   {
-    Icon: ShieldCheckIcon,
-    title: 'Quality Assurance Agent',
-    desc: 'Template compliance, file-naming conventions, and version control checks before anything goes to a client.',
+    Icon: Cog6ToothIcon,
+    title: "Custom Agent Builder",
+    desc: "Need something unique? We build fully custom agents tailored to your specific business processes — inventory, compliance, reporting, or anything else.",
   },
-]
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -55,7 +56,7 @@ const containerVariants = {
 };
 
 export function FeaturesGrid() {
-  const { ref, isVisible } = useScrollAnimation()
+  const { ref, isVisible } = useScrollAnimation();
 
   return (
     <section id="agents" className="relative section-padding">
@@ -64,28 +65,32 @@ export function FeaturesGrid() {
       <WaveDecoration className="absolute bottom-0 left-0 w-[500px] h-[350px] opacity-10 rotate-180" />
 
       <div className="container-width relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         <div ref={ref} className="text-center max-w-3xl mx-auto mb-20">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8 }}
             className="text-4xl md:text-5xl font-bold mb-6 text-white"
           >
-            Capabilities that drive <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">growth</span>.
+            Choose your{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">
+              agent stack
+            </span>
+            .
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-lg text-slate-400"
           >
-            We don't just implement technology; we architect competitive advantages. 
-            Discover the tools we use to transform your operational efficiency.
+            Pick the agents your business needs, customize them to your
+            workflows, and let them run your operations — so you can focus on
+            growth.
           </motion.p>
         </div>
 
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
@@ -97,23 +102,27 @@ export function FeaturesGrid() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
 
 interface FeatureCardProps {
-  feature: (typeof features)[0]
-  index: number
+  feature: (typeof features)[0];
+  index: number;
 }
 
 function FeatureCard({ feature, index }: FeatureCardProps) {
-  const pulseProps = useMeshPulse()
+  const pulseProps = useMeshPulse();
 
   return (
     <motion.div
       className="group relative bg-navy-900/40 backdrop-blur-md rounded-2xl p-7 border border-white/5 shadow-2xl hover:border-teal-500/30 cursor-default overflow-hidden transition-all duration-500"
       variants={{
         hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+        },
       }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
     >
@@ -121,7 +130,8 @@ function FeatureCard({ feature, index }: FeatureCardProps) {
       <motion.div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{
-          background: 'radial-gradient(circle at center, rgba(45, 212, 191, 0.08) 0%, transparent 70%)',
+          background:
+            "radial-gradient(circle at center, rgba(45, 212, 191, 0.08) 0%, transparent 70%)",
         }}
         animate={pulseProps.animate}
         transition={pulseProps.transition}
@@ -136,7 +146,7 @@ function FeatureCard({ feature, index }: FeatureCardProps) {
         >
           {/* Subtle glow behind icon */}
           <div className="absolute inset-0 bg-teal-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
+
           <motion.div
             whileHover={{ rotate: 12 }}
             transition={{ duration: 0.4 }}
@@ -165,19 +175,60 @@ function FeatureCard({ feature, index }: FeatureCardProps) {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
 function WaveDecoration({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-      <path d="M600,50 C500,80 400,20 300,60 C200,100 100,30 0,70" stroke="#4FA0B4" strokeWidth="1.2" opacity="0.5" />
-      <path d="M600,100 C500,130 400,70 300,110 C200,150 100,80 0,120" stroke="#4FA0B4" strokeWidth="1.2" opacity="0.4" />
-      <path d="M600,150 C500,180 400,120 300,160 C200,200 100,130 0,170" stroke="#4FA0B4" strokeWidth="1.2" opacity="0.35" />
-      <path d="M600,200 C500,230 380,160 280,205 C180,250 80,180 0,220" stroke="#4FA0B4" strokeWidth="1.2" opacity="0.3" />
-      <path d="M600,250 C490,275 370,205 265,250 C160,295 60,225 0,268" stroke="#4FA0B4" strokeWidth="1" opacity="0.25" />
-      <path d="M600,300 C480,320 360,255 255,298 C150,340 50,272 0,315" stroke="#4FA0B4" strokeWidth="1" opacity="0.2" />
-      <path d="M600,350 C470,365 350,300 245,345 C140,388 40,318 0,362" stroke="#4FA0B4" strokeWidth="1" opacity="0.15" />
+    <svg
+      viewBox="0 0 600 400"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M600,50 C500,80 400,20 300,60 C200,100 100,30 0,70"
+        stroke="#4FA0B4"
+        strokeWidth="1.2"
+        opacity="0.5"
+      />
+      <path
+        d="M600,100 C500,130 400,70 300,110 C200,150 100,80 0,120"
+        stroke="#4FA0B4"
+        strokeWidth="1.2"
+        opacity="0.4"
+      />
+      <path
+        d="M600,150 C500,180 400,120 300,160 C200,200 100,130 0,170"
+        stroke="#4FA0B4"
+        strokeWidth="1.2"
+        opacity="0.35"
+      />
+      <path
+        d="M600,200 C500,230 380,160 280,205 C180,250 80,180 0,220"
+        stroke="#4FA0B4"
+        strokeWidth="1.2"
+        opacity="0.3"
+      />
+      <path
+        d="M600,250 C490,275 370,205 265,250 C160,295 60,225 0,268"
+        stroke="#4FA0B4"
+        strokeWidth="1"
+        opacity="0.25"
+      />
+      <path
+        d="M600,300 C480,320 360,255 255,298 C150,340 50,272 0,315"
+        stroke="#4FA0B4"
+        strokeWidth="1"
+        opacity="0.2"
+      />
+      <path
+        d="M600,350 C470,365 350,300 245,345 C140,388 40,318 0,362"
+        stroke="#4FA0B4"
+        strokeWidth="1"
+        opacity="0.15"
+      />
     </svg>
-  )
+  );
 }

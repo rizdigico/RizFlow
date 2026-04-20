@@ -1,18 +1,24 @@
-import { Fragment, type ReactNode } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { cn } from '@/lib/utils'
+import { Fragment, type ReactNode } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { cn } from "@/lib/utils";
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title?: string
-  children: ReactNode
-  size?: 'sm' | 'md' | 'lg'
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  children: ReactNode;
+  size?: "sm" | "md" | "lg";
 }
 
-export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
-  const sizes = { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl' }
+export function Modal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  size = "md",
+}: ModalProps) {
+  const sizes = { sm: "max-w-sm", md: "max-w-lg", lg: "max-w-2xl" };
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -38,7 +44,12 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className={cn('w-full rounded-2xl bg-white shadow-2xl', sizes[size])}>
+              <Dialog.Panel
+                className={cn(
+                  "w-full rounded-2xl bg-white shadow-2xl",
+                  sizes[size],
+                )}
+              >
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
                   {title && (
                     <Dialog.Title className="text-lg font-semibold text-navy font-heading">
@@ -59,5 +70,5 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
         </div>
       </Dialog>
     </Transition>
-  )
+  );
 }

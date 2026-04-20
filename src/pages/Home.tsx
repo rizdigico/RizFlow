@@ -1,78 +1,131 @@
-import { Helmet } from 'react-helmet-async'
-import { useRef } from 'react'
-import { motion } from 'framer-motion'
-import { Hero } from '@/components/sections/Hero'
-import { SocialProofLogos } from '@/components/sections/SocialProofLogos'
-import { HowItWorks } from '@/components/sections/HowItWorks'
-import { FeaturesGrid } from '@/components/sections/FeaturesGrid'
-import { FlowingMesh } from '@/components/animations/FlowingMesh'
-import { useParallaxScroll } from '@/hooks/useFlowingAnimation'
-import { Container } from '@/components/layout/Container'
-import { SEO_DEFAULTS, SITE_URL } from '@/lib/constants'
+import { Helmet } from "react-helmet-async";
+import { useRef } from "react";
+import { motion } from "framer-motion";
+import { Hero } from "@/components/sections/Hero";
+import { SocialProofLogos } from "@/components/sections/SocialProofLogos";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { FeaturesGrid } from "@/components/sections/FeaturesGrid";
+import { FlowingMesh } from "@/components/animations/FlowingMesh";
+import { useParallaxScroll } from "@/hooks/useFlowingAnimation";
+import { Container } from "@/components/layout/Container";
+import { SEO_DEFAULTS, SITE_URL } from "@/lib/constants";
 
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      '@type': 'Organization',
-      '@id': `${SITE_URL}/#organization`,
-      name: 'RizFlow',
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: "RizFlow",
       url: SITE_URL,
       logo: `${SITE_URL}/og-banner.png`,
-      foundingDate: '2026',
-      founder: { '@type': 'Person', name: 'Aariz Arfan' },
-      description: 'RizFlow builds and manages agentic AI systems for service-based agencies, saving founders 10-20 hours per week on manual operations.',
-      address: { '@type': 'PostalAddress', addressCountry: 'SG', addressLocality: 'Singapore' },
-      contactPoint: { '@type': 'ContactPoint', email: 'main@rizflow.co', contactType: 'customer service' },
+      foundingDate: "2026",
+      founder: { "@type": "Person", name: "Aariz Arfan" },
+      description:
+        "RizFlow builds custom agentic-AI systems for businesses and SMEs, saving owners 10-20 hours per week on manual operations — run your business from your phone.",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "SG",
+        addressLocality: "Singapore",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: "main@rizflow.co",
+        contactType: "customer service",
+      },
       sameAs: [
-        'https://www.linkedin.com/in/aariz-arfan/',
-        'https://www.instagram.com/rizflow.ai/',
-        'https://www.tiktok.com/@rizflow.ai',
+        "https://www.linkedin.com/in/aariz-arfan/",
+        "https://www.instagram.com/rizflow.ai/",
+        "https://www.tiktok.com/@rizflow.ai",
       ],
     },
     {
-      '@type': 'ProfessionalService',
-      '@id': `${SITE_URL}/#business`,
-      name: 'RizFlow',
+      "@type": "ProfessionalService",
+      "@id": `${SITE_URL}/#business`,
+      name: "RizFlow",
       url: SITE_URL,
-      priceRange: '$$$$',
-      description: 'Agentic AI operations agency based in Singapore. We automate email triage, client onboarding, invoicing, reporting, and CRM updates for service-based agencies.',
-      address: { '@type': 'PostalAddress', addressCountry: 'SG', addressLocality: 'Singapore' },
-      areaServed: ['Singapore', 'Malaysia', 'Indonesia', 'Philippines', 'Thailand'],
+      priceRange: "$$$$",
+      description:
+        "Custom agentic-AI systems for businesses and SMEs based in Singapore. We automate customer intake, workflow tracking, scheduling, billing, communications, and more — tailored to your specific business.",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "SG",
+        addressLocality: "Singapore",
+      },
+      areaServed: [
+        "Singapore",
+        "Malaysia",
+        "Indonesia",
+        "Philippines",
+        "Thailand",
+      ],
       hasOfferCatalog: {
-        '@type': 'OfferCatalog',
-        name: 'AI Operations Plans',
+        "@type": "OfferCatalog",
+        name: "Custom Agentic-AI Implementation Plans",
         itemListElement: [
-          { '@type': 'Offer', name: 'Starter Node', description: 'AI operations starter plan for small agencies' },
-          { '@type': 'Offer', name: 'Pro Agent Stack', description: 'Full AI agent stack for growing agencies' },
-          { '@type': 'Offer', name: 'Enterprise Grid', description: 'Enterprise-grade AI operations for large agencies' },
+          {
+            "@type": "Offer",
+            name: "Essential",
+            description:
+              "Core agent stack for small businesses — customer intake, workflow tracking, scheduling, and billing automation",
+          },
+          {
+            "@type": "Offer",
+            name: "Professional",
+            description:
+              "Full agent suite with custom agents, predictive analytics, and autonomous communications for growing businesses",
+          },
+          {
+            "@type": "Offer",
+            name: "Enterprise",
+            description:
+              "Full-scale automation with unlimited custom agents, white-label portals, and API access for complex operations",
+          },
         ],
       },
     },
   ],
-}
+};
 
 export function Home() {
-  const meshRef = useRef<HTMLDivElement>(null)
-  const parallaxProps = useParallaxScroll(0.5)
+  const meshRef = useRef<HTMLDivElement>(null);
+  const parallaxProps = useParallaxScroll(0.5);
 
   return (
     <>
       <Helmet>
-        <title>RizFlow | Agentic-AI operations for SME's</title>
-        <meta name="description" content="RizFlow builds and manages agentic AI systems that save agency & business founders 15-25 hours/week. Hands-free AI operations for 5-25 person teams in Singapore." />
-        <meta name="keywords" content="AI operations agency, agentic AI for agencies, AI automation Singapore, automated agency operations, hands-free AI operations" />
+        <title>Custom Agentic-AI Systems for Businesses & SMEs | RizFlow</title>
+        <meta
+          name="description"
+          content="RizFlow builds custom agentic-AI systems tailored to your business. Automate workflows, communications, invoicing, and more — run your business from your phone."
+        />
+        <meta
+          name="keywords"
+          content="custom AI agents for business, SME AI automation, agentic AI systems, business automation, run business from phone"
+        />
         <link rel="canonical" href={SITE_URL} />
         <link rel="alternate" hrefLang="en-SG" href={SITE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={SITE_URL} />
-        <meta property="og:title" content="RizFlow | Agentic-AI operations for SME's" />
-        <meta property="og:description" content="RizFlow builds and manages agentic AI systems that save agency & business founders 15-25 hours/week. Hands-free AI operations for 5-25 person teams in Singapore." />
+        <meta
+          property="og:title"
+          content="Custom Agentic-AI Systems for Businesses & SMEs | RizFlow"
+        />
+        <meta
+          property="og:description"
+          content="RizFlow builds custom agentic-AI systems tailored to your business. Automate workflows, communications, invoicing, and more — run your business from your phone."
+        />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="RizFlow | Agentic-AI operations for SME's" />
-        <meta name="twitter:description" content="RizFlow builds and manages agentic AI systems that save agency & business founders 15-25 hours/week. Hands-free AI operations for 5-25 person teams in Singapore." />
+        <meta
+          name="twitter:title"
+          content="Custom Agentic-AI Systems for Businesses & SMEs | RizFlow"
+        />
+        <meta
+          name="twitter:description"
+          content="RizFlow builds custom agentic-AI systems tailored to your business. Automate workflows and run your business from your phone."
+        />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
@@ -99,5 +152,5 @@ export function Home() {
 
       <SocialProofLogos />
     </>
-  )
+  );
 }

@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface SMLogoProps {
-  className?: string
-  animated?: boolean
+  className?: string;
+  animated?: boolean;
 }
 
 export function SMLogo({ className, animated = true }: SMLogoProps) {
@@ -13,9 +13,9 @@ export function SMLogo({ className, animated = true }: SMLogoProps) {
       viewBox="0 0 100 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn('w-10 h-10', className)}
+      className={cn("w-10 h-10", className)}
       whileHover={animated ? { scale: 1.05, rotate: 2 } : {}}
-      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
     >
       <defs>
         <linearGradient id="sm-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -45,7 +45,7 @@ export function SMLogo({ className, animated = true }: SMLogoProps) {
               }
             : {}
         }
-        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* The "S" Path - Flowy wave */}
@@ -55,9 +55,13 @@ export function SMLogo({ className, animated = true }: SMLogoProps) {
         strokeWidth="8"
         strokeLinecap="round"
         strokeLinejoin="round"
-        initial={animated ? { pathLength: 0, opacity: 0 } : { pathLength: 1, opacity: 1 }}
+        initial={
+          animated
+            ? { pathLength: 0, opacity: 0 }
+            : { pathLength: 1, opacity: 1 }
+        }
         animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ duration: 1.5, ease: 'easeInOut' }}
+        transition={{ duration: 1.5, ease: "easeInOut" }}
       />
 
       {/* The "M" Path - Intersecting geometry */}
@@ -67,9 +71,13 @@ export function SMLogo({ className, animated = true }: SMLogoProps) {
         strokeWidth="6"
         strokeLinecap="round"
         strokeLinejoin="round"
-        initial={animated ? { pathLength: 0, opacity: 0 } : { pathLength: 1, opacity: 1 }}
+        initial={
+          animated
+            ? { pathLength: 0, opacity: 0 }
+            : { pathLength: 1, opacity: 1 }
+        }
         animate={{ pathLength: 1, opacity: 0.9 }}
-        transition={{ duration: 1.5, delay: 0.5, ease: 'easeOut' }}
+        transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
       />
 
       {/* Interactive floating dot */}
@@ -91,9 +99,9 @@ export function SMLogo({ className, animated = true }: SMLogoProps) {
         transition={{
           opacity: { delay: 1.5, duration: 0.5 },
           scale: { delay: 1.5, duration: 0.5 },
-          y: { duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 2 },
+          y: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 2 },
         }}
       />
     </motion.svg>
-  )
+  );
 }

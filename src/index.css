@@ -28,7 +28,7 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background-color: theme('colors.obsidian.light');
+  background-color: theme("colors.obsidian.light");
 }
 ::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.1);

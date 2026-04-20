@@ -1,62 +1,62 @@
-import { useState, type ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Button } from '@/components/ui/Button'
-import { sanitizeInput, cn } from '@/lib/utils'
+import { useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/Button";
+import { sanitizeInput, cn } from "@/lib/utils";
 
-const AUDIT_WEBHOOK = 'https://riz-flow-mc-db.vercel.app/api/webhook/audit'
+const AUDIT_WEBHOOK = "https://riz-flow-mc-db.vercel.app/api/webhook/audit";
 
 const schema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
-  agency: z.string().min(2, 'Agency name required').max(100),
+  name: z.string().min(2, "Name must be at least 2 characters").max(100),
+  agency: z.string().min(2, "Business name required").max(100),
   website: z
     .string()
     .optional()
-    .refine(val => {
-      if (!val || val.trim() === '') return true
-      let url = val.trim()
-      if (!/^[a-zA-Z][\w+\-.]*:\/\//.test(url)) url = `https://${url}`
+    .refine((val) => {
+      if (!val || val.trim() === "") return true;
+      let url = val.trim();
+      if (!/^[a-zA-Z][\w+\-.]*:\/\//.test(url)) url = `https://${url}`;
       try {
-        const parsed = new URL(url)
-        const blocked = ['javascript:', 'data:', 'vbscript:', 'file:', 'blob:']
-        return !blocked.includes(parsed.protocol.toLowerCase())
+        const parsed = new URL(url);
+        const blocked = ["javascript:", "data:", "vbscript:", "file:", "blob:"];
+        return !blocked.includes(parsed.protocol.toLowerCase());
       } catch {
-        return false
+        return false;
       }
-    }, 'Enter a valid URL (e.g. yoursite.com or https://yoursite.com)'),
-  email: z.string().email('Enter a valid email address'),
+    }, "Enter a valid URL (e.g. yoursite.com or https://yoursite.com)"),
+  email: z.string().email("Enter a valid email address"),
   phone: z.string().max(20).optional(),
   referral: z.string().optional(),
-  consent: z.literal(true, { error: 'You must agree to continue' }),
-})
+  consent: z.literal(true, { error: "You must agree to continue" }),
+});
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<typeof schema>;
 
 const referralOptions = [
-  { value: '', label: 'How did you hear about us?' },
-  { value: 'google', label: 'Google Search' },
-  { value: 'linkedin', label: 'LinkedIn' },
-  { value: 'referral', label: 'Referral / Word of mouth' },
-  { value: 'twitter', label: 'Twitter / X' },
-  { value: 'event', label: 'Event or Meetup' },
-  { value: 'other', label: 'Other' },
-]
+  { value: "", label: "How did you hear about us?" },
+  { value: "google", label: "Google Search" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "referral", label: "Referral / Word of mouth" },
+  { value: "twitter", label: "Twitter / X" },
+  { value: "event", label: "Event or Meetup" },
+  { value: "other", label: "Other" },
+];
 
 const consentLabel: ReactNode = (
   <span className="font-mono text-[10px] sm:text-xs text-slate-300 leading-tight">
-    I agree to RizFlow's{' '}
+    I agree to RizFlow's{" "}
     <a href="/privacy-terms" className="text-teal-400 hover:underline">
       Privacy Policy
-    </a>{' '}
+    </a>{" "}
     and consent to being contacted.
   </span>
-)
+);
 
 export function AuditForm({ className }: { className?: string }) {
-  const navigate = useNavigate()
-  const [serverError, setServerError] = useState('')
+  const navigate = useNavigate();
+  const [serverError, setServerError] = useState("");
 
   const {
     register,
@@ -64,102 +64,141 @@ export function AuditForm({ className }: { className?: string }) {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-  })
+  });
 
   const onSubmit = async (data: FormData) => {
-    setServerError('')
-    const rawWebsite = data.website?.trim() || ''
-    const normalizedWebsite = rawWebsite && !/^[a-zA-Z][\w+\-.]*:\/\//.test(rawWebsite)
-      ? `https://${rawWebsite}`
-      : rawWebsite
+    setServerError("");
+    const rawWebsite = data.website?.trim() || "";
+    const normalizedWebsite =
+      rawWebsite && !/^[a-zA-Z][\w+\-.]*:\/\//.test(rawWebsite)
+        ? `https://${rawWebsite}`
+        : rawWebsite;
     const payload = {
       name: sanitizeInput(data.name),
       agency: sanitizeInput(data.agency),
       website: sanitizeInput(normalizedWebsite),
       email: sanitizeInput(data.email),
-      phone: sanitizeInput(data.phone || ''),
-      referral: data.referral || '',
+      phone: sanitizeInput(data.phone || ""),
+      referral: data.referral || "",
       consent: data.consent,
-    }
+    };
 
     try {
       const res = await fetch(AUDIT_WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-      })
-      if (!res.ok) throw new Error('Server error')
-      navigate('/thank-you')
+      });
+      if (!res.ok) throw new Error("Server error");
+      navigate("/thank-you");
     } catch {
-      setServerError('System Error: Submission failed. Please try again or email us directly.')
+      setServerError(
+        "System Error: Submission failed. Please try again or email us directly.",
+      );
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-5', className)} noValidate>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className={cn("space-y-5", className)}
+      noValidate
+    >
       <div className="grid sm:grid-cols-2 gap-5">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Your Full Name</label>
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">
+            Your Full Name
+          </label>
           <input
             placeholder="Jane Smith"
             className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
-            {...register('name')}
+            {...register("name")}
           />
-          {errors.name && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-xs text-red-400 font-mono flex items-center gap-1">
+              <span>{">"}</span> {errors.name.message}
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Agency Name</label>
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">
+            Business Name
+          </label>
           <input
-            placeholder="Acme Digital Agency"
+            placeholder="Acme Business"
             className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
-            {...register('agency')}
+            {...register("agency")}
           />
-          {errors.agency && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.agency.message}</p>}
+          {errors.agency && (
+            <p className="text-xs text-red-400 font-mono flex items-center gap-1">
+              <span>{">"}</span> {errors.agency.message}
+            </p>
+          )}
         </div>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Agency Website</label>
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">
+            Business Website
+          </label>
           <input
-            placeholder="youragency.com or https://youragency.com"
+            placeholder="yourbusiness.com or https://yourbusiness.com"
             type="text"
             className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
-            {...register('website')}
+            {...register("website")}
           />
-          {errors.website && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.website.message}</p>}
+          {errors.website && (
+            <p className="text-xs text-red-400 font-mono flex items-center gap-1">
+              <span>{">"}</span> {errors.website.message}
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Email Address</label>
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">
+            Email Address
+          </label>
           <input
-            placeholder="jane@youragency.com"
+            placeholder="jane@yourbusiness.com"
             type="email"
             className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
-            {...register('email')}
+            {...register("email")}
           />
-          {errors.email && <p className="text-xs text-red-400 font-mono flex items-center gap-1"><span>{'>'}</span> {errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-xs text-red-400 font-mono flex items-center gap-1">
+              <span>{">"}</span> {errors.email.message}
+            </p>
+          )}
         </div>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Phone (Optional)</label>
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">
+            Phone (Optional)
+          </label>
           <input
             placeholder="+65 9123 4567"
             type="tel"
             className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm placeholder:text-teal-700/50 transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
-            {...register('phone')}
+            {...register("phone")}
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">Referral Source</label>
+          <label className="text-xs font-mono text-teal-400 uppercase tracking-widest">
+            Referral Source
+          </label>
           <div className="relative">
             <select
               className="h-11 w-full rounded-sm border border-teal-500/30 bg-[#050A14] px-4 text-white font-mono text-sm appearance-none transition-all focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 outline-none"
-              {...register('referral')}
+              {...register("referral")}
             >
               {referralOptions.map((o) => (
-                <option key={o.value} value={o.value} className="bg-[#050A14] text-white">
+                <option
+                  key={o.value}
+                  value={o.value}
+                  className="bg-[#050A14] text-white"
+                >
                   {o.label}
                 </option>
               ))}
@@ -176,12 +215,16 @@ export function AuditForm({ className }: { className?: string }) {
           <input
             type="checkbox"
             className="w-4 h-4 rounded-sm border border-teal-500/30 bg-[#050A14] text-teal-500 focus:ring-cyan-400/20 focus:ring-offset-0 focus:ring-1 transition-all"
-            {...register('consent')}
+            {...register("consent")}
           />
         </div>
         <div className="flex flex-col">
           <label className="text-sm font-mono">{consentLabel}</label>
-          {errors.consent && <p className="text-xs text-red-400 font-mono mt-1 flex items-center gap-1"><span>{'>'}</span> {errors.consent.message}</p>}
+          {errors.consent && (
+            <p className="text-xs text-red-400 font-mono mt-1 flex items-center gap-1">
+              <span>{">"}</span> {errors.consent.message}
+            </p>
+          )}
         </div>
       </div>
 
@@ -192,8 +235,14 @@ export function AuditForm({ className }: { className?: string }) {
         </div>
       )}
 
-      <Button type="submit" variant="cta" size="lg" className="w-full font-mono uppercase tracking-widest mt-4" isLoading={isSubmitting}>
-        {isSubmitting ? 'Processing...' : 'Execute Audit Request'}
+      <Button
+        type="submit"
+        variant="cta"
+        size="lg"
+        className="w-full font-mono uppercase tracking-widest mt-4"
+        isLoading={isSubmitting}
+      >
+        {isSubmitting ? "Processing..." : "Execute Discovery Request"}
       </Button>
 
       <p className="text-xs font-mono text-teal-500/60 text-center uppercase tracking-wider flex items-center justify-center gap-2 mt-4">
@@ -201,5 +250,5 @@ export function AuditForm({ className }: { className?: string }) {
         Encrypted & PDPA Compliant
       </p>
     </form>
-  )
+  );
 }

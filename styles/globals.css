@@ -1,36 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap");
 @import "tailwindcss";
 
 @theme {
   /* Fonts */
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Montserrat', system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Montserrat", system-ui, sans-serif;
 
   /* Brand colors based on new logo */
-  --color-obsidian: #0A0F1A;
+  --color-obsidian: #0a0f1a;
   --color-obsidian-light: #111827;
-  --color-obsidian-lighter: #1F2937;
-  
-  --color-cyan: #06B6D4;
-  --color-cyan-light: #22D3EE;
-  --color-cyan-dark: #0891B2;
-  
-  --color-blue: #3B82F6;
-  --color-blue-light: #60A5FA;
-  --color-blue-dark: #2563EB;
-  
-  --color-gold: #F59E0B;
-  --color-gold-light: #FBBF24;
+  --color-obsidian-lighter: #1f2937;
+
+  --color-cyan: #06b6d4;
+  --color-cyan-light: #22d3ee;
+  --color-cyan-dark: #0891b2;
+
+  --color-blue: #3b82f6;
+  --color-blue-light: #60a5fa;
+  --color-blue-dark: #2563eb;
+
+  --color-gold: #f59e0b;
+  --color-gold-light: #fbbf24;
 
   /* Shadows */
-  --shadow-soft: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -2px rgba(0,0,0,0.3);
+  --shadow-soft:
+    0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
   --shadow-glow: 0 0 20px rgba(6, 182, 212, 0.2);
   --shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.3);
   --shadow-glow-blue: 0 0 30px rgba(59, 130, 246, 0.3);
 
   /* Animations */
   --animate-float: float 6s ease-in-out infinite;
-  --animate-pulse-slow: pulse-slow 4s cubic-bezier(0.4,0,0.6,1) infinite;
+  --animate-pulse-slow: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-pulse-glow: pulse-glow 3s infinite alternate;
   --animate-fade-in: fadeIn 0.6s ease-out;
   --animate-slide-up: slideUp 0.5s ease-out;
@@ -39,32 +40,69 @@
 
   /* Keyframes */
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
   @keyframes pulse-slow {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
   }
   @keyframes pulse-glow {
-    0% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
-    100% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.6); }
+    0% {
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+    }
+    100% {
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
+    }
   }
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
   @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
   @keyframes flowIn {
-    from { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(4px); }
-    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
   }
   @keyframes meshPulse {
-    0% { stroke-opacity: 0.1; }
-    100% { stroke-opacity: 0.25; transform: scale(1.02); }
+    0% {
+      stroke-opacity: 0.1;
+    }
+    100% {
+      stroke-opacity: 0.25;
+      transform: scale(1.02);
+    }
   }
 }
 
@@ -79,7 +117,12 @@
     @apply bg-obsidian text-slate-300 antialiased;
     font-family: var(--font-sans);
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply text-white;
     font-family: var(--font-heading);
   }
@@ -95,13 +138,17 @@
 
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(135deg, var(--color-cyan-light) 0%, var(--color-blue) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--color-cyan-light) 0%,
+      var(--color-blue) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .bg-grid {
-    background-image: 
+    background-image:
       linear-gradient(to right, rgba(6, 182, 212, 0.05) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
     background-size: 32px 32px;

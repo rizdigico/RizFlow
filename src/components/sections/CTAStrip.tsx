@@ -1,13 +1,13 @@
-import { ArrowRightIcon, CalendarDaysIcon } from '@heroicons/react/24/outline'
-import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/Button'
-import { cn } from '@/lib/utils'
+import { ArrowRightIcon, CalendarDaysIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 
 interface CTAStripProps {
-  variant?: 'navy' | 'teal'
+  variant?: "navy" | "teal";
 }
 
-export function CTAStrip({ variant = 'navy' }: CTAStripProps) {
+export function CTAStrip({ variant = "navy" }: CTAStripProps) {
   return (
     <section className="py-20 relative overflow-hidden bg-black border-t border-white/10">
       <div className="absolute inset-0 bg-grid opacity-20" />
@@ -19,12 +19,13 @@ export function CTAStrip({ variant = 'navy' }: CTAStripProps) {
               Stop Trading Time for Money.
               <br />
               <span className="text-gradient">
-                Start Scaling with AI.
+                Start Running Your Business From Your Phone.
               </span>
             </h2>
             <p className="mt-4 text-lg max-w-xl text-blue-200/60">
-              Book your free 30-minute Operational Audit. We'll show you exactly how many hours
-              you're losing and what it would take to automate them.
+              Book your free 30-minute Discovery Audit. We'll map your
+              workflows, recommend the right custom AI agents, and show you
+              exactly how many hours you can reclaim.
             </p>
           </div>
           <div className="flex flex-col items-center gap-4 flex-shrink-0">
@@ -35,7 +36,7 @@ export function CTAStrip({ variant = 'navy' }: CTAStripProps) {
                 className="group w-full sm:w-auto sm:min-w-56"
               >
                 <CalendarDaysIcon className="w-5 h-5 mr-2" />
-                Get Free Operational Audit
+                Get Free Discovery Audit
                 <ArrowRightIcon className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -46,5 +47,5 @@ export function CTAStrip({ variant = 'navy' }: CTAStripProps) {
         </div>
       </div>
     </section>
-  )
+  );
 }

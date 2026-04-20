@@ -1,26 +1,26 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { HelmetProvider } from 'react-helmet-async'
-import { useEffect } from 'react'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
-import { Home } from '@/pages/Home'
-import { About } from '@/pages/About'
-import { Services } from '@/pages/Services'
-import { Audit } from '@/pages/Audit'
-import { Contact } from '@/pages/Contact'
-import { FAQ } from '@/pages/FAQ'
-import { PrivacyTerms } from '@/pages/PrivacyTerms'
-import { ThankYou } from '@/pages/ThankYou'
-import { NotFound } from '@/pages/NotFound'
-import { Blog } from '@/pages/Blog'
-import { BlogPost } from '@/pages/BlogPost'
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
+import { useEffect } from "react";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { Home } from "@/pages/Home";
+import { About } from "@/pages/About";
+import { Services } from "@/pages/Services";
+import { Audit } from "@/pages/Audit";
+import { Contact } from "@/pages/Contact";
+import { FAQ } from "@/pages/FAQ";
+import { PrivacyTerms } from "@/pages/PrivacyTerms";
+import { ThankYou } from "@/pages/ThankYou";
+import { NotFound } from "@/pages/NotFound";
+import { Blog } from "@/pages/Blog";
+import { BlogPost } from "@/pages/BlogPost";
 
 function ScrollToTop() {
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' })
-  }, [pathname])
-  return null
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
+  return null;
 }
 
 function AppRoutes() {
@@ -45,7 +45,7 @@ function AppRoutes() {
       </main>
       <Footer />
     </>
-  )
+  );
 }
 
 export default function App() {
@@ -55,5 +55,5 @@ export default function App() {
         <AppRoutes />
       </BrowserRouter>
     </HelmetProvider>
-  )
+  );
 }

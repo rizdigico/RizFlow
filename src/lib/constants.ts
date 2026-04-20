@@ -1,26 +1,28 @@
-export const SITE_URL = 'https://rizflow.co'
-export const SITE_NAME = 'RizFlow'
-export const CALENDLY_LINK = import.meta.env.VITE_CALENDLY_LINK || 'https://cal.com/aariz-a/30min'
-export const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || ''
+export const SITE_URL = "https://rizflow.co";
+export const SITE_NAME = "RizFlow";
+export const CALENDLY_LINK =
+  import.meta.env.VITE_CALENDLY_LINK || "https://cal.com/aariz-a/30min";
+export const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || "";
 
 export const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Services', href: '/services' },
-  { label: 'FAQ', href: '/faq' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '/contact' },
-]
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
+];
 
 export const SOCIAL_LINKS = {
-  linkedin: 'https://www.linkedin.com/in/aariz-arfan/',
-  instagram: 'https://www.instagram.com/rizflow.ai/',
-  tiktok: 'https://www.tiktok.com/@rizflow.ai?lang=en',
-}
+  linkedin: "https://www.linkedin.com/in/aariz-arfan/",
+  instagram: "https://www.instagram.com/rizflow.ai/",
+  tiktok: "https://www.tiktok.com/@rizflow.ai?lang=en",
+};
 
 export const SEO_DEFAULTS = {
-  title: 'RizFlow – AI Operations for Service-Based Agencies | Save 10-20 hrs/week',
+  title:
+    "RizFlow – Custom Agentic-AI Systems for Businesses & SMEs | Run Your Business From Your Phone",
   description:
-    "Discover how RizFlow's agentic AI saves agency founders 10-20 hrs/week on manual work. Free Operational Audit. Based in Singapore, serving SEA.",
+    "RizFlow builds custom agentic-AI systems tailored to your business. Choose the agents you need, automate your operations, and run your business from your phone. Free Discovery Audit. Based in Singapore, serving SEA.",
   ogImage: `${SITE_URL}/og-banner.png`,
-}
+};

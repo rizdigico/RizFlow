@@ -1,18 +1,21 @@
-import { forwardRef, type TextareaHTMLAttributes } from 'react'
-import { cn } from '@/lib/utils'
+import { forwardRef, type TextareaHTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  label?: string
-  error?: string
+  label?: string;
+  error?: string;
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, label, error, id, ...props }, ref) => {
-    const textareaId = id || label?.toLowerCase().replace(/\s+/g, '-')
+    const textareaId = id || label?.toLowerCase().replace(/\s+/g, "-");
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={textareaId} className="text-sm font-medium text-slate-700">
+          <label
+            htmlFor={textareaId}
+            className="text-sm font-medium text-slate-700"
+          >
             {label}
           </label>
         )}
@@ -20,18 +23,18 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={textareaId}
           className={cn(
-            'w-full rounded-lg border border-white/10 bg-navy-900/50 px-4 py-3 text-white text-sm placeholder:text-slate-400 resize-none',
-            'transition-all duration-150 outline-none min-h-[120px]',
-            'focus:border-teal focus:ring-2 focus:ring-teal/20',
-            error && 'border-red-400 focus:border-red-400',
-            className
+            "w-full rounded-lg border border-white/10 bg-navy-900/50 px-4 py-3 text-white text-sm placeholder:text-slate-400 resize-none",
+            "transition-all duration-150 outline-none min-h-[120px]",
+            "focus:border-teal focus:ring-2 focus:ring-teal/20",
+            error && "border-red-400 focus:border-red-400",
+            className,
           )}
           {...props}
         />
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
-    )
-  }
-)
-Textarea.displayName = 'Textarea'
-export { Textarea }
+    );
+  },
+);
+Textarea.displayName = "Textarea";
+export { Textarea };

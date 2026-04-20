@@ -1,82 +1,106 @@
-import { Helmet } from 'react-helmet-async'
-import { useState } from 'react'
-import { PlusIcon, MinusIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
-import { SITE_URL, SEO_DEFAULTS } from '@/lib/constants'
-import { cn } from '@/lib/utils'
-import { FlowingMesh } from '@/components/animations/FlowingMesh'
+import { Helmet } from "react-helmet-async";
+import { useState } from "react";
+import {
+  PlusIcon,
+  MinusIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/24/outline";
+import { SITE_URL, SEO_DEFAULTS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+import { FlowingMesh } from "@/components/animations/FlowingMesh";
 
 const faqs = [
   {
-    question: 'How do RizFlow AI agents integrate with our existing tools?',
+    question: "How do RizFlow AI agents integrate with our existing tools?",
     answer:
-      'Our AI agents are designed for seamless integration with popular CRMs, project management, and communication platforms, requiring minimal setup. We connect to Asana, HubSpot, Slack, Xero, Notion, and 50+ other tools via secure API connectors — no rip-and-replace required.',
+      "Our AI agents are designed for seamless integration with popular CRMs, project management, accounting, and communication platforms, requiring minimal setup. We connect to Asana, HubSpot, Slack, Xero, Notion, and 50+ other tools via secure API connectors — no rip-and-replace required.",
   },
   {
-    question: 'What is the typical onboarding timeline?',
+    question: "What is the typical onboarding timeline?",
     answer:
-      'Most agencies are fully live within 2-4 weeks of kickoff. The process includes a 30-minute strategy call, workflow mapping session, and agent configuration. Your team is up and running with full support.',
+      "Most businesses are fully live within 2-4 weeks of kickoff. The process includes a 30-minute discovery call, workflow mapping session, and agent configuration. Your team is up and running with full support.",
   },
   {
-    question: 'Is my data secure and compliant?',
+    question: "Is my data secure and compliant?",
     answer:
-      'All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Each client has fully isolated data environments. We are GDPR and PDPA compliant. Your data is never used to train public AI models.',
+      "All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Each client has fully isolated data environments. We are GDPR and PDPA compliant. Your data is never used to train public AI models.",
   },
   {
-    question: 'Can RizFlow be customized for my specific industry?',
+    question: "Can RizFlow build custom agents for my specific business?",
     answer:
-      'Yes. While our core agents cover universal agency operations, we offer custom agent development tailored to your industry — whether you are in marketing, legal, accounting, creative, or consulting. Contact us to discuss your specific needs.',
+      "Absolutely. That's our core value proposition. We don't just offer pre-set agents — we design and build custom AI agents tailored to your unique workflows and industry. Whether you run a restaurant, retail store, professional services firm, or any other business, we create agents that fit your exact needs. Contact us to discuss your specific requirements.",
   },
   {
-    question: 'How much time will I need to invest?',
+    question: "How much time will I need to invest?",
     answer:
-      'After setup, you will spend less than 30 minutes per week reviewing outputs and approving optimisations. Human-in-the-loop approvals are built in for high-stakes actions — you maintain final control.',
+      "After setup, you will spend less than 30 minutes per week reviewing outputs and approving optimisations — all from your phone. Human-in-the-loop approvals are built in for high-stakes actions — you maintain final control.",
   },
   {
-    question: 'Can I cancel anytime?',
+    question: "Can I cancel anytime?",
     answer:
-      'Yes. There are no lock-in contracts. You can cancel with 30 days notice. We are confident in the results, so we do not rely on lock-in to retain clients.',
+      "Yes. There are no lock-in contracts. You can cancel with 30 days notice. We are confident in the results, so we do not rely on lock-in to retain clients.",
   },
-]
+];
 
 const faqBreadcrumb = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-    { '@type': 'ListItem', position: 2, name: 'FAQ', item: `${SITE_URL}/faq` },
+    { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+    { "@type": "ListItem", position: 2, name: "FAQ", item: `${SITE_URL}/faq` },
   ],
-}
+};
 
 const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
   mainEntity: faqs.map((f) => ({
-    '@type': 'Question',
+    "@type": "Question",
     name: f.question,
-    acceptedAnswer: { '@type': 'Answer', text: f.answer },
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
   })),
-}
+};
 
 export function FAQ() {
   return (
     <>
       <Helmet>
-        <title>Frequently Asked Questions | RizFlow AI Operations</title>
-        <meta name="description" content="Answers to common questions about RizFlow's agentic AI operations for service agencies. Pricing, security, how it works, and more." />
-        <meta name="keywords" content="AI operations FAQ, agentic AI questions, RizFlow pricing FAQ" />
+        <title>Frequently Asked Questions | RizFlow Custom Agentic-AI</title>
+        <meta
+          name="description"
+          content="Answers to common questions about RizFlow's custom agentic-AI systems for businesses and SMEs. Pricing, security, customization, how it works, and more."
+        />
+        <meta
+          name="keywords"
+          content="custom AI agents FAQ, agentic AI for business, RizFlow FAQ, SME AI automation questions"
+        />
         <link rel="canonical" href={`${SITE_URL}/faq`} />
         <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/faq`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/faq`} />
-        <meta property="og:title" content="Frequently Asked Questions | RizFlow AI Operations" />
-        <meta property="og:description" content="Answers to common questions about RizFlow's agentic AI operations for service agencies. Pricing, security, how it works, and more." />
+        <meta
+          property="og:title"
+          content="Frequently Asked Questions | RizFlow Custom Agentic-AI"
+        />
+        <meta
+          property="og:description"
+          content="Answers to common questions about RizFlow's custom agentic-AI systems for businesses and SMEs. Pricing, security, customization, how it works, and more."
+        />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Frequently Asked Questions | RizFlow AI Operations" />
-        <meta name="twitter:description" content="Answers to common questions about RizFlow's agentic AI operations for service agencies." />
+        <meta
+          name="twitter:title"
+          content="Frequently Asked Questions | RizFlow Custom Agentic-AI"
+        />
+        <meta
+          name="twitter:description"
+          content="Answers to common questions about RizFlow's custom agentic-AI for businesses and SMEs."
+        />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
-        <script type="application/ld+json">{JSON.stringify(faqBreadcrumb)}</script>
+        <script type="application/ld+json">
+          {JSON.stringify(faqBreadcrumb)}
+        </script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
 
@@ -85,14 +109,14 @@ export function FAQ() {
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
           <FlowingMesh opacity={0.6} parallax={false} />
         </div>
-        
+
         {/* Cyberpunk Grid */}
-        <div 
-          className="absolute inset-0 pointer-events-none z-0" 
-          style={{ 
-            backgroundImage: `linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px)`, 
-            backgroundSize: '30px 30px' 
-          }} 
+        <div
+          className="absolute inset-0 pointer-events-none z-0"
+          style={{
+            backgroundImage: `linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px)`,
+            backgroundSize: "30px 30px",
+          }}
         />
         {/* Ambient blurs */}
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-teal-500/10 blur-[100px] rounded-full pointer-events-none" />
@@ -111,26 +135,39 @@ export function FAQ() {
 
             <div className="space-y-4">
               {faqs.map((faq, i) => (
-                <FAQItem key={i} question={faq.question} answer={faq.answer} defaultOpen={i === 0} />
+                <FAQItem
+                  key={i}
+                  question={faq.question}
+                  answer={faq.answer}
+                  defaultOpen={i === 0}
+                />
               ))}
             </div>
           </div>
         </div>
       </section>
     </>
-  )
+  );
 }
 
-function FAQItem({ question, answer, defaultOpen = false }: { question: string; answer: string; defaultOpen?: boolean }) {
-  const [open, setOpen] = useState(defaultOpen)
+function FAQItem({
+  question,
+  answer,
+  defaultOpen = false,
+}: {
+  question: string;
+  answer: string;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <div
       className={cn(
-        'rounded-lg border transition-all duration-300 overflow-hidden font-mono',
+        "rounded-lg border transition-all duration-300 overflow-hidden font-mono",
         open
-          ? 'bg-[#0A0F1A]/95 backdrop-blur-3xl border-teal-500/50 shadow-[0_0_30px_rgba(0,229,255,0.1)]'
-          : 'bg-[#0A0F1A]/60 border-white/5 hover:border-teal-500/30 backdrop-blur-xl'
+          ? "bg-[#0A0F1A]/95 backdrop-blur-3xl border-teal-500/50 shadow-[0_0_30px_rgba(0,229,255,0.1)]"
+          : "bg-[#0A0F1A]/60 border-white/5 hover:border-teal-500/30 backdrop-blur-xl",
       )}
     >
       <button
@@ -141,14 +178,28 @@ function FAQItem({ question, answer, defaultOpen = false }: { question: string; 
         <div className="flex items-start gap-3">
           <span className="text-teal-400 mt-1 shrink-0 flex items-center gap-2">
             <span className="animate-pulse opacity-70">_</span>
-            <span className="uppercase text-xs tracking-wider opacity-70">query:</span>
+            <span className="uppercase text-xs tracking-wider opacity-70">
+              query:
+            </span>
           </span>
-          <span className={cn('text-base leading-snug', open ? 'text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]' : 'text-slate-300')}>
+          <span
+            className={cn(
+              "text-base leading-snug",
+              open
+                ? "text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]"
+                : "text-slate-300",
+            )}
+          >
             {question}
           </span>
         </div>
-        <span className={cn('flex-shrink-0 text-sm transition-all duration-300', open ? 'text-teal-400' : 'text-slate-500')}>
-          {open ? '[ - ]' : '[ + ]'}
+        <span
+          className={cn(
+            "flex-shrink-0 text-sm transition-all duration-300",
+            open ? "text-teal-400" : "text-slate-500",
+          )}
+        >
+          {open ? "[ - ]" : "[ + ]"}
         </span>
       </button>
       {open && (
@@ -164,5 +215,5 @@ function FAQItem({ question, answer, defaultOpen = false }: { question: string; 
         </div>
       )}
     </div>
-  )
+  );
 }

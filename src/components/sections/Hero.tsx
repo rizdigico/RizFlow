@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react'
-import { ArrowRightIcon, BoltIcon, CheckCircleIcon, CalendarDaysIcon } from '@heroicons/react/24/outline'
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/Button'
-import { useMeshPulse } from '@/hooks/useMeshPulse'
-import { ANIMATION_VARIANTS } from '@/lib/animation-config'
-import { cn } from '@/lib/utils'
+import { useState, useEffect } from "react";
+import {
+  ArrowRightIcon,
+  BoltIcon,
+  CheckCircleIcon,
+  CalendarDaysIcon,
+} from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/Button";
+import { useMeshPulse } from "@/hooks/useMeshPulse";
+import { ANIMATION_VARIANTS } from "@/lib/animation-config";
+import { cn } from "@/lib/utils";
 
 export function Hero() {
   return (
@@ -22,39 +27,58 @@ export function Hero() {
           variants={ANIMATION_VARIANTS.staggerContainer}
         >
           {/* Left — Content */}
-          <motion.div className="space-y-8" variants={ANIMATION_VARIANTS.enterFromLeft}>
+          <motion.div
+            className="space-y-8"
+            variants={ANIMATION_VARIANTS.enterFromLeft}
+          >
             <motion.div variants={ANIMATION_VARIANTS.fadeIn}>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-[0_0_15px_rgba(0,229,255,0.1)]">
-                <span className="flex h-2 w-2 relative">
+                <span className="flex h-2 w-2 relative flex-shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-teal"></span>
                 </span>
-                <span className="text-sm text-slate-200 font-medium tracking-wide">Next-Gen Agentic Operations</span>
+                <span
+                  className="text-sm text-slate-200 font-medium tracking-wide"
+                  style={{ transform: "translateX(-5px)" }}
+                >
+                  Custom Agentic-AI for Your Business
+                </span>
               </div>
             </motion.div>
 
-            <motion.div className="space-y-6" variants={ANIMATION_VARIANTS.fadeIn}>
-               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold font-heading text-white leading-[1.1] tracking-tight text-shadow-glow">
-                Scale Operations with <br />
+            <motion.div
+              className="space-y-6"
+              variants={ANIMATION_VARIANTS.fadeIn}
+            >
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold font-heading text-white leading-[1.1] tracking-tight text-shadow-glow">
+                Run Your Business <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal via-white to-gold animate-gradient-x drop-shadow-[0_0_20px_rgba(0,229,255,0.3)]">
-                  Agentic AI
+                  From Your Phone
                 </span>
               </h1>
               <p className="text-base sm:text-xl text-slate-300 leading-relaxed max-w-lg font-light">
-                Deploy orchestrated AI agents to autonomously handle client intake, tracking, invoicing, and comms. Scale your agency effortlessly.
+                Custom agentic-AI systems tailored to your business. Choose the
+                agents you need, automate your operations, and reclaim your time
+                — all from your phone.
               </p>
             </motion.div>
 
-            <motion.div className="flex flex-col sm:flex-row gap-5 pt-4" variants={ANIMATION_VARIANTS.fadeIn}>
+            <motion.div
+              className="flex flex-col sm:flex-row gap-5 pt-4"
+              variants={ANIMATION_VARIANTS.fadeIn}
+            >
               <div className="flex flex-col items-center gap-4 flex-shrink-0 w-full sm:w-auto">
                 <Link to="/audit" className="w-full">
-                  <Button size="lg" className="w-full h-[56px] relative group overflow-hidden bg-transparent border-0 p-0 text-white rounded-xl shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_0_40px_rgba(0,229,255,0.8)] transition-all duration-300">
-                     <div className="absolute inset-0 bg-gradient-to-r from-teal via-teal-light to-teal bg-[length:200%_auto] animate-gradient-x group-hover:scale-105 transition-transform" />
-                     <div className="relative h-full w-full px-8 flex items-center justify-center gap-2 font-bold text-base">
-                        <CalendarDaysIcon className="w-5 h-5" />
-                        Get Free Operational Audit
-                        <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                     </div>
+                  <Button
+                    size="lg"
+                    className="w-full h-[56px] relative group overflow-hidden bg-transparent border-0 p-0 text-white rounded-xl shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:shadow-[0_0_40px_rgba(0,229,255,0.8)] transition-all duration-300"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-teal via-teal-light to-teal bg-[length:200%_auto] animate-gradient-x group-hover:scale-105 transition-transform" />
+                    <div className="relative h-full w-full px-8 flex items-center justify-center gap-2 font-bold text-base">
+                      <CalendarDaysIcon className="w-5 h-5" />
+                      Get Free Discovery Audit
+                      <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </Button>
                 </Link>
                 <p className="text-sm text-blue-200/40 flex items-center gap-1.5">
@@ -72,8 +96,16 @@ export function Hero() {
             </motion.div>
 
             {/* Trust indicators */}
-            <motion.div className="flex flex-wrap items-center gap-6 pt-6 border-t border-white/10" variants={ANIMATION_VARIANTS.fadeIn}>
-              {['PDPA compliant', 'Bank-Grade Security', 'Live in 1-2 Weeks'].map((item, i) => (
+            <motion.div
+              className="flex flex-wrap items-center gap-6 pt-6 border-t border-white/10"
+              variants={ANIMATION_VARIANTS.fadeIn}
+            >
+              {[
+                "PDPA Compliant",
+                "Bank-Grade Security",
+                "Live in 1-2 Weeks",
+                "Fully Customizable",
+              ].map((item, i) => (
                 <motion.div
                   key={item}
                   className="flex items-center gap-2 text-slate-300 text-sm font-medium"
@@ -103,80 +135,107 @@ export function Hero() {
         </motion.div>
       </div>
 
-       {/* Scroll indicator overlay at bottom */}
+      {/* Scroll indicator overlay at bottom */}
       <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-navy-dark to-transparent pointer-events-none z-20" />
     </section>
-  )
+  );
 }
 
 function TypewriterText({ text }: { text: string }) {
-  const [displayedText, setDisplayedText] = useState('')
+  const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
-    setDisplayedText('')
-    let i = 0
-    if (!text) return
+    setDisplayedText("");
+    let i = 0;
+    if (!text) return;
 
     const interval = setInterval(() => {
-      setDisplayedText(text.substring(0, i + 1))
-      i++
+      setDisplayedText(text.substring(0, i + 1));
+      i++;
       if (i >= text.length) {
-        clearInterval(interval)
+        clearInterval(interval);
       }
-    }, 20) // Fast typing speed
+    }, 20); // Fast typing speed
 
-    return () => clearInterval(interval)
-  }, [text])
+    return () => clearInterval(interval);
+  }, [text]);
 
   return (
     <>
       {displayedText}
-      <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 0.8, repeat: Infinity }} className="inline-block w-1.5 h-3 bg-teal-300 align-middle ml-1 shadow-[0_0_8px_rgba(45,212,191,0.8)]" />
+      <motion.span
+        animate={{ opacity: [0, 1, 0] }}
+        transition={{ duration: 0.8, repeat: Infinity }}
+        className="inline-block w-1.5 h-3 bg-teal-300 align-middle ml-1 shadow-[0_0_8px_rgba(45,212,191,0.8)]"
+      />
     </>
-  )
+  );
 }
 
 function AgentNetworkSVG() {
-  const pulseProps = useMeshPulse()
-  const [taskText, setTaskText] = useState('Initializing Orchestrator Swarm...')
-  const [activeNode, setActiveNode] = useState<number>(0)
+  const pulseProps = useMeshPulse();
+  const [taskText, setTaskText] = useState(
+    "Initializing Orchestrator Swarm...",
+  );
+  const [activeNode, setActiveNode] = useState<number>(0);
 
   useEffect(() => {
     const tasks = [
-      { text: '[INTAKE] Parsing inbound email from "Acme Corp"...', node: 0 },
-      { text: '[TRACKING] Lead scored: 94/100. Pushing to CRM.', node: 1 },
-      { text: '[ORCHESTRATOR] Routing data to Comms Agent...', node: 5 },
-      { text: '[COMMS] Drafting hyper-personalized outreach sequence...', node: 3 },
-      { text: '[QA] Outreach validated against brand guidelines.', node: 4 },
-      { text: '[COMMS] Email sequence approved & dispatched.', node: 3 },
-      { text: '[TRACKING] Analyzing previous campaign metrics...', node: 1 },
-      { text: '[ORCHESTRATOR] Optimizing ad spend allocation...', node: 5 },
-      { text: '[BILLING] Invoice #2045 generated. Awaiting approval.', node: 2 }
-    ]
-    let i = 0
+      {
+        text: "[INTAKE] New customer inquiry received — auto-qualifying...",
+        node: 0,
+      },
+      { text: "[WORKFLOW] Order #1847 assigned to fulfilment queue.", node: 1 },
+      { text: "[ORCHESTRATOR] Routing data to Comms Agent...", node: 5 },
+      {
+        text: "[COMMS] Customer update drafted — matching your brand tone...",
+        node: 3,
+      },
+      { text: "[QA] Delivery checklist verified. All checks passed.", node: 4 },
+      { text: "[COMMS] Status update sent to customer via WhatsApp.", node: 3 },
+      {
+        text: "[WORKFLOW] Inventory alert triggered — restock recommended.",
+        node: 1,
+      },
+      { text: "[ORCHESTRATOR] Rescheduling daily report for 5 PM...", node: 5 },
+      {
+        text: "[BILLING] Payment reminder sent for Invoice #2045.",
+        node: 2,
+      },
+    ];
+    let i = 0;
     const interval = setInterval(() => {
-      setTaskText(tasks[i].text)
-      setActiveNode(tasks[i].node)
-      i = (i + 1) % tasks.length
-    }, 2800)
-    return () => clearInterval(interval)
-  }, [])
+      setTaskText(tasks[i].text);
+      setActiveNode(tasks[i].node);
+      i = (i + 1) % tasks.length;
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
 
   const nodes = [
-    { cx: 130, cy: 110, label: 'Intake Agent', icon: '📥', isCenter: false },
-    { cx: 360, cy: 90, label: 'Tracking Agent', icon: '📊', isCenter: false },
-    { cx: 400, cy: 230, label: 'Billing Agent', icon: '💳', isCenter: false },
-    { cx: 250, cy: 310, label: 'Comms Agent', icon: '📩', isCenter: false },
-    { cx: 110, cy: 260, label: 'QA Agent', icon: '✅', isCenter: false },
-    { cx: 255, cy: 200, label: 'Orchestrator', icon: '🧠', isCenter: true },
-  ]
+    { cx: 130, cy: 110, label: "Intake Agent", icon: "📥", isCenter: false },
+    { cx: 360, cy: 90, label: "Workflow Agent", icon: "📊", isCenter: false },
+    { cx: 400, cy: 230, label: "Billing Agent", icon: "💳", isCenter: false },
+    { cx: 250, cy: 310, label: "Comms Agent", icon: "📩", isCenter: false },
+    { cx: 110, cy: 260, label: "QA Agent", icon: "✅", isCenter: false },
+    { cx: 255, cy: 200, label: "Orchestrator", icon: "🧠", isCenter: true },
+  ];
 
   // Create a mesh network by connecting more nodes
   const edges = [
-    [0, 5], [1, 5], [2, 5], [3, 5], [4, 5], // All to center
-    [0, 1], [1, 2], [2, 3], [3, 4], [4, 0], // Outer ring
-    [0, 3], [1, 4] // Cross connections
-  ]
+    [0, 5],
+    [1, 5],
+    [2, 5],
+    [3, 5],
+    [4, 5], // All to center
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [4, 0], // Outer ring
+    [0, 3],
+    [1, 4], // Cross connections
+  ];
 
   return (
     <motion.div
@@ -196,52 +255,56 @@ function AgentNetworkSVG() {
             <motion.div
               key={`particle-${i}`}
               className="absolute w-1 h-1 bg-teal rounded-full blur-[1px]"
-              initial={{ 
-                x: Math.random() * 500, 
+              initial={{
+                x: Math.random() * 500,
                 y: Math.random() * 400,
-                opacity: Math.random() * 0.5 + 0.1
+                opacity: Math.random() * 0.5 + 0.1,
               }}
-              animate={{ 
+              animate={{
                 y: [null, Math.random() * -100 - 50],
-                opacity: [null, 0]
+                opacity: [null, 0],
               }}
-              transition={{ 
-                duration: Math.random() * 5 + 5, 
+              transition={{
+                duration: Math.random() * 5 + 5,
                 repeat: Infinity,
-                ease: "linear" 
+                ease: "linear",
               }}
             />
           ))}
         </div>
       </div>
 
-      <svg viewBox="20 20 460 360" className="w-full h-full overflow-visible z-10" aria-hidden="true">
+      <svg
+        viewBox="20 20 460 360"
+        className="w-full h-full overflow-visible z-10"
+        aria-hidden="true"
+      >
         <defs>
-            <linearGradient id="edgeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#3B82F6" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#D97706" stopOpacity="0.8" />
-            </linearGradient>
-            <filter id="hyper-glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="8" result="blur1" />
-                <feGaussianBlur stdDeviation="4" result="blur2" />
-                <feMerge>
-                    <feMergeNode in="blur1" />
-                    <feMergeNode in="blur2" />
-                    <feMergeNode in="SourceGraphic" />
-                </feMerge>
-            </filter>
-            <filter id="subtle-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
+          <linearGradient id="edgeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.8" />
+            <stop offset="50%" stopColor="#3B82F6" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#D97706" stopOpacity="0.8" />
+          </linearGradient>
+          <filter id="hyper-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="8" result="blur1" />
+            <feGaussianBlur stdDeviation="4" result="blur2" />
+            <feMerge>
+              <feMergeNode in="blur1" />
+              <feMergeNode in="blur2" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="subtle-glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
 
-            {/* Real-time scanning line pattern */}
-            <linearGradient id="scanline" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="transparent" />
-                <stop offset="50%" stopColor="#06B6D4" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="transparent" />
-            </linearGradient>
+          {/* Real-time scanning line pattern */}
+          <linearGradient id="scanline" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="transparent" />
+            <stop offset="50%" stopColor="#06B6D4" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="transparent" />
+          </linearGradient>
         </defs>
 
         {/* Connections / Edges */}
@@ -249,7 +312,7 @@ function AgentNetworkSVG() {
           const isCenterConnection = a === 5 || b === 5;
           const isActivePath = a === activeNode || b === activeNode;
           // Use smooth bezier curves for a more organic, neural look
-          const d = `M ${nodes[a].cx} ${nodes[a].cy} Q ${(nodes[a].cx + nodes[b].cx)/2 + (isCenterConnection ? 30 : -20)} ${(nodes[a].cy + nodes[b].cy)/2 + (isCenterConnection ? -10 : 30)} ${nodes[b].cx} ${nodes[b].cy}`;
+          const d = `M ${nodes[a].cx} ${nodes[a].cy} Q ${(nodes[a].cx + nodes[b].cx) / 2 + (isCenterConnection ? 30 : -20)} ${(nodes[a].cy + nodes[b].cy) / 2 + (isCenterConnection ? -10 : 30)} ${nodes[b].cx} ${nodes[b].cy}`;
 
           return (
             <g key={`edge-group-${i}`}>
@@ -262,10 +325,17 @@ function AgentNetworkSVG() {
                 strokeOpacity={isActivePath ? "0.8" : "0.4"}
                 strokeDasharray="4 4"
                 initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1, strokeDashoffset: isActivePath ? [0, -30] : 0 }}
-                transition={{ 
-                  pathLength: { duration: 2, delay: i * 0.05 }, 
-                  strokeDashoffset: { duration: 2, repeat: Infinity, ease: "linear" } 
+                animate={{
+                  pathLength: 1,
+                  strokeDashoffset: isActivePath ? [0, -30] : 0,
+                }}
+                transition={{
+                  pathLength: { duration: 2, delay: i * 0.05 },
+                  strokeDashoffset: {
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "linear",
+                  },
                 }}
               />
 
@@ -273,12 +343,34 @@ function AgentNetworkSVG() {
               {isActivePath && (
                 <>
                   <circle r="4" fill="#06B6D4" filter="url(#subtle-glow)">
-                    <animateMotion dur="1.5s" repeatCount="indefinite" path={d} />
-                    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="1.5s" repeatCount="indefinite" />
+                    <animateMotion
+                      dur="1.5s"
+                      repeatCount="indefinite"
+                      path={d}
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0;1;1;0"
+                      keyTimes="0;0.1;0.9;1"
+                      dur="1.5s"
+                      repeatCount="indefinite"
+                    />
                   </circle>
                   <circle r="2" fill="#F8FAFC">
-                    <animateMotion dur="1s" repeatCount="indefinite" path={d} begin="0.5s" />
-                    <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite" begin="0.5s" />
+                    <animateMotion
+                      dur="1s"
+                      repeatCount="indefinite"
+                      path={d}
+                      begin="0.5s"
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0;1;0"
+                      keyTimes="0;0.5;1"
+                      dur="1s"
+                      repeatCount="indefinite"
+                      begin="0.5s"
+                    />
                   </circle>
                 </>
               )}
@@ -295,48 +387,68 @@ function AgentNetworkSVG() {
               key={`node-${i}`}
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 + i * 0.1, type: "spring", stiffness: 300, damping: 20 }}
+              transition={{
+                delay: 0.2 + i * 0.1,
+                type: "spring",
+                stiffness: 300,
+                damping: 20,
+              }}
             >
-               {/* Ambient Node Aura */}
-               <motion.circle 
-                  cx={node.cx} cy={node.cy} 
-                  r={node.isCenter ? 55 : (isActive ? 40 : 35)} 
-                  fill={node.isCenter ? '#06B6D4' : (isActive ? '#3B82F6' : '#1E293B')} 
-                  filter="url(#hyper-glow)" 
-                  animate={{
-                    opacity: node.isCenter ? [0.15, 0.3, 0.15] : (isActive ? [0.3, 0.6, 0.3] : 0.1),
-                    scale: isActive ? [1, 1.1, 1] : 1
-                  }}
-                  transition={{
-                    duration: node.isCenter ? 3 : 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-               />
+              {/* Ambient Node Aura */}
+              <motion.circle
+                cx={node.cx}
+                cy={node.cy}
+                r={node.isCenter ? 55 : isActive ? 40 : 35}
+                fill={
+                  node.isCenter ? "#06B6D4" : isActive ? "#3B82F6" : "#1E293B"
+                }
+                filter="url(#hyper-glow)"
+                animate={{
+                  opacity: node.isCenter
+                    ? [0.15, 0.3, 0.15]
+                    : isActive
+                      ? [0.3, 0.6, 0.3]
+                      : 0.1,
+                  scale: isActive ? [1, 1.1, 1] : 1,
+                }}
+                transition={{
+                  duration: node.isCenter ? 3 : 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
 
-               {/* Core Hardware Shell */}
+              {/* Core Hardware Shell */}
               <circle
-                cx={node.cx} cy={node.cy}
+                cx={node.cx}
+                cy={node.cy}
                 r={node.isCenter ? 42 : 28}
                 fill="#0A0F1A"
-                stroke={node.isCenter ? '#06B6D4' : (isActive ? '#60A5FA' : '#334155')}
-                strokeWidth={node.isCenter ? '2' : '1.5'}
+                stroke={
+                  node.isCenter ? "#06B6D4" : isActive ? "#60A5FA" : "#334155"
+                }
+                strokeWidth={node.isCenter ? "2" : "1.5"}
                 className="drop-shadow-xl"
               />
 
               {/* Rotating inner ring for Orchestrator */}
               {node.isCenter && (
-                 <motion.circle
-                   cx={node.cx} cy={node.cy}
-                   r={36}
-                   fill="none"
-                   stroke="url(#edgeGradient)"
-                   strokeWidth="1"
-                   strokeDasharray="10 20"
-                   animate={{ rotate: 360 }}
-                   transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                   style={{ originX: `${node.cx}px`, originY: `${node.cy}px` }}
-                 />
+                <motion.circle
+                  cx={node.cx}
+                  cy={node.cy}
+                  r={36}
+                  fill="none"
+                  stroke="url(#edgeGradient)"
+                  strokeWidth="1"
+                  strokeDasharray="10 20"
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                  style={{ originX: `${node.cx}px`, originY: `${node.cy}px` }}
+                />
               )}
 
               {/* Node Icon */}
@@ -347,29 +459,33 @@ function AgentNetworkSVG() {
                 fontSize={node.isCenter ? "26" : "18"}
                 fill={isActive || node.isCenter ? "#FFFFFF" : "#94A3B8"}
                 className="select-none filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] transition-colors duration-300"
-                style={{ filter: isActive ? 'drop-shadow(0 0 8px rgba(255,255,255,0.8))' : 'none' }}
+                style={{
+                  filter: isActive
+                    ? "drop-shadow(0 0 8px rgba(255,255,255,0.8))"
+                    : "none",
+                }}
               >
                 {node.icon}
               </text>
 
               {/* Hardware Label Display */}
-               <rect 
-                  x={node.cx - 40} 
-                  y={node.cy + (node.isCenter ? 50 : 36)} 
-                  width="80" 
-                  height="20" 
-                  rx="4" 
-                  fill="#0A0F1A" 
-                  stroke={isActive ? '#06B6D4' : '#334155'} 
-                  strokeWidth="1"
-                  className="transition-colors duration-300"
-               />
+              <rect
+                x={node.cx - 40}
+                y={node.cy + (node.isCenter ? 50 : 36)}
+                width="80"
+                height="20"
+                rx="4"
+                fill="#0A0F1A"
+                stroke={isActive ? "#06B6D4" : "#334155"}
+                strokeWidth="1"
+                className="transition-colors duration-300"
+              />
               <text
                 x={node.cx}
                 y={node.cy + (node.isCenter ? 63 : 49)}
                 textAnchor="middle"
                 fontSize="9"
-                fill={isActive ? '#22D3EE' : '#94A3B8'}
+                fill={isActive ? "#22D3EE" : "#94A3B8"}
                 fontWeight="700"
                 className="select-none tracking-wider font-mono transition-colors duration-300"
               >
@@ -379,7 +495,8 @@ function AgentNetworkSVG() {
               {/* Active processing indicator dots */}
               {isActive && !node.isCenter && (
                 <motion.circle
-                  cx={node.cx - 30} cy={node.cy + 46}
+                  cx={node.cx - 30}
+                  cy={node.cy + 46}
                   r="2"
                   fill="#22C55E"
                   animate={{ opacity: [1, 0, 1] }}
@@ -387,7 +504,7 @@ function AgentNetworkSVG() {
                 />
               )}
             </motion.g>
-          )
+          );
         })}
       </svg>
 
@@ -403,8 +520,14 @@ function AgentNetworkSVG() {
           <span className="font-bold">System Live</span>
         </div>
         <div className="text-[10px] font-mono text-slate-400 flex items-center gap-1.5">
-          <span className="tracking-widest">UPTIME:</span> 
-          <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 2, repeat: Infinity }} className="text-teal-400 font-bold tracking-wider">99.99%</motion.span>
+          <span className="tracking-widest">UPTIME:</span>
+          <motion.span
+            animate={{ opacity: [1, 0.5, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="text-teal-400 font-bold tracking-wider"
+          >
+            99.99%
+          </motion.span>
         </div>
       </motion.div>
 
@@ -413,38 +536,40 @@ function AgentNetworkSVG() {
         className="absolute -bottom-10 sm:-bottom-12 left-1/2 -translate-x-1/2 w-[90%] sm:w-[85%] bg-[#050A14]/95 backdrop-blur-3xl border border-teal-500/30 rounded-xl shadow-[0_0_50px_rgba(0,229,255,0.2)] overflow-hidden"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, type: 'spring', stiffness: 200, damping: 20 }}
+        transition={{ delay: 1.5, type: "spring", stiffness: 200, damping: 20 }}
       >
-         {/* Console Header */}
-         <div className="flex items-center justify-between px-3 py-1.5 bg-teal-950/40 border-b border-teal-500/20">
-            <div className="flex gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-red-500/80 shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
-              <div className="w-2 h-2 rounded-full bg-yellow-500/80 shadow-[0_0_5px_rgba(234,179,8,0.5)]" />
-              <div className="w-2 h-2 rounded-full bg-green-500/80 shadow-[0_0_5px_rgba(34,197,94,0.5)]" />
-            </div>
-            <p className="text-teal-400 text-[9px] font-bold tracking-[0.2em] uppercase font-mono flex items-center gap-1.5">
-              <BoltIcon className="w-2.5 h-2.5" />
-              Operations.log
-            </p>
-         </div>
+        {/* Console Header */}
+        <div className="flex items-center justify-between px-3 py-1.5 bg-teal-950/40 border-b border-teal-500/20">
+          <div className="flex gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-red-500/80 shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
+            <div className="w-2 h-2 rounded-full bg-yellow-500/80 shadow-[0_0_5px_rgba(234,179,8,0.5)]" />
+            <div className="w-2 h-2 rounded-full bg-green-500/80 shadow-[0_0_5px_rgba(34,197,94,0.5)]" />
+          </div>
+          <p className="text-teal-400 text-[9px] font-bold tracking-[0.2em] uppercase font-mono flex items-center gap-1.5">
+            <BoltIcon className="w-2.5 h-2.5" />
+            Business.log
+          </p>
+        </div>
 
-         {/* Console Output */}
-         <div className="p-3 sm:p-4 flex items-start gap-3 font-mono">
-           <div className="mt-0.5 relative flex items-center justify-center w-3.5 h-3.5 rounded-sm bg-teal-500/10 border border-teal-500/40 flex-shrink-0 shadow-[0_0_10px_rgba(45,212,191,0.2)]">
-              <span className="absolute inset-0 bg-teal-400 opacity-20 animate-pulse"></span>
-              <span className="text-teal-400 text-[8px] ml-[1px]">▶</span>
-           </div>
-           <div className="flex-1 min-w-0">
-              <p className="text-teal-300 text-[11px] sm:text-xs font-semibold tracking-wide leading-relaxed drop-shadow-[0_0_8px_rgba(45,212,191,0.6)] min-h-[36px] sm:min-h-[40px]">
-                <TypewriterText text={taskText} />
-              </p>
-              <div className="mt-2 flex items-center gap-2">
-                 <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/50 via-cyan-500/10 to-transparent" />
-                 <span className="text-[7px] text-teal-500/50 tracking-widest uppercase">Agentic Swarm Active</span>
-              </div>
-           </div>
-         </div>
+        {/* Console Output */}
+        <div className="p-3 sm:p-4 flex items-start gap-3 font-mono">
+          <div className="mt-0.5 relative flex items-center justify-center w-3.5 h-3.5 rounded-sm bg-teal-500/10 border border-teal-500/40 flex-shrink-0 shadow-[0_0_10px_rgba(45,212,191,0.2)]">
+            <span className="absolute inset-0 bg-teal-400 opacity-20 animate-pulse"></span>
+            <span className="text-teal-400 text-[8px] ml-[1px]">▶</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-teal-300 text-[11px] sm:text-xs font-semibold tracking-wide leading-relaxed drop-shadow-[0_0_8px_rgba(45,212,191,0.6)] min-h-[36px] sm:min-h-[40px]">
+              <TypewriterText text={taskText} />
+            </p>
+            <div className="mt-2 flex items-center gap-2">
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/50 via-cyan-500/10 to-transparent" />
+              <span className="text-[7px] text-teal-500/50 tracking-widest uppercase">
+                Agent Network Active
+              </span>
+            </div>
+          </div>
+        </div>
       </motion.div>
     </motion.div>
-  )
+  );
 }

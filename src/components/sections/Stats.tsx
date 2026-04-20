@@ -1,17 +1,17 @@
-import { useEffect, useRef } from 'react';
-import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
+import { useEffect, useRef } from "react";
+import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
 
 const stats = [
-  { id: 1, name: 'Projects Delivered', value: 150, suffix: '+' },
-  { id: 2, name: 'Client Retention', value: 98, suffix: '%' },
-  { id: 3, name: 'Design Awards', value: 12, suffix: '' },
-  { id: 4, name: 'Global Clients', value: 45, suffix: '+' },
+  { id: 1, name: "Projects Delivered", value: 150, suffix: "+" },
+  { id: 2, name: "Client Retention", value: 98, suffix: "%" },
+  { id: 3, name: "Design Awards", value: 12, suffix: "" },
+  { id: 4, name: "Global Clients", value: 45, suffix: "+" },
 ];
 
 function AnimatedNumber({ value }: { value: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
-  
+
   const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, {
     damping: 50,
@@ -27,7 +27,9 @@ function AnimatedNumber({ value }: { value: number }) {
   useEffect(() => {
     return springValue.on("change", (latest) => {
       if (ref.current) {
-        ref.current.textContent = Intl.NumberFormat('en-US').format(Math.floor(latest));
+        ref.current.textContent = Intl.NumberFormat("en-US").format(
+          Math.floor(latest),
+        );
       }
     });
   }, [springValue]);
