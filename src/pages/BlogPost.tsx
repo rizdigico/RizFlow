@@ -159,17 +159,18 @@ export function BlogPost() {
           {post.content ? (
             <article
               className="prose prose-invert prose-teal max-w-none
-              prose-headings:font-heading prose-headings:text-white prose-headings:font-bold
-              prose-h2:text-3xl prose-h2:mt-24 prose-h2:mb-12
-              prose-h3:text-2xl prose-h3:mt-20 prose-h3:mb-10
-              prose-p:text-slate-200 prose-p:leading-[2.2] prose-p:mb-10 prose-p:text-lg prose-p:font-sans
-              prose-strong:text-white prose-strong:font-semibold
-              prose-em:text-slate-200
-              prose-ul:text-slate-200 prose-ul:text-lg prose-ul:font-sans prose-ul:leading-[2.2] prose-ul:space-y-5 prose-ul:mb-12
-              prose-ol:text-slate-200 prose-ol:text-lg prose-ol:font-sans prose-ol:leading-[2.2] prose-ol:space-y-5 prose-ol:mb-12
-              prose-li:text-slate-200
-              prose-a:text-teal-400 prose-a:no-underline hover:prose-a:text-teal-300
-            "
+                bg-[#0A0F1A]/60 border border-white/[0.06] rounded-2xl p-6 sm:p-10
+                prose-headings:font-heading prose-headings:text-white prose-headings:font-bold
+                prose-h2:text-3xl prose-h2:mt-20 prose-h2:mb-8
+                prose-h3:text-2xl prose-h3:mt-16 prose-h3:mb-6
+                prose-p:text-slate-200 prose-p:leading-[2] prose-p:mb-8 prose-p:text-lg prose-p:font-sans
+                prose-strong:text-white prose-strong:font-semibold
+                prose-em:text-slate-200
+                prose-ul:text-slate-200 prose-ul:text-lg prose-ul:font-sans prose-ul:leading-[2] prose-ul:space-y-4 prose-ul:mb-10
+                prose-ol:text-slate-200 prose-ol:text-lg prose-ol:font-sans prose-ol:leading-[2] prose-ol:space-y-4 prose-ol:mb-10
+                prose-li:text-slate-200
+                prose-a:text-teal-400 prose-a:no-underline hover:prose-a:text-teal-300
+              "
             >
               {post.content}
             </article>

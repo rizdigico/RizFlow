@@ -2,14 +2,14 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 
 const tools = [
-  "Slack",
-  "HubSpot",
-  "Asana",
-  "Xero",
-  "Notion",
-  "Zapier",
-  "Monday.com",
-  "Stripe",
+  { name: "Slack", url: "https://slack.com" },
+  { name: "HubSpot", url: "https://www.hubspot.com" },
+  { name: "Asana", url: "https://asana.com" },
+  { name: "Xero", url: "https://www.xero.com" },
+  { name: "Notion", url: "https://www.notion.so" },
+  { name: "Zapier", url: "https://zapier.com" },
+  { name: "Monday.com", url: "https://monday.com" },
+  { name: "Stripe", url: "https://stripe.com" },
 ];
 
 export function SocialProofLogos() {
@@ -33,16 +33,22 @@ export function SocialProofLogos() {
           )}
         >
           {tools.map((tool) => (
-            <div
-              key={tool}
-              className="group flex items-center justify-center h-9 opacity-40 hover:opacity-100 transition-all duration-300 cursor-default"
+            <a
+              key={tool.name}
+              href={tool.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-center h-9 opacity-40 hover:opacity-100 transition-all duration-300 cursor-pointer"
             >
               <span className="text-sm font-bold text-slate-400 group-hover:text-white font-heading transition-colors">
-                {tool}
+                {tool.name}
               </span>
-            </div>
+            </a>
           ))}
         </div>
+        <p className="text-center text-sm text-slate-500 font-mono tracking-wider mt-8">
+          +50 more
+        </p>
       </div>
     </section>
   );
