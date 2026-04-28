@@ -15,7 +15,7 @@ export function FounderProfile({ compact = false }: FounderProfileProps) {
         compact ? "gap-6" : "gap-20 lg:gap-24",
       )}
     >
-      {/* Avatar with scanning ring/glow */}
+      {/* Founder photo with scanning ring/glow */}
       <div className="relative flex-shrink-0">
         <div
           className="absolute inset-0 rounded-full border border-teal-500/30 animate-spin"
@@ -25,12 +25,11 @@ export function FounderProfile({ compact = false }: FounderProfileProps) {
           className="absolute inset-2 rounded-full border border-cyan-500/20 animate-spin"
           style={{ animationDuration: "15s", animationDirection: "reverse" }}
         />
-        <div className="w-40 h-40 rounded-full bg-[#0A0F1A] overflow-hidden border-2 border-teal-500/50 shadow-[0_0_30px_rgba(0,229,255,0.2)] relative z-10">
+        <div className="w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-[#0A0F1A] overflow-hidden border-2 border-teal-500/50 shadow-[0_0_30px_rgba(0,229,255,0.2)] relative z-10">
           <img
             src="/founder.jpg"
             alt="Aariz Arfan, Founder of RizFlow"
-            className="w-full h-full object-cover"
-            style={{ objectPosition: "center 25%" }}
+            className="w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-teal-500/10 to-transparent pointer-events-none" />
         </div>
