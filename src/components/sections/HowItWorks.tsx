@@ -77,7 +77,7 @@ const steps = [
     description:
       "Your custom AI agents handle repetitive work around the clock. Review outputs in under 30 minutes per week — from your phone — and invest reclaimed hours into growing your business.",
     cta: "View Case Studies",
-    ctaHref: "/about",
+    ctaHref: "/case-study/rainfresh-sg",
     visual: <GrowCard />,
   },
 ];
