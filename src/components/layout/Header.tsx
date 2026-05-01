@@ -5,6 +5,7 @@ import {
   XMarkIcon,
   BoltIcon,
   CalendarDaysIcon,
+  PlayIcon,
 } from "@heroicons/react/24/outline";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
@@ -96,7 +97,17 @@ export function Header() {
           </nav>
 
           {/* CTA */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
+            <Link to="/demo">
+              <Button
+                size="md"
+                variant="outline"
+                className="flex items-center gap-2 border-teal-500/40 text-teal-300 hover:bg-teal-500/10 hover:border-teal-400/60"
+              >
+                <PlayIcon className="w-4 h-4" />
+                Live Demo
+              </Button>
+            </Link>
             <Link to="/audit">
               <Button
                 size="md"
@@ -172,12 +183,21 @@ export function Header() {
                   </motion.div>
                 ))}
                 <motion.div
-                  className="pt-2 pb-2"
+                  className="pt-2 pb-2 flex flex-col gap-2"
                   variants={{
                     hidden: { opacity: 0, y: 10 },
                     visible: { opacity: 1, y: 0 },
                   }}
                 >
+                  <Link to="/demo" className="block">
+                    <Button
+                      className="w-full flex items-center justify-center gap-2 border-teal-500/40 text-teal-300 hover:bg-teal-500/10 hover:border-teal-400/60"
+                      variant="outline"
+                    >
+                      <PlayIcon className="w-4 h-4" />
+                      Live Demo
+                    </Button>
+                  </Link>
                   <Link to="/audit" className="block">
                     <Button
                       className="w-full flex items-center justify-center gap-2"

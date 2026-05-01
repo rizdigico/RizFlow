@@ -494,7 +494,7 @@ export function CaseStudy() {
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <Link
-                  to="/"
+                  to="/demo"
                   className="group relative px-6 py-3 rounded-lg text-white font-medium transition-all overflow-hidden shadow-[0_0_25px_rgba(45,212,191,0.3)] hover:shadow-[0_0_40px_rgba(45,212,191,0.6)]"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-teal via-teal-light to-teal bg-[length:200%_auto] animate-gradient-x" />
