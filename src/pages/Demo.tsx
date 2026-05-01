@@ -19,7 +19,7 @@ import {
   PlayIcon,
   PauseIcon,
   QueueListIcon,
-  CalendarDaysIcon,
+  CalendarIcon,
 } from "@heroicons/react/24/outline";
 
 // ── Agent Definitions ──
@@ -305,12 +305,21 @@ export function Demo() {
   const [totalTime, setTotalTime] = useState(0);
   const [completedSteps, setCompletedSteps] = useState(0);
   const [activeAgents, setActiveAgents] = useState<Set<AgentId>>(new Set());
+
+  // Use refs for values the timer callback needs to read without stale closures
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const logEndRef = useRef<HTMLDivElement>(null);
+  const isPausedRef = useRef(false);
+  const scenarioRef = useRef<Scenario | null>(null);
+  const nextStepRef = useRef(0);
   const dashboardRef = useRef<HTMLDivElement>(null);
+  const logEndRef = useRef<HTMLDivElement>(null);
 
   const resetSimulation = useCallback(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    isPausedRef.current = false;
     setActiveScenario(null);
     setCurrentStepIndex(-1);
     setLogs([]);
@@ -321,51 +330,57 @@ export function Demo() {
     setActiveAgents(new Set());
   }, []);
 
-  const runStep = useCallback(
-    (scenario: Scenario, stepIndex: number) => {
-      if (stepIndex >= scenario.steps.length) {
-        setIsRunning(false);
-        return;
-      }
+  const runNextStep = useCallback(() => {
+    const scenario = scenarioRef.current;
+    if (!scenario) return;
 
-      const step = scenario.steps[stepIndex];
-      const agent = getAgent(step.agent);
+    const stepIndex = nextStepRef.current;
+    if (stepIndex >= scenario.steps.length) {
+      setIsRunning(false);
+      setActiveAgents(new Set());
+      return;
+    }
 
-      setActiveAgents((prev) => new Set(prev).add(step.agent));
-      setCurrentStepIndex(stepIndex);
+    const step = scenario.steps[stepIndex];
+    const agent = getAgent(step.agent);
 
-      timerRef.current = setTimeout(
-        () => {
-          setTotalTime((t) => t + step.duration);
-          setCompletedSteps((c) => c + 1);
-          setLogs((prev) => [
-            ...prev,
-            {
-              agent,
-              action: step.action,
-              detail: step.detail,
-              time: formatTime(step.duration),
-            },
-          ]);
-          setCurrentStepIndex(stepIndex + 1);
+    setActiveAgents((prev) => new Set(prev).add(step.agent));
+    setCurrentStepIndex(stepIndex);
 
-          if (stepIndex + 1 < scenario.steps.length) {
-            runStep(scenario, stepIndex + 1);
-          } else {
-            setIsRunning(false);
-            setActiveAgents(new Set());
-          }
+    timerRef.current = setTimeout(() => {
+      // If paused, stop here — resume will call runNextStep again
+      if (isPausedRef.current) return;
+
+      setTotalTime((t) => t + step.duration);
+      setCompletedSteps((c) => c + 1);
+      setLogs((prev) => [
+        ...prev,
+        {
+          agent,
+          action: step.action,
+          detail: step.detail,
+          time: formatTime(step.duration),
         },
-        isPaused ? 500 : step.duration,
-      );
-    },
-    [isPaused],
-  );
+      ]);
+
+      nextStepRef.current = stepIndex + 1;
+
+      if (stepIndex + 1 < scenario.steps.length) {
+        runNextStep();
+      } else {
+        setIsRunning(false);
+        setActiveAgents(new Set());
+      }
+    }, step.duration);
+  }, []);
 
   const startScenario = useCallback(
     (scenario: Scenario) => {
       resetSimulation();
       setActiveScenario(scenario);
+      scenarioRef.current = scenario;
+      nextStepRef.current = 0;
+      isPausedRef.current = false;
       setIsRunning(true);
       setIsPaused(false);
 
@@ -379,17 +394,32 @@ export function Demo() {
 
       // Small delay for visual effect, then run
       setTimeout(() => {
-        runStep(scenario, 0);
+        runNextStep();
       }, 600);
     },
-    [resetSimulation, runStep],
+    [resetSimulation, runNextStep],
   );
 
   const togglePause = useCallback(() => {
-    setIsPaused((p) => !p);
-  }, []);
+    setIsPaused((prev) => {
+      const next = !prev;
+      isPausedRef.current = next;
 
-  // Removed: auto-scrolling on every log entry was pulling users away from the view
+      if (next) {
+        // Pausing — clear the pending timer
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+          timerRef.current = null;
+        }
+      } else {
+        // Resuming — continue from where we left off
+        // Re-run current step (which was interrupted by pause)
+        runNextStep();
+      }
+
+      return next;
+    });
+  }, [runNextStep]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -981,7 +1011,7 @@ export function Demo() {
                   variant="cta"
                   className="flex items-center gap-2 mx-auto"
                 >
-                  <CalendarDaysIcon className="w-5 h-5" />
+                  <CalendarIcon className="w-5 h-5" />
                   Get Your Custom Agent Plan
                   <ArrowRightIcon className="w-5 h-5" />
                 </Button>
