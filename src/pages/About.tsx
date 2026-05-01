@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { motion, AnimatePresence } from "framer-motion";
 import { FounderProfile } from "@/components/sections/FounderProfile";
 import { Container } from "@/components/layout/Container";
 import { FlowingMesh } from "@/components/animations/FlowingMesh";
@@ -31,32 +33,61 @@ const founderSchema = {
 const timeline = [
   {
     year: "2024",
+    emoji: "🧠",
+    title: "The Spark",
     event:
       "Discovered & learnt about the full potential of AI while using it to study in Senior high. Scored multiple distinctions & got into my dream course.",
+    status: "COMPLETED",
   },
   {
     year: "Early 2025",
+    emoji: "⚡",
+    title: "First Automations",
     event:
       "Started automating workflows with Zapier, N8N and custom scripts. Saved 12-20 hours personally.",
+    status: "COMPLETED",
   },
   {
     year: "Late 2025",
+    emoji: "🤖",
+    title: "Agent Awakening",
     event:
       "Discovered LLMs could handle nuanced ops tasks. Started utilising & building AI agents.",
+    status: "COMPLETED",
   },
   {
     year: "Early 2026",
+    emoji: "🚀",
+    title: "RizFlow Launched",
     event:
       "Ran first paid pilot with a business. Validated the core product. RizFlow was born.",
+    status: "DEPLOYED",
   },
   {
     year: "Now",
+    emoji: "🌏",
+    title: "Scaling Across SEA",
     event:
       "Aiming to serve businesses & SMEs across SEA. Building while studying — proving it can be done.",
+    status: "ACTIVE",
   },
 ];
 
+const statusColors: Record<string, string> = {
+  COMPLETED: "text-teal-400 border-teal-500/40 bg-teal-500/10",
+  DEPLOYED: "text-cyan-400 border-cyan-500/40 bg-cyan-500/10",
+  ACTIVE: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10",
+};
+
+const statusDots: Record<string, string> = {
+  COMPLETED: "bg-teal-400",
+  DEPLOYED: "bg-cyan-400",
+  ACTIVE: "bg-emerald-400 animate-pulse",
+};
+
 export function About() {
+  const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
+
   return (
     <>
       <Helmet>
@@ -237,45 +268,188 @@ export function About() {
           </Container>
         </section>
 
-        {/* System Event Log */}
+        {/* Our Promise */}
         <section className="py-24 relative">
-          <Container>
-            <div className="text-center mb-20">
-              <h2 className="font-mono text-teal-400 uppercase tracking-widest text-lg font-semibold mb-2">
-                System Event Log
-              </h2>
-              <div className="h-[1px] w-24 bg-teal-500/30 mx-auto" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.04)_0%,transparent_70%)] pointer-events-none" />
+          <Container className="relative z-10">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center gap-2">
+                <div className="w-2 h-2 bg-gold animate-pulse rounded-full" />
+                <h2 className="font-mono text-gold uppercase tracking-widest text-sm font-semibold">
+                  Our Promise
+                </h2>
+              </div>
             </div>
 
-            <div className="font-mono max-w-4xl mx-auto space-y-6">
-              {timeline.map((item, index) => (
-                <div
-                  key={item.year}
-                  className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8 p-5 sm:p-8 bg-[#0A0F1A]/40 backdrop-blur-sm border border-white/5 hover:border-teal-500/30 rounded-xl transition-all duration-300 group relative"
-                >
-                  <div className="flex items-center gap-4 sm:w-48 flex-shrink-0 pt-1">
-                    <span className="text-teal-500/40 group-hover:text-teal-400 transition-colors text-sm">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <div className="h-[1px] flex-1 bg-teal-500/20 group-hover:bg-teal-500/50 transition-colors hidden sm:block" />
-                  </div>
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-2xl p-10 md:p-14 lg:p-16 border border-gold/20 shadow-[0_0_40px_rgba(245,158,11,0.06)] relative overflow-hidden group hover:border-gold/40 hover:shadow-[0_0_60px_rgba(245,158,11,0.1)] transition-all duration-500">
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-gold to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                  <div className="flex-1">
-                    <div className="inline-flex items-center gap-2 mb-3">
-                      <span className="text-cyan-400 font-bold tracking-wider text-sm uppercase">
-                        [{item.year}]
-                      </span>
-                      {index === timeline.length - 1 && (
-                        <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                      )}
-                    </div>
-                    <p className="text-slate-300 text-sm leading-relaxed">
-                      <span className="text-teal-500/50 mr-2">&gt;</span>
-                      {item.event}
-                    </p>
+                <div className="space-y-8 font-mono text-lg text-slate-300 leading-relaxed relative z-10">
+                  <p className="border-l-2 border-gold/40 pl-8 text-slate-200">
+                    &gt; Everything runs on{" "}
+                    <span className="text-gold-light font-bold">
+                      our infrastructure
+                    </span>
+                    . Servers, agents, orchestration, monitoring — we handle the
+                    entire technical stack so you never have to think about it.
+                  </p>
+                  <p className="border-l-2 border-gold/40 pl-8 text-slate-200">
+                    &gt; You'll only see{" "}
+                    <span className="text-gold-light font-bold">
+                      guaranteed results
+                    </span>{" "}
+                    — orders processed, customers responded to, invoices sent,
+                    reports delivered. The work gets done, and you see the
+                    outcomes in your business.
+                  </p>
+                  <p className="border-l-2 border-gold/40 pl-8 text-slate-200">
+                    &gt; No dashboards to configure. No agents to debug. No
+                    servers to manage. Your agent systems run silently in the
+                    background, and your business moves forward.
+                  </p>
+                </div>
+
+                <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-center gap-6">
+                  <div className="flex items-center gap-2 text-sm font-mono text-gold/60 uppercase tracking-widest">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Zero technical overhead
+                  </div>
+                  <div className="hidden sm:block w-[1px] h-4 bg-white/10" />
+                  <div className="flex items-center gap-2 text-sm font-mono text-gold/60 uppercase tracking-widest">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Results-only visibility
+                  </div>
+                  <div className="hidden sm:block w-[1px] h-4 bg-white/10" />
+                  <div className="flex items-center gap-2 text-sm font-mono text-gold/60 uppercase tracking-widest">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Fully managed
                   </div>
                 </div>
-              ))}
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        {/* System Event Log */}
+        <section className="py-24 relative">
+          <Container className="relative z-10">
+            <div className="text-center mb-20">
+              <div className="inline-flex items-center justify-center gap-2 mb-4">
+                <div className="w-2 h-2 bg-teal-500 animate-pulse" />
+                <h2 className="font-mono text-teal-400 uppercase tracking-widest text-lg font-semibold">
+                  System Event Log
+                </h2>
+              </div>
+              <p className="text-slate-500 font-mono text-sm mt-2">
+                Click any event to expand the details
+              </p>
+              <div className="h-[1px] w-24 bg-teal-500/30 mx-auto mt-4" />
+            </div>
+
+            <div className="max-w-4xl mx-auto">
+              <div className="relative">
+                {/* Vertical connector line */}
+                <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-teal-500/40 via-teal-500/20 to-transparent" />
+
+                <div className="space-y-4">
+                  {timeline.map((item, index) => {
+                    const isExpanded = expandedIdx === index;
+                    const isLast = index === timeline.length - 1;
+
+                    return (
+                      <motion.div
+                        key={item.year}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                      >
+                        <button
+                          onClick={() =>
+                            setExpandedIdx(isExpanded ? null : index)
+                          }
+                          className="w-full text-left group"
+                        >
+                          <div
+                            className={`relative flex items-start gap-4 md:gap-6 p-5 md:p-6 rounded-xl border transition-all duration-300 ${
+                              isExpanded
+                                ? "bg-[#0A0F1A]/80 border-teal-500/40 shadow-[0_0_30px_rgba(0,229,255,0.08)]"
+                                : "bg-[#0A0F1A]/40 border-white/5 hover:border-teal-500/30 hover:bg-[#0A0F1A]/60"
+                            }`}
+                          >
+                            {/* Timeline node */}
+                            <div className="relative flex-shrink-0">
+                              <div
+                                className={`w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-2xl border transition-all duration-300 ${
+                                  isExpanded
+                                    ? "bg-teal-500/10 border-teal-500/40 shadow-[0_0_20px_rgba(0,229,255,0.15)]"
+                                    : "bg-[#0A0F1A] border-white/10 group-hover:border-teal-500/30"
+                                }`}
+                              >
+                                {item.emoji}
+                              </div>
+                              {/* Connector dot on the vertical line */}
+                              <div
+                                className={`absolute left-1/2 -translate-x-1/2 -bottom-7 w-2 h-2 rounded-full ${statusDots[item.status] || "bg-slate-500"} hidden md:block`}
+                              />
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-1">
+                                <span className="font-mono text-cyan-400 font-bold tracking-wider text-sm uppercase">
+                                  [{item.year}]
+                                </span>
+                                <span
+                                  className={`font-mono text-xs px-2 py-0.5 rounded-md border ${statusColors[item.status] || "text-slate-400 border-slate-500/40 bg-slate-500/10"}`}
+                                >
+                                  {item.status}
+                                </span>
+                                {isLast && (
+                                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                                )}
+                              </div>
+                              <h4 className="text-white font-bold text-base md:text-lg font-heading flex items-center gap-2">
+                                {item.title}
+                                <motion.span
+                                  animate={{ rotate: isExpanded ? 90 : 0 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="text-teal-500/60 text-sm"
+                                >
+                                  ▶
+                                </motion.span>
+                              </h4>
+                            </div>
+                          </div>
+                        </button>
+
+                        {/* Expandable detail */}
+                        <AnimatePresence>
+                          {isExpanded && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="ml-16 md:ml-20 mt-2 mb-2 p-5 md:p-6 bg-[#0A0F1A]/60 border border-teal-500/20 rounded-xl font-mono text-sm text-slate-300 leading-relaxed backdrop-blur-sm">
+                                <div className="flex items-start gap-3">
+                                  <span className="text-teal-500/60 mt-0.5 flex-shrink-0">
+                                    &gt;
+                                  </span>
+                                  <p>{item.event}</p>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </Container>
         </section>
