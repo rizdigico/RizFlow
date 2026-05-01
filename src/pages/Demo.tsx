@@ -463,7 +463,7 @@ export function Demo() {
         <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(0,229,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.04)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
         {/* Hero */}
-        <section className="pt-28 md:pt-36 lg:pt-44 pb-12 relative">
+        <section className="pt-24 sm:pt-28 md:pt-36 lg:pt-44 pb-8 sm:pb-12 relative">
           <Container className="relative z-10 text-center">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-500/30 bg-[#0A0F1A]/80 backdrop-blur-md mb-8 shadow-[0_0_15px_rgba(0,229,255,0.15)]">
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
@@ -483,12 +483,12 @@ export function Demo() {
                 Run Itself
               </span>
             </h1>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto font-mono text-sm tracking-wide mb-8">
+            <p className="text-slate-400 max-w-2xl mx-auto font-mono text-xs sm:text-sm tracking-wide mb-6 sm:mb-8">
               &gt; Choose a scenario below. Watch how RizFlow agents coordinate,
               communicate, and complete real business workflows — autonomously,
               in real-time.
             </p>
-            <p className="text-sm text-slate-500 max-w-xl mx-auto">
+            <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
               This is a simulation. No data is being processed or sent. It
               demonstrates the workflow architecture.
             </p>
@@ -498,14 +498,14 @@ export function Demo() {
         {/* Scenario Selector */}
         <section className="pb-8 relative">
           <Container className="relative z-10">
-            <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
               {SCENARIOS.map((scenario) => {
                 const isActive = activeScenario?.id === scenario.id;
                 return (
                   <motion.button
                     key={scenario.id}
                     onClick={() => startScenario(scenario)}
-                    className={`group relative text-left p-6 rounded-xl border transition-all duration-300 overflow-hidden ${
+                    className={`group relative text-left p-4 sm:p-6 rounded-xl border transition-all duration-300 overflow-hidden ${
                       isActive
                         ? "border-teal-500/60 bg-[#0A0F1A]/90 shadow-[0_0_30px_rgba(0,229,255,0.2)]"
                         : "border-white/10 bg-[#0A0F1A]/60 hover:border-teal-500/30 hover:bg-[#0A0F1A]/80 hover:shadow-[0_0_20px_rgba(0,229,255,0.1)]"
@@ -517,9 +517,11 @@ export function Demo() {
                     {/* Scan line on hover */}
                     <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-0 group-hover:opacity-100 animate-[slideRight_2s_ease-in-out_infinite]" />
 
-                    <div className="text-3xl mb-3">{scenario.icon}</div>
+                    <div className="text-2xl sm:text-3xl mb-2 sm:mb-3">
+                      {scenario.icon}
+                    </div>
                     <h3
-                      className={`text-lg font-bold font-mono mb-2 tracking-tight transition-colors ${
+                      className={`text-base sm:text-lg font-bold font-mono mb-1 sm:mb-2 tracking-tight transition-colors ${
                         isActive
                           ? "text-teal-300"
                           : "text-white group-hover:text-teal-200"
@@ -527,7 +529,7 @@ export function Demo() {
                     >
                       {scenario.title}
                     </h3>
-                    <p className="text-slate-400 text-sm leading-relaxed font-mono opacity-80">
+                    <p className="text-slate-400 text-xs sm:text-sm leading-relaxed font-mono opacity-80">
                       {scenario.description}
                     </p>
                     {isActive && isRunning && (
@@ -567,9 +569,9 @@ export function Demo() {
             >
               <Container className="relative z-10">
                 {/* Controls bar */}
-                <div className="flex items-center justify-between mb-6 px-1">
-                  <div className="flex items-center gap-4">
-                    <h2 className="text-xl font-bold font-mono text-white tracking-tight">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 px-1">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <h2 className="text-base sm:text-xl font-bold font-mono text-white tracking-tight truncate">
                       <span className="text-teal-400">&gt;</span>{" "}
                       {activeScenario.title}
                     </h2>
@@ -580,7 +582,7 @@ export function Demo() {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     {isRunning && (
                       <button
                         onClick={togglePause}
@@ -622,12 +624,12 @@ export function Demo() {
                   </div>
                 </div>
 
-                <div className="grid lg:grid-cols-12 gap-6">
+                <div className="grid lg:grid-cols-12 gap-4 sm:gap-6">
                   {/* Left: Agent Status Panel */}
                   <div className="lg:col-span-4">
                     <div className="bg-[#0A0F1A]/80 backdrop-blur-3xl border border-white/10 rounded-xl overflow-hidden">
                       {/* Panel header */}
-                      <div className="px-4 py-3 border-b border-white/5 flex items-center gap-2">
+                      <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-white/5 flex items-center gap-2">
                         <UserGroupIcon className="w-4 h-4 text-teal-400" />
                         <span className="text-sm font-bold font-mono text-slate-300 tracking-wide">
                           Agent Network
@@ -635,7 +637,7 @@ export function Demo() {
                       </div>
 
                       {/* Agent list */}
-                      <div className="p-4 space-y-3">
+                      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
                         {AGENTS.map((agent) => {
                           const isActive = activeAgents.has(agent.id);
                           const isDone =
@@ -645,7 +647,7 @@ export function Demo() {
                           return (
                             <motion.div
                               key={agent.id}
-                              className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-300 ${
+                              className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg border transition-all duration-300 ${
                                 isActive
                                   ? "border-teal-500/40 bg-teal-500/5 " +
                                     agent.glow
@@ -660,10 +662,12 @@ export function Demo() {
                                   : {}
                               }
                             >
-                              <span className="text-xl">{agent.icon}</span>
+                              <span className="text-lg sm:text-xl">
+                                {agent.icon}
+                              </span>
                               <div className="flex-1 min-w-0">
                                 <span
-                                  className={`text-sm font-bold font-mono tracking-tight ${
+                                  className={`text-xs sm:text-sm font-bold font-mono tracking-tight ${
                                     isActive
                                       ? agent.color
                                       : isDone
@@ -699,20 +703,20 @@ export function Demo() {
                     </div>
 
                     {/* Metrics */}
-                    <div className="mt-4 grid grid-cols-2 gap-3">
-                      <div className="bg-[#0A0F1A]/80 backdrop-blur-3xl border border-white/10 rounded-xl p-4 text-center">
-                        <div className="text-2xl font-bold font-mono text-teal-400">
+                    <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
+                      <div className="bg-[#0A0F1A]/80 backdrop-blur-3xl border border-white/10 rounded-xl p-3 sm:p-4 text-center">
+                        <div className="text-xl sm:text-2xl font-bold font-mono text-teal-400">
                           {completedSteps}
                         </div>
-                        <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">
+                        <div className="text-[9px] sm:text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">
                           Steps Done
                         </div>
                       </div>
-                      <div className="bg-[#0A0F1A]/80 backdrop-blur-3xl border border-white/10 rounded-xl p-4 text-center">
-                        <div className="text-2xl font-bold font-mono text-cyan-400">
+                      <div className="bg-[#0A0F1A]/80 backdrop-blur-3xl border border-white/10 rounded-xl p-3 sm:p-4 text-center">
+                        <div className="text-xl sm:text-2xl font-bold font-mono text-cyan-400">
                           {formatTime(totalTime)}
                         </div>
-                        <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">
+                        <div className="text-[9px] sm:text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">
                           Total Time
                         </div>
                       </div>
@@ -723,7 +727,7 @@ export function Demo() {
                   <div className="lg:col-span-8">
                     <div className="bg-[#0A0F1A]/80 backdrop-blur-3xl border border-white/10 rounded-xl overflow-hidden shadow-[0_0_30px_rgba(0,229,255,0.05)]">
                       {/* Terminal header */}
-                      <div className="px-4 py-2.5 bg-[#050A14]/60 border-b border-white/5 flex items-center justify-between">
+                      <div className="px-3 sm:px-4 py-2 sm:py-2.5 bg-[#050A14]/60 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="flex gap-1.5">
                             <div className="w-2 h-2 rounded-full bg-red-500/80 shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
@@ -742,7 +746,7 @@ export function Demo() {
                       </div>
 
                       {/* Terminal output */}
-                      <div className="p-4 min-h-[400px] max-h-[500px] overflow-y-auto font-mono text-sm space-y-1 scrollbar-thin">
+                      <div className="p-3 sm:p-4 min-h-[280px] sm:min-h-[400px] max-h-[360px] sm:max-h-[500px] overflow-y-auto font-mono text-xs sm:text-sm space-y-1 scrollbar-thin">
                         {/* Initial boot message */}
                         {logs.length === 0 && (
                           <div className="text-slate-600 py-8 text-center">
@@ -761,10 +765,10 @@ export function Demo() {
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.3 }}
-                            className="flex items-start gap-3 py-1.5 border-b border-white/[0.03] group"
+                            className="flex items-start gap-2 sm:gap-3 py-1.5 border-b border-white/[0.03] group"
                           >
                             {/* Step number */}
-                            <span className="text-[10px] text-slate-600 w-4 text-right flex-shrink-0 mt-0.5">
+                            <span className="text-[10px] text-slate-600 w-4 text-right flex-shrink-0 mt-0.5 hidden sm:inline">
                               {String(i + 1).padStart(2, "0")}
                             </span>
 
@@ -777,23 +781,23 @@ export function Demo() {
 
                             {/* Log content */}
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
+                              <div className="flex flex-wrap items-center gap-1 sm:gap-2">
                                 <span
-                                  className={`text-xs font-bold ${log.agent.color} tracking-wide`}
+                                  className={`text-[10px] sm:text-xs font-bold ${log.agent.color} tracking-wide`}
                                 >
                                   [{log.agent.name.split(" ")[0].toUpperCase()}]
                                 </span>
-                                <span className="text-[10px] text-slate-600 font-bold tracking-widest">
+                                <span className="text-[9px] sm:text-[10px] text-slate-600 font-bold tracking-widest">
                                   {log.action}
                                 </span>
                               </div>
-                              <p className="text-slate-400 text-xs mt-0.5 leading-relaxed">
+                              <p className="text-slate-400 text-[11px] sm:text-xs mt-0.5 leading-relaxed">
                                 {log.detail}
                               </p>
                             </div>
 
                             {/* Duration */}
-                            <span className="text-[10px] text-slate-600 flex-shrink-0 mt-0.5">
+                            <span className="text-[9px] sm:text-[10px] text-slate-600 flex-shrink-0 mt-0.5">
                               {log.time}
                             </span>
                           </motion.div>
@@ -843,21 +847,21 @@ export function Demo() {
                     </div>
 
                     {/* Workflow diagram (horizontal agent flow) */}
-                    <div className="mt-4 bg-[#0A0F1A]/80 backdrop-blur-3xl border border-white/10 rounded-xl p-4 overflow-x-auto">
+                    <div className="mt-4 bg-[#0A0F1A]/80 backdrop-blur-3xl border border-white/10 rounded-xl p-3 sm:p-4 overflow-x-auto -mx-2 sm:mx-0">
                       <div className="flex items-center gap-2 text-xs font-mono text-slate-500 mb-3">
                         <QueueListIcon className="w-3.5 h-3.5 text-teal-400" />
                         <span className="tracking-widest uppercase">
                           Agent Pipeline
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 min-w-max">
+                      <div className="flex items-center gap-1.5 sm:gap-2 min-w-max pb-1">
                         {activeScenario.steps.map((step, i) => {
                           const isCompleted = i < completedSteps;
                           const isCurrent = i === currentStepIndex && isRunning;
                           return (
                             <div key={i} className="flex items-center gap-2">
                               <motion.div
-                                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-mono tracking-wide transition-all duration-300 ${
+                                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border text-[10px] sm:text-xs font-mono tracking-wide transition-all duration-300 whitespace-nowrap ${
                                   isCompleted
                                     ? "border-green-500/30 bg-green-500/10 text-green-400"
                                     : isCurrent
@@ -906,8 +910,8 @@ export function Demo() {
                       transition={{ delay: 0.5 }}
                       className="mt-12 text-center"
                     >
-                      <div className="bg-[#0A0F1A]/80 backdrop-blur-3xl border border-teal-500/20 rounded-2xl p-8 max-w-2xl mx-auto shadow-[0_0_40px_rgba(0,229,255,0.1)]">
-                        <h3 className="text-2xl font-bold font-heading text-white mb-3">
+                      <div className="bg-[#0A0F1A]/80 backdrop-blur-3xl border border-teal-500/20 rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto shadow-[0_0_40px_rgba(0,229,255,0.1)]">
+                        <h3 className="text-xl sm:text-2xl font-bold font-heading text-white mb-3">
                           Want This For Your Business?
                         </h3>
                         <p className="text-slate-400 font-mono text-sm mb-6">
@@ -947,9 +951,9 @@ export function Demo() {
         {!activeScenario && (
           <section className="pb-20 relative">
             <Container className="relative z-10 text-center">
-              <div className="bg-[#0A0F1A]/60 backdrop-blur-3xl border border-white/5 rounded-2xl p-12 max-w-2xl mx-auto">
-                <div className="text-4xl mb-4">🧠</div>
-                <h3 className="text-xl font-bold font-heading text-white mb-3">
+              <div className="bg-[#0A0F1A]/60 backdrop-blur-3xl border border-white/5 rounded-2xl p-8 sm:p-12 max-w-2xl mx-auto">
+                <div className="text-3xl sm:text-4xl mb-4">🧠</div>
+                <h3 className="text-lg sm:text-xl font-bold font-heading text-white mb-3">
                   Pick a Scenario to Start
                 </h3>
                 <p className="text-slate-400 font-mono text-sm">
@@ -958,7 +962,7 @@ export function Demo() {
                   how agents coordinate, communicate, and deliver results —
                   autonomously.
                 </p>
-                <div className="mt-6 flex items-center justify-center gap-6 text-xs font-mono text-slate-600">
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs font-mono text-slate-600">
                   <div className="flex items-center gap-1.5">
                     <ClockIcon className="w-3.5 h-3.5 text-teal-500" />
                     <span>Takes ~15 seconds</span>
@@ -987,7 +991,7 @@ export function Demo() {
               </span>
             </div>
             <div className="max-w-xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-bold font-heading text-white mb-4">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-heading text-white mb-4">
                 See What{" "}
                 <span
                   className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-cyan-300 to-amber-300"

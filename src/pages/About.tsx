@@ -167,7 +167,7 @@ export function About() {
         </section>
 
         {/* Founder */}
-        <section className="py-24 relative">
+        <section className="py-12 sm:py-24 relative">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.05)_0%,transparent_70%)] pointer-events-none" />
           <Container className="relative z-10">
             <FounderProfile />
@@ -175,7 +175,7 @@ export function About() {
         </section>
 
         {/* Core Directives */}
-        <section className="py-24 relative">
+        <section className="py-12 sm:py-24 relative">
           <Container className="relative z-10">
             <div className="text-center mb-20">
               <div className="inline-flex items-center justify-center gap-2 mb-4">
@@ -184,7 +184,7 @@ export function About() {
                   System Protocols
                 </h2>
               </div>
-              <h3 className="text-4xl font-bold font-heading text-white drop-shadow-md">
+              <h3 className="text-2xl sm:text-4xl font-bold font-heading text-white drop-shadow-md">
                 Core Directives
               </h3>
             </div>
@@ -269,7 +269,7 @@ export function About() {
         </section>
 
         {/* Our Promise */}
-        <section className="py-24 relative">
+        <section className="py-12 sm:py-24 relative">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.04)_0%,transparent_70%)] pointer-events-none" />
           <Container className="relative z-10">
             <div className="text-center mb-12">
@@ -282,7 +282,7 @@ export function About() {
             </div>
 
             <div className="max-w-4xl mx-auto">
-              <div className="bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-2xl p-10 md:p-14 lg:p-16 border border-gold/20 shadow-[0_0_40px_rgba(245,158,11,0.06)] relative overflow-hidden group hover:border-gold/40 hover:shadow-[0_0_60px_rgba(245,158,11,0.1)] transition-all duration-500">
+              <div className="bg-[#0A0F1A]/90 backdrop-blur-3xl rounded-2xl p-6 sm:p-10 md:p-14 lg:p-16 border border-gold/20 shadow-[0_0_40px_rgba(245,158,11,0.06)] relative overflow-hidden group hover:border-gold/40 hover:shadow-[0_0_60px_rgba(245,158,11,0.1)] transition-all duration-500">
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-gold to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 <div className="space-y-8 font-mono text-lg text-slate-300 leading-relaxed relative z-10">
@@ -332,7 +332,7 @@ export function About() {
         </section>
 
         {/* System Event Log */}
-        <section className="py-24 relative">
+        <section className="py-12 sm:py-24 relative">
           <Container className="relative z-10">
             <div className="text-center mb-20">
               <div className="inline-flex items-center justify-center gap-2 mb-4">
@@ -341,7 +341,7 @@ export function About() {
                   System Event Log
                 </h2>
               </div>
-              <p className="text-slate-500 font-mono text-sm mt-2">
+              <p className="text-slate-500 font-mono text-xs sm:text-sm mt-2">
                 Click any event to expand the details
               </p>
               <div className="h-[1px] w-24 bg-teal-500/30 mx-auto mt-4" />
@@ -434,7 +434,7 @@ export function About() {
                               transition={{ duration: 0.3, ease: "easeInOut" }}
                               className="overflow-hidden"
                             >
-                              <div className="ml-16 md:ml-20 mt-2 mb-2 p-5 md:p-6 bg-[#0A0F1A]/60 border border-teal-500/20 rounded-xl font-mono text-sm text-slate-300 leading-relaxed backdrop-blur-sm">
+                              <div className="ml-12 sm:ml-16 md:ml-20 mt-2 mb-2 p-4 sm:p-5 md:p-6 bg-[#0A0F1A]/60 border border-teal-500/20 rounded-xl font-mono text-xs sm:text-sm text-slate-300 leading-relaxed backdrop-blur-sm">
                                 <div className="flex items-start gap-3">
                                   <span className="text-teal-500/60 mt-0.5 flex-shrink-0">
                                     &gt;

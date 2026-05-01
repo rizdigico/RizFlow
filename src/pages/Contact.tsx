@@ -71,10 +71,7 @@ export function Contact() {
   return (
     <>
       <Helmet>
-        <title>
-          Get Started with Custom Agentic-AI | Contact RizFlow|Get Started with
-          Custom Agentic-AI | Contact RizFlow
-        </title>
+        <title>Get Started with Custom Agentic-AI | Contact RizFlow</title>
         <meta
           name="description"
           content="Ready to automate your business? Get in touch with RizFlow. We'll map your workflows and show you what custom AI agents can do for you."
@@ -89,7 +86,7 @@ export function Contact() {
         <meta property="og:url" content={`${SITE_URL}/contact`} />
         <meta
           property="og:title"
-          content="Get Started with Custom Agentic-AI | Contact RizFlow|Get Started with Custom Agentic-AI | Contact RizFlow"
+          content="Get Started with Custom Agentic-AI | Contact RizFlow"
         />
         <meta
           property="og:description"
@@ -100,7 +97,7 @@ export function Contact() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Get Started with Custom Agentic-AI | Contact RizFlow|Get Started with Custom Agentic-AI | Contact RizFlow"
+          content="Get Started with Custom Agentic-AI | Contact RizFlow"
         />
         <meta
           name="twitter:description"
