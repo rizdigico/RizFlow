@@ -29,7 +29,7 @@ export function FounderProfile({ compact = false }: FounderProfileProps) {
           <img
             src="/founder.jpg"
             alt="Aariz Arfan, Founder of RizFlow"
-            className="w-full h-full object-contain object-center"
+            className="w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-teal-500/10 to-transparent pointer-events-none" />
         </div>

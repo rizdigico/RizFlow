@@ -16,6 +16,7 @@ import { Blog } from "@/pages/Blog";
 import { BlogPost } from "@/pages/BlogPost";
 import { CaseStudy } from "@/pages/CaseStudy";
 import { Demo } from "@/pages/Demo";
+import { RainFreshDemo } from "@/pages/RainFreshDemo";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -44,6 +45,7 @@ function AppRoutes() {
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/case-study/rainfresh-sg" element={<CaseStudy />} />
           <Route path="/demo" element={<Demo />} />
+          <Route path="/demo/rainfresh" element={<RainFreshDemo />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

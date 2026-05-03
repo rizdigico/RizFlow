@@ -158,7 +158,7 @@ const metrics = [
     negative: false,
   },
   {
-    label: "Confirmation Emails",
+    label: "Buyer Emails",
     emoji: "✉️",
     before: "0%",
     after: "100%",
@@ -224,7 +224,7 @@ const differentiators = [
   {
     emoji: "🛠️",
     title: "No New Software",
-    desc: "Agents work through your existing tools (email, sheets, social)",
+    desc: "Agents work through your existing tools (TikTok Shop, Gmail, Sheets, Instagram)",
   },
   {
     emoji: "🎛️",
@@ -239,16 +239,16 @@ const differentiators = [
 ];
 
 const painPoints = [
-  "2-3 hours/day manually processing orders",
+  "2-3 hours/day manually processing TikTok Shop orders",
   "Stockouts discovered only after customer complaints",
   "Zero social media presence despite selling on TikTok",
-  "No order confirmation or shipping emails",
+  "No order confirmation or shipping emails sent to buyers",
 ];
 
 const improvements = [
-  "Orders auto-confirmed in under 3 seconds",
+  "TikTok Shop orders auto-confirmed in under 3 seconds",
   "48-hour advance stock alerts — zero stockouts",
-  "7 posts/week scheduled automatically",
+  "7 posts/week scheduled automatically across Instagram & TikTok",
   "100% automated confirmation & shipping emails",
 ];
 
@@ -267,7 +267,7 @@ export function CaseStudy() {
         <title>RainFreshSG Case Study — RizFlow AI Automation</title>
         <meta
           name="description"
-          content="See how RainFreshSG went from 2-3 hours/day on manual operations to automated order processing, inventory alerts, and social scheduling with RizFlow."
+          content="See how RainFreshSG went from 2-3 hours/day on manual operations to automated TikTok Shop order processing, inventory alerts, and social scheduling with RizFlow."
         />
       </Helmet>
 
@@ -320,8 +320,8 @@ export function CaseStudy() {
               </a>
             </h1>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              From manual operations to automated growth — how a Singapore
-              e-commerce brand cut order processing time by{" "}
+              From manual operations to automated growth — how a Singapore home
+              fragrance brand cut order processing time by{" "}
               <span className="text-teal-400 font-bold drop-shadow-[0_0_8px_rgba(45,212,191,0.5)]">
                 99%
               </span>{" "}
@@ -501,20 +501,20 @@ export function CaseStudy() {
             <div className="relative z-10">
               <span className="text-4xl block mb-4">🤖</span>
               <h2 className="text-2xl font-bold font-heading text-white mb-2">
-                See this running for your business
+                See Their Agent System in Action
               </h2>
               <p className="text-slate-400 mb-6">
-                We set up AI agents specifically for your workflows. No
-                templates, no one-size-fits-all.
+                Watch how RainFreshSG's AI agents automate orders, inventory
+                alerts, social posts, and customer inquiries — live.
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <Link
-                  to="/demo"
+                  to="/demo/rainfresh"
                   className="group relative px-6 py-3 rounded-lg text-white font-medium transition-all overflow-hidden shadow-[0_0_25px_rgba(45,212,191,0.3)] hover:shadow-[0_0_40px_rgba(45,212,191,0.6)]"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-teal via-teal-light to-teal bg-[length:200%_auto] animate-gradient-x" />
                   <span className="relative flex items-center gap-2 font-bold">
-                    Try the Live Demo →
+                    Try Their Agent System →
                   </span>
                 </Link>
                 <Link
