@@ -276,3 +276,27 @@ export const rainfreshMetrics = [
     prefix: "-",
   },
 ];
+
+// ── Suggested follow-up prompts for RainFresh scenarios ──
+export const RAINFOOD_FOLLOWUPS: Record<string, string[]> = {
+  "rf-order": [
+    "What if the customer wants to add more items?",
+    "Can you handle returns and exchanges?",
+    "Send them a loyalty discount code",
+  ],
+  "rf-stock": [
+    "What happens when the reorder arrives?",
+    "Can you forecast demand for next month?",
+    "Set a minimum stock level alert",
+  ],
+  "rf-social": [
+    "Can you create a TikTok version too?",
+    "What about engagement captions?",
+    "Schedule posts for the whole week",
+  ],
+  "rf-inquiry": [
+    "What if they want a sample box?",
+    "Can you offer volume discounts?",
+    "Send them the full catalogue",
+  ],
+};

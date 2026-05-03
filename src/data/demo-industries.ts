@@ -817,8 +817,266 @@ export const INDUSTRIES: Industry[] = [
       { label: "Hours saved/week", value: "12+", icon: "🕐" },
     ],
   },
+  {
+    id: "salon",
+    name: "Salon & Beauty",
+    icon: "🧖",
+    color: "text-pink-400",
+    bgColor: "bg-pink-500/10",
+    borderColor: "border-pink-500/30",
+    gradientFrom: "from-pink-500",
+    gradientTo: "to-rose-500",
+    tagline: "From booking to follow-up — your AI receptionist never sleeps",
+    description:
+      "AI agents that handle appointment bookings, manage product inventory, send follow-up reminders, respond to reviews, and promote seasonal offers — so stylists can focus on their craft.",
+    systemPrompt: `You are a RizFlow AI agent demo for the Salon & Beauty industry. You are demonstrating how an AI agent handles salon and beauty business operations. You are helpful, professional, and concise — respond in 2-4 short paragraphs max. Use realistic salon details (treatment names, prices, appointment times, stylist names). Be specific and actionable. You handle: appointment bookings, cancellations, product recommendations, follow-up reminders, review responses, and inventory alerts. If asked something outside salon/beauty, politely redirect to beauty business operations. Always demonstrate how automation saves time compared to manual handling.`,
+    scenarios: [
+      {
+        id: "salon-booking",
+        title: "Appointment Booking",
+        description: "New client wants to book a treatment",
+        firstMessage:
+          "Hi! I'd like to book a haircut and colour session this Saturday. I'm thinking balayage — maybe around 2pm? Also, do you have anyone who specialises in curly hair?",
+        actions: [
+          {
+            id: "sb-b1",
+            label: "Checked stylist availability",
+            tool: "Booking System",
+            icon: "📅",
+            detail:
+              "Stylist Maya available Sat 2pm — curly hair specialist, 5-star rating, 8 years experience",
+            delayMs: 800,
+          },
+          {
+            id: "sb-b2",
+            label: "Booked appointment",
+            tool: "Booking System",
+            icon: "📅",
+            detail:
+              "Sat 2pm: Balayage + Cut with Maya. Estimated 3hrs. Confirmation SMS sent.",
+            delayMs: 1600,
+          },
+          {
+            id: "sb-b3",
+            label: "Sent prep instructions",
+            tool: "WhatsApp Business",
+            icon: "💬",
+            detail:
+              'WhatsApp sent: "Pre-appointment tips: unwashed hair preferred, bring reference photos. See you Saturday! 🧖"',
+            delayMs: 2400,
+          },
+          {
+            id: "sb-b4",
+            label: "Created client profile",
+            tool: "CRM",
+            icon: "👥",
+            detail:
+              "New client: Curly hair, interested in colour services, preferred time: weekends 2pm. Tagged for targeted promos.",
+            delayMs: 3200,
+          },
+        ],
+      },
+      {
+        id: "salon-restock",
+        title: "Product Restock Alert",
+        description: "Best-selling shampoo running low",
+        firstMessage:
+          "We're running low on Olaplex No.3 — only 6 bottles left and we typically sell 15-20/month. Our regular supplier has it on backorder for 2 weeks. Can you handle the reorder and find an alternative source?",
+        actions: [
+          {
+            id: "sb-r1",
+            label: "Checked stock levels",
+            tool: "Inventory System",
+            icon: "📦",
+            detail:
+              "Olaplex No.3: 6 bottles (below 10-bottle reorder point). Also low: Kerastase serum (4), Amika dry shampoo (8).",
+            delayMs: 800,
+          },
+          {
+            id: "sb-r2",
+            label: "Placed alternative order",
+            tool: "Email",
+            icon: "📧",
+            detail:
+              "Order placed with backup supplier BeautyHQ: 30 bottles Olaplex No.3, 15 Kerastase serum. Delivery in 3-5 days.",
+            delayMs: 1600,
+          },
+          {
+            id: "sb-r3",
+            label: "Updated product listing",
+            tool: "Website",
+            icon: "🌐",
+            detail:
+              'Online shop updated: Olaplex No.3 now shows "Limited Stock" badge. Related products surfaced as alternatives.',
+            delayMs: 2400,
+          },
+          {
+            id: "sb-r4",
+            label: "Notified team",
+            tool: "Slack",
+            icon: "💬",
+            detail:
+              '#inventory: "Olaplex No.3 low — backup order placed. Recommend alternatives to clients until restock arrives Fri."',
+            delayMs: 3200,
+          },
+        ],
+      },
+      {
+        id: "salon-followup",
+        title: "Post-Visit Follow-up",
+        description: "Send a review request and rebooking reminder",
+        firstMessage:
+          "Client Sarah Tan had a balayage + cut with Maya yesterday at 2pm. She seemed happy with the result. Can you send a follow-up message asking for a review and suggesting a 6-week touch-up appointment?",
+        actions: [
+          {
+            id: "sb-f1",
+            label: "Sent review request",
+            tool: "WhatsApp Business",
+            icon: "⭐",
+            detail:
+              'WhatsApp sent: "Hi Sarah! How did you like your balayage with Maya? Leave a review and get 10% off your next visit! ✨"',
+            delayMs: 800,
+          },
+          {
+            id: "sb-f2",
+            label: "Suggested touch-up",
+            tool: "Booking System",
+            icon: "📅",
+            detail:
+              "6-week touch-up suggestion: Jun 15, Sat 2pm with Maya. Auto-reminder set for Jun 12.",
+            delayMs: 1600,
+          },
+          {
+            id: "sb-f3",
+            label: "Updated client profile",
+            tool: "CRM",
+            icon: "👥",
+            detail:
+              "Sarah Tan: balayage preference logged, satisfied customer, high rebooking probability. Added to VIP promo list.",
+            delayMs: 2400,
+          },
+          {
+            id: "sb-f4",
+            label: "Triggered loyalty offer",
+            tool: "Email",
+            icon: "🎁",
+            detail:
+              "Automated email sent: 10% off next colour service + referral bonus for bringing a friend.",
+            delayMs: 3200,
+          },
+        ],
+      },
+    ],
+    metrics: [
+      { label: "Appointments/mo", value: "420", icon: "📅" },
+      { label: "No-show reduction", value: "73%", icon: "📉" },
+      { label: "Rebooking rate", value: "68%", icon: "🔄" },
+      { label: "Hours saved/week", value: "11+", icon: "⚡" },
+    ],
+  },
 ];
 
+// ── Suggested follow-up prompts for each scenario ──
+export const SCENARIO_FOLLOWUPS: Record<string, string[]> = {
+  // F&B
+  "reservation-change": [
+    "What if they want to cancel instead?",
+    "Can you handle dietary requirements?",
+    "What about no-show policies?",
+  ],
+  "inventory-alert": [
+    "What happens when the reorder arrives?",
+    "Can you track expiry dates too?",
+    "Set a minimum stock threshold",
+  ],
+  "review-response": [
+    "What about positive reviews?",
+    "Can you flag serious complaints to management?",
+    "How do you handle TripAdvisor reviews?",
+  ],
+  // Real Estate
+  "lead-inquiry": [
+    "Can you schedule a second viewing?",
+    "What if they want to see other units?",
+    "Send them mortgage info too",
+  ],
+  "follow-up": [
+    "What if they still don't respond?",
+    "Can you suggest similar properties?",
+    "Set a reminder to call them",
+  ],
+  "market-report": [
+    "Can you compare with last quarter?",
+    "Add rental yield forecasts",
+    "Share this with my team",
+  ],
+  // E-Commerce
+  "order-status": [
+    "What if the package is lost?",
+    "Can you issue a refund?",
+    "Add a gift note to the order",
+  ],
+  "abandoned-cart": [
+    "What if they still don't buy?",
+    "Can you offer free shipping?",
+    "What's our cart recovery rate?",
+  ],
+  "return-request": [
+    "What about exchanges for a different colour?",
+    "Can you process a partial refund?",
+    "Update the customer's size preference",
+  ],
+  // Professional Services
+  "client-intake": [
+    "What's the typical onboarding timeline?",
+    "Can you send an NDA too?",
+    "Set up a Slack channel for them",
+  ],
+  "invoice-followup": [
+    "What if they still don't pay?",
+    "Can you offer a payment plan?",
+    "Flag this for the finance team",
+  ],
+  "project-brief": [
+    "Can you assign team members?",
+    "What milestones should we set?",
+    "Create a timeline view",
+  ],
+  // Construction
+  "quote-request": [
+    "Can you add a discount for early sign-up?",
+    "What about HDB renovation permits?",
+    "Schedule the first site visit",
+  ],
+  "progress-update": [
+    "Add photos of the completed work",
+    "What if the client has questions?",
+    "Flag any upcoming delays",
+  ],
+  "material-shortage": [
+    "What about the budget impact?",
+    "Can you source locally instead?",
+    "Update the project timeline",
+  ],
+  // Salon & Beauty
+  "salon-booking": [
+    "Can you suggest a stylist?",
+    "What about group bookings?",
+    "Send them a first-visit discount",
+  ],
+  "salon-restock": [
+    "Can you track expiry dates?",
+    "Set up automatic reorder thresholds",
+    "Compare prices across suppliers",
+  ],
+  "salon-followup": [
+    "Can you offer a loyalty discount?",
+    "Suggest a complementary treatment",
+    "Schedule their next appointment",
+  ],
+};
+
+// ── Helper ──
 export function getIndustry(id: string): Industry | undefined {
   return INDUSTRIES.find((i) => i.id === id);
 }

@@ -9,6 +9,7 @@ import { ActionTimeline } from "@/components/ActionTimeline";
 import { SITE_URL, SEO_DEFAULTS } from "@/lib/constants";
 import {
   INDUSTRIES,
+  SCENARIO_FOLLOWUPS,
   type Industry,
   type IndustryScenario,
 } from "@/data/demo-industries";
@@ -22,6 +23,11 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
+import {
+  DemoWalkthrough,
+  WalkthroughTrigger,
+} from "@/components/DemoWalkthrough";
+import { SuggestedPrompts } from "@/components/SuggestedPrompts";
 
 // ── Types ──
 interface ChatMessage {
@@ -100,16 +106,19 @@ function LiveChat({
   industry,
   scenario,
   onStatsUpdate,
+  customFollowUps,
 }: {
   industry: Industry;
   scenario: IndustryScenario | null;
   onStatsUpdate: (stats: SessionStats) => void;
+  customFollowUps?: string[];
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [messageCount, setMessageCount] = useState(0);
+  const [suggestedPrompts, setSuggestedPrompts] = useState<string[]>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -118,6 +127,7 @@ function LiveChat({
     if (!scenario) {
       setMessages([]);
       setMessageCount(0);
+      setSuggestedPrompts([]);
       return;
     }
 
@@ -136,6 +146,9 @@ function LiveChat({
     setMessageCount(1);
     setError(null);
     setInput("");
+    setSuggestedPrompts(
+      customFollowUps || SCENARIO_FOLLOWUPS[scenario.id] || [],
+    );
 
     // Auto-send to get AI response
     sendToAI([systemMsg, userMsg], industry);
@@ -225,6 +238,7 @@ function LiveChat({
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
+    setSuggestedPrompts([]);
     setMessageCount((prev) => prev + 1);
 
     sendToAI(newMessages, industry);
@@ -332,6 +346,20 @@ function LiveChat({
           </motion.div>
         )}
 
+        {/* Suggested follow-up prompts */}
+        {!isLoading &&
+          suggestedPrompts.length > 0 &&
+          visibleMessages.some((m) => m.role === "assistant") && (
+            <SuggestedPrompts
+              prompts={suggestedPrompts}
+              onSelect={(prompt) => {
+                setInput(prompt);
+                inputRef.current?.focus();
+              }}
+              disabled={isLoading}
+            />
+          )}
+
         <div ref={chatEndRef} />
       </div>
 
@@ -393,6 +421,10 @@ export function Demo() {
     industry: "",
   });
   const [phase, setPhase] = useState<"select" | "demo">("select");
+  const [showWalkthrough, setShowWalkthrough] = useState(true);
+  const [reopenWalkthrough, setReopenWalkthrough] = useState(false);
+  const [customBusiness, setCustomBusiness] = useState("");
+  const [isCreatingCustom, setIsCreatingCustom] = useState(false);
 
   // Track industry selection for analytics
   const handleIndustrySelect = useCallback((industry: Industry) => {
@@ -427,8 +459,68 @@ export function Demo() {
     }
   }, [selectedScenario]);
 
+  // Custom industry handler — creates a temporary Industry from user input
+  const handleCustomIndustry = useCallback(() => {
+    const business = customBusiness.trim();
+    if (!business) return;
+    setIsCreatingCustom(true);
+
+    const customIndustry: Industry = {
+      id: "custom",
+      name: business,
+      icon: "🎯",
+      color: "text-teal-400",
+      bgColor: "bg-teal-500/10",
+      borderColor: "border-teal-500/30",
+      gradientFrom: "from-teal-500",
+      gradientTo: "to-cyan-500",
+      tagline: `AI agents tailored for ${business}`,
+      description: `See how RizFlow agents can automate operations for your ${business} business — orders, inquiries, scheduling, and more.`,
+      systemPrompt: `You are a RizFlow AI agent demo for a ${business} business in Singapore. You are demonstrating how an AI agent handles operations for this type of business. Be helpful, professional, and concise — respond in 2-4 short paragraphs max. Suggest specific automations this business could benefit from. Use realistic details (prices, product names, customer scenarios). You handle: customer inquiries, scheduling, inventory, social media, follow-ups, and more. Always demonstrate how automation saves time compared to manual handling.`,
+      scenarios: [
+        {
+          id: "custom-start",
+          title: "Getting Started",
+          description: `See what RizFlow can do for ${business}`,
+          firstMessage: `I run a ${business} business in Singapore. What can you help me automate?`,
+        },
+      ],
+      metrics: [
+        { label: "Tasks automated", value: "50+", icon: "⚡" },
+        { label: "Response time", value: "<5s", icon: "⏱️" },
+        { label: "Hours saved/wk", value: "10+", icon: "🕐" },
+        { label: "Accuracy", value: "99%", icon: "✓" },
+      ],
+    };
+
+    setSelectedIndustry(customIndustry);
+    setSelectedScenario(customIndustry.scenarios[0]);
+    setPhase("demo");
+    setSessionStats({
+      messagesHandled: 0,
+      estimatedTimeSaved: 0,
+      industry: "custom",
+    });
+    trackDemoEvent("industry_selected", { industry: "custom", business });
+    setIsCreatingCustom(false);
+    setCustomBusiness("");
+  }, [customBusiness]);
+
+  // Suggested follow-ups for the current scenario
+  const currentFollowUps = selectedScenario
+    ? SCENARIO_FOLLOWUPS[selectedScenario.id] || []
+    : [];
+
   return (
     <>
+      <DemoWalkthrough
+        onComplete={() => {
+          setShowWalkthrough(false);
+          setReopenWalkthrough(false);
+        }}
+        open={reopenWalkthrough}
+      />
+      <WalkthroughTrigger onClick={() => setReopenWalkthrough(true)} />
       <Helmet>
         <title>
           Live AI Demo — See RizFlow Agents in Action | {SEO_DEFAULTS.title}
@@ -516,6 +608,64 @@ export function Demo() {
                         </div>
                       </motion.button>
                     ))}
+
+                    {/* Custom Industry Card */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: INDUSTRIES.length * 0.08,
+                      }}
+                      className="relative p-6 rounded-2xl border border-dashed border-teal-500/30 bg-teal-500/5 hover:border-teal-400/50 transition-all duration-300 text-left sm:col-span-2 lg:col-span-3"
+                    >
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-teal-400 mb-1">
+                            Don&apos;t see your industry?
+                          </h3>
+                          <p className="text-sm text-slate-400 mb-3">
+                            Describe your business and we&apos;ll show you how
+                            RizFlow agents can help — no matter what you do.
+                          </p>
+                          <div className="flex flex-col sm:flex-row gap-2">
+                            <input
+                              type="text"
+                              value={customBusiness}
+                              onChange={(e) =>
+                                setCustomBusiness(e.target.value)
+                              }
+                              onKeyDown={(e) => {
+                                if (
+                                  e.key === "Enter" &&
+                                  customBusiness.trim()
+                                ) {
+                                  handleCustomIndustry();
+                                }
+                              }}
+                              placeholder="e.g. landscaping company, dental clinic, tutoring centre..."
+                              className="flex-1 bg-[#050A14] border border-slate-700/50 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500/50 focus:ring-1 focus:ring-teal-500/30"
+                            />
+                            <button
+                              onClick={handleCustomIndustry}
+                              disabled={
+                                !customBusiness.trim() || isCreatingCustom
+                              }
+                              className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-400 text-white text-sm font-semibold hover:from-teal-400 hover:to-cyan-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)] flex items-center gap-2 justify-center"
+                            >
+                              {isCreatingCustom ? (
+                                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                              ) : (
+                                <>
+                                  <BoltIcon className="w-4 h-4" />
+                                  Try It Live
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
                   </div>
 
                   {/* Trust metrics */}
@@ -531,7 +681,7 @@ export function Demo() {
                       </span>
                       <span className="flex items-center gap-1.5">
                         <ChatBubbleLeftRightIcon className="w-4 h-4 text-cyan-400" />
-                        5 industries
+                        6 industries
                       </span>
                     </div>
                   </div>
@@ -764,6 +914,7 @@ export function Demo() {
                           industry={selectedIndustry}
                           scenario={selectedScenario}
                           onStatsUpdate={setSessionStats}
+                          customFollowUps={currentFollowUps}
                         />
                       </div>
 
@@ -782,6 +933,30 @@ export function Demo() {
                             />
                           </motion.div>
                         )}
+
+                      {/* Social proof banner */}
+                      {sessionStats.messagesHandled > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="mt-3 flex items-center justify-center gap-3 py-2 px-4 rounded-lg bg-emerald-500/5 border border-emerald-500/20"
+                        >
+                          <CheckCircleIcon className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                          <p className="text-xs text-emerald-300/80">
+                            This exact workflow saves businesses{" "}
+                            <strong className="text-emerald-300">
+                              14+ hours/week
+                            </strong>{" "}
+                            on average.{" "}
+                            <Link
+                              to="/case-study/rainfresh-sg"
+                              className="text-teal-400 hover:text-teal-300 underline"
+                            >
+                              See verified results
+                            </Link>
+                          </p>
+                        </motion.div>
+                      )}
                     </div>
                   </div>
                 </Container>
