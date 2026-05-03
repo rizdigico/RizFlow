@@ -144,7 +144,7 @@ function RainFreshChat({
         timestamp: Date.now(),
       };
       setMessages((prev) => [...prev, assistantMsg]);
-      onMessageCount((prev) => prev + 1);
+      onMessageCount(messages.length + 1);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Something went wrong.";
@@ -174,7 +174,7 @@ function RainFreshChat({
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
-    onMessageCount((prev: number) => prev + 1);
+    onMessageCount(messages.length + 2);
     sendToAI(newMessages, scenario.systemPrompt);
   }
 
