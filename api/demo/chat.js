@@ -11,8 +11,8 @@ const MODEL_CHAIN = [
 
 const VPS_PROXY =
   "https://variations-phillips-ringtones-laundry.trycloudflare.com/api/demo/chat";
-const REQUEST_TIMEOUT_MS = 15000;
-const PROXY_TIMEOUT_MS = 25000;
+const REQUEST_TIMEOUT_MS = 12000;
+const PROXY_TIMEOUT_MS = 20000;
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
@@ -89,7 +89,8 @@ async function raceAllSources(messages) {
   // Also try direct OpenRouter (works if Vercel env key is valid)
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
   if (OPENROUTER_API_KEY) {
-    for (const model of MODEL_CHAIN.slice(0, 3)) {
+    // Race ALL 5 models — more sources = higher chance one isn't rate-limited
+    for (const model of MODEL_CHAIN) {
       sources.push(callModel(model, messages, OPENROUTER_API_KEY));
     }
   }
