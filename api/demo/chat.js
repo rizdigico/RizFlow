@@ -229,25 +229,40 @@ function cleanModelResponse(content) {
       /\*(?:Brainstorming|Self-check|Checking rules|Avoiding scope creep|Final|Important|Note):[^*]*\*/gi,
       "",
     )
-    // Strip *thought process* lines that start with common internal-reasoning patterns
+    // Strip *thought process* lines
     .replace(
       /\*(?:First, I need to|Hmm\.\.\.|Let me think|I should|I'll focus|I need to)[^*]*\*/gi,
       "",
     )
+    // Strip reasoning_details JSON artifacts
+    .replace(/reasoning_details?\s*:\s*\[.*?\]/gs, "")
     .trim();
 
-  if (/^(Okay|Let me|Hmm|I need to|The user|So,|Well,)/i.test(cleaned)) {
-    const sentences = cleaned.split(/\.\s+/);
-    const meaningfulStart = sentences.findIndex(
-      (s) =>
-        s.length > 20 &&
-        !/^(Okay|Let me|Hmm|I should|I'll|The user wants|So I|Well)/i.test(s),
-    );
-    if (meaningfulStart > 0) {
-      cleaned = sentences.slice(meaningfulStart).join(". ").trim();
-    }
-  }
+  // Strip sentences that are clearly internal reasoning (plain text, no markers)
+  // These are meta-commentary about the model's own process, not the user-facing answer
+  const reasoningPatterns = [
+    /^(?:From what I know|As far as I know|Based on my knowledge|I think I recall)/i,
+    /^(?:First, I need to|First, I should|I need to figure out|I should consider|I should check|I should verify|Let me think about|Let me consider|Let me recall|Hmm,? let me)/i,
+    /^(?:The user(?:'s| wants| is| might| probably| explicitly| didn't)|They might|They probably|They could|The question is)/i,
+    /^(?:Wait,? |Actually,? |But wait|Another angle|I should also|Also,? considering|I'll focus)/i,
+    /^(?:Since they|Given that|It seems like|I'm not sure|I don't have|Assuming|Based on what)/i,
+    /^(?:Okay,? so|Okay,? let me|Alright,? let me|So,? I (?:need|should|think|will|can))/i,
+    /^(?:Let me (?:check|verify|look|think|consider|recall|think about|figure)|Hmm|I wonder)/i,
+    /^(?:For a (?:hair|nail|beauty|salon|dental|restaurant|fitness|law|account|real)[\w\s]*,?(?:I|they|we|you)\s+(?:need|should|could|might|want|probably|would))/i,
+  ];
 
-  cleaned = cleaned.replace(/reasoning_details?\s*:\s*\[.*?\]/gs, "").trim();
-  return cleaned || content;
+  const sentences = cleaned.split(/(?<=[.!?])\s+/);
+  const meaningful = sentences.filter((s) => {
+    const trimmed = s.trim();
+    if (trimmed.length < 10) return true; // keep short sentences (they're answers)
+    return !reasoningPatterns.some((p) => p.test(trimmed));
+  });
+
+  cleaned = meaningful.join(" ").trim();
+
+  // If we stripped everything, fall back to original minus known markers
+  if (!cleaned || cleaned.length < 20)
+    return content.replace(/<think[\s\S]*?<\/think>/g, "").trim() || content;
+
+  return cleaned;
 }
