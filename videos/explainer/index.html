@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #000;
+      }
+      .scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+      }
+      #scene1 {
+        z-index: 1;
+      }
+      #scene2 {
+        z-index: 2;
+        opacity: 0;
+      }
+      #scene3 {
+        z-index: 3;
+        opacity: 0;
+      }
+      #scene4 {
+        z-index: 4;
+        opacity: 0;
+      }
+      #scene5 {
+        z-index: 5;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-width="1920"
+      data-height="1080"
+      data-start="0"
+      data-duration="41"
+    >
+      <!-- Beat 1: THE PROBLEM (0.00 - 7.36s) -->
+      <div
+        id="scene1"
+        class="scene"
+        data-composition-id="beat1-problem"
+        data-composition-src="compositions/beat-1-problem.html"
+        data-start="0"
+        data-duration="7.36"
+        data-track-index="1"
+      ></div>
+
+      <!-- Beat 2: DISCOVER (7.36 - 13.54s) -->
+      <div
+        id="scene2"
+        class="scene"
+        data-composition-id="beat2-discover"
+        data-composition-src="compositions/beat-2-discover.html"
+        data-start="7.36"
+        data-duration="5.88"
+        data-track-index="1"
+      ></div>
+
+      <!-- Beat 3: BUILD & DEPLOY (13.54 - 20.66s) -->
+      <div
+        id="scene3"
+        class="scene"
+        data-composition-id="beat3-deploy"
+        data-composition-src="compositions/beat-3-deploy.html"
+        data-start="13.54"
+        data-duration="6.82"
+        data-track-index="1"
+      ></div>
+
+      <!-- Beat 4: SCALE/IMPACT (20.66 - 32.38s) -->
+      <div
+        id="scene4"
+        class="scene"
+        data-composition-id="beat4-scale"
+        data-composition-src="compositions/beat-4-scale.html"
+        data-start="20.66"
+        data-duration="11.42"
+        data-track-index="1"
+      ></div>
+
+      <!-- Beat 5: CTA (32.38 - 41s) -->
+      <div
+        id="scene5"
+        class="scene"
+        data-composition-id="beat5-cta"
+        data-composition-src="compositions/beat-5-cta.html"
+        data-start="32.38"
+        data-duration="8.62"
+        data-track-index="1"
+      ></div>
+
+      <!-- Narration audio -->
+      <audio
+        id="narration"
+        src="narration.wav"
+        data-start="0"
+        data-duration="37.2"
+        data-track-index="0"
+        data-volume="1"
+      ></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var total = 41;
+
+      // Transition 1→2: Blur crossfade at 7.06s (0.3s before beat2 start)
+      var t1 = 7.06;
+      tl.to(
+        "#scene1",
+        { filter: "blur(20px)", opacity: 0, duration: 0.3, ease: "power3.in" },
+        t1,
+      );
+      tl.fromTo(
+        "#scene2",
+        { opacity: 0, filter: "blur(20px)", scale: 0.75 },
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          scale: 1,
+          duration: 0.5,
+          ease: "expo.out",
+        },
+        t1 + 0.1,
+      );
+
+      // Transition 2→3: Velocity-matched upward slide at 13.24s
+      var t2 = 13.24;
+      tl.to(
+        "#scene2",
+        {
+          y: -150,
+          filter: "blur(30px)",
+          opacity: 0,
+          duration: 0.33,
+          ease: "power2.in",
+        },
+        t2,
+      );
+      tl.fromTo(
+        "#scene3",
+        { y: 150, filter: "blur(30px)", opacity: 0 },
+        {
+          y: 0,
+          filter: "blur(0px)",
+          opacity: 1,
+          duration: 1.0,
+          ease: "power2.out",
+        },
+        t2,
+      );
+
+      // Transition 3→4: Whip pan left at 20.36s
+      var t3 = 20.36;
+      tl.to(
+        "#scene3",
+        {
+          x: -400,
+          filter: "blur(24px)",
+          opacity: 0.4,
+          duration: 0.3,
+          ease: "power3.in",
+        },
+        t3,
+      );
+      tl.fromTo(
+        "#scene4",
+        { x: 400, filter: "blur(24px)", opacity: 0 },
+        {
+          x: 0,
+          filter: "blur(0px)",
+          opacity: 1,
+          duration: 0.3,
+          ease: "power3.out",
+        },
+        t3 + 0.15,
+      );
+
+      // Transition 4→5: Zoom through at 32.08s
+      var t4 = 32.08;
+      tl.to(
+        "#scene4",
+        {
+          scale: 1.2,
+          filter: "blur(20px)",
+          opacity: 0,
+          duration: 0.4,
+          ease: "power3.in",
+        },
+        t4,
+      );
+      tl.fromTo(
+        "#scene5",
+        { scale: 0.9, opacity: 0, filter: "blur(10px)" },
+        {
+          scale: 1,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 0.6,
+          ease: "power2.inOut",
+        },
+        t4 + 0.1,
+      );
+
+      // Hard kills for deterministic rendering
+      tl.set("#scene1", { visibility: "hidden" }, 7.5);
+      tl.set("#scene2", { visibility: "hidden" }, 13.7);
+      tl.set("#scene3", { visibility: "hidden" }, 20.7);
+      tl.set("#scene4", { visibility: "hidden" }, 32.5);
+      tl.set("#scene5", { visibility: "hidden" }, 41);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

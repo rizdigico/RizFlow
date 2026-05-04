@@ -1,0 +1,81 @@
+[span] RizFlow
+[span] Services
+[button] Live Demo
+[button] Get Free Discovery Audit
+[span] Custom Agentic-AI for Your Business
+[h1] Run Your Business
+[span] From Your Phone
+[p] Custom agentic-AI systems tailored to your business. Choose the agents you need, automate your operations, and reclaim your time — all from your phone.
+[div] Get Free Discovery Audit
+[span] ✓ No commitment required
+[button] See How It Works
+[div] PDPA Compliant
+[div] Bank-Grade Security
+[div] Live in 1-2 Weeks
+[div] Fully Customizable
+[text] ADMIN AGENT
+[text] PROJECTS AGENT
+[text] FINANCE AGENT
+[text] COMMS AGENT
+[text] SOCIAL AGENT
+[text] ORCHESTRATOR
+[span] System Live
+[span] UPTIME:
+[span] 99.99%
+[p] Business.log
+[p] [SOCIAL] Instagram post scheduled for peak engagement window.
+[span] Agent Network Active
+[h2] How
+[span] RizFlow
+[h2] Works
+[p] Three steps from discovery to a fully autonomous operations layer for your business.
+[span] Discover
+[span] Build & Deploy
+[span] Scale
+[span] STEP
+[h3] Discover
+[p] Audit & Analysis
+[p] We map your business workflows, identify bottlenecks, and show you exactly how many hours & cost are lost to manual operations each week — and which agents can fix them.
+[a] Start Your Audit
+[p] Audit Report
+[span] Customer Intake
+[span] Workflow Tracking
+[span] Invoicing
+[span] Communications
+[span] Social Media
+[span] Analysis
+[span] 14 hrs/wk saved
+[span] Previous
+[span] Next
+[h2] Choose your
+[span] agent stack
+[p] Pick the agents your business needs, customize them to your workflows, and let them run your operations — from your phone — so you can focus on growth.
+[h3] Admin Automation Agent
+[p] Handles paperwork, data entry, filing, and routine admin tasks 24/7. Free yourself from the repetitive work that keeps you stuck at your desk.
+[h3] Project & Deliverables Agent
+[p] Tracks client deliverables, deadlines, and progress in real time. Sends proactive status updates so nothing falls through the cracks.
+[h3] Scheduling & Coordination Agent
+[p] Smart scheduling, resource allocation, and team coordination. Eliminate the back-and-forth and let your calendar run itself.
+[h3] Billing & Finance Agent
+[p] Auto-invoicing, payment reminders, expense tracking, and revenue forecasting. Your cash flow runs on autopilot.
+[h3] Communications Agent
+[p] Drafts and sends updates, handles client follow-ups, and manages responses across email, messaging, and social — all matching your brand tone.
+[h3] Custom Agent Builder
+[p] Need something unique? We build fully custom agents for any business process — social media, compliance, reporting, operations, or anything else.
+[p] Integrates with tools your business already uses
+[span] Slack
+[span] HubSpot
+[span] Asana
+[span] Xero
+[span] Notion
+[span] Zapier
+[span] Monday.com
+[span] Stripe
+[p] +50 more
+[p] Agentic-AI powered operations that give business owners back 15-25 hours every week. Based in Singapore, serving SEA.
+[a] Services
+[a] Discovery Audit
+[h4] Resources
+[a] Privacy & Terms
+[p] RizFlow Pte. Ltd. All rights reserved.
+[p] Made with ♥ in Singapore 🇸🇬

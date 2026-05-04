@@ -1,0 +1,382 @@
+<template id="beat2-discover-template">
+  <div
+    data-composition-id="beat2-discover"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="5.88"
+  >
+    <style>
+      [data-composition-id="beat2-discover"] {
+        font-family: "Inter", "Montserrat", sans-serif;
+        background: #0a0f1a;
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      [data-composition-id="beat2-discover"] .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 1;
+      }
+
+      [data-composition-id="beat2-discover"] .radial-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(6, 182, 212, 0.06) 0%,
+          transparent 70%
+        );
+        z-index: 1;
+      }
+
+      [data-composition-id="beat2-discover"] .audit-card {
+        position: absolute;
+        top: 140px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 40px 44px;
+        box-shadow: 0 0 30px rgba(6, 182, 212, 0.08);
+        z-index: 3;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat2-discover"] .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 30px;
+      }
+
+      [data-composition-id="beat2-discover"] .card-header h3 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 24px;
+        color: #ffffff;
+        letter-spacing: 0.05em;
+        margin: 0;
+      }
+
+      [data-composition-id="beat2-discover"] .card-header-icon {
+        width: 28px;
+        height: 28px;
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-name {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        color: #94a3b8;
+        min-width: 160px;
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-bar-track {
+        flex: 1;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        margin: 0 16px;
+        overflow: hidden;
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        background: linear-gradient(90deg, #06b6d4, #22d3ee);
+        transform-origin: left center;
+        transform: scaleX(0);
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-pct {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: #ffffff;
+        font-variant-numeric: tabular-nums;
+        min-width: 50px;
+        text-align: right;
+      }
+
+      [data-composition-id="beat2-discover"] .saved-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 28px;
+        padding: 14px 24px;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-radius: 12px;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat2-discover"] .saved-badge-text {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 22px;
+        color: #10b981;
+        letter-spacing: 0.03em;
+      }
+
+      [data-composition-id="beat2-discover"] .checkmark-svg {
+        width: 24px;
+        height: 24px;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat2-discover"] .checkmark-path {
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+      }
+
+      /* Floating decorative pulse dot */
+      [data-composition-id="beat2-discover"] .pulse-dot {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #06b6d4;
+        z-index: 2;
+        opacity: 0;
+      }
+      [data-composition-id="beat2-discover"] .pulse-dot-1 {
+        top: 100px;
+        right: 300px;
+      }
+      [data-composition-id="beat2-discover"] .pulse-dot-2 {
+        bottom: 200px;
+        left: 250px;
+      }
+      [data-composition-id="beat2-discover"] .pulse-dot-3 {
+        top: 400px;
+        right: 150px;
+      }
+    </style>
+
+    <!-- Background -->
+    <div class="grid-overlay"></div>
+    <div class="radial-glow"></div>
+
+    <!-- Decorative pulse dots -->
+    <div class="pulse-dot pulse-dot-1"></div>
+    <div class="pulse-dot pulse-dot-2"></div>
+    <div class="pulse-dot pulse-dot-3"></div>
+
+    <!-- Audit Card -->
+    <div class="audit-card" id="audit-card">
+      <div class="card-header">
+        <img class="card-header-icon" src="../capture/assets/svgs/filter.svg" />
+        <h3>Workflow Audit</h3>
+      </div>
+
+      <div class="workflow-row" id="wf-1">
+        <span class="workflow-name">Customer Intake</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill" id="bar-1"></div>
+        </div>
+        <span class="workflow-pct" id="pct-1">0%</span>
+      </div>
+      <div class="workflow-row" id="wf-2">
+        <span class="workflow-name">Workflow Tracking</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill" id="bar-2"></div>
+        </div>
+        <span class="workflow-pct" id="pct-2">0%</span>
+      </div>
+      <div class="workflow-row" id="wf-3">
+        <span class="workflow-name">Invoicing</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill" id="bar-3"></div>
+        </div>
+        <span class="workflow-pct" id="pct-3">0%</span>
+      </div>
+      <div class="workflow-row" id="wf-4">
+        <span class="workflow-name">Communications</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill" id="bar-4"></div>
+        </div>
+        <span class="workflow-pct" id="pct-4">0%</span>
+      </div>
+      <div class="workflow-row" id="wf-5">
+        <span class="workflow-name">Social Media</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill" id="bar-5"></div>
+        </div>
+        <span class="workflow-pct" id="pct-5">0%</span>
+      </div>
+
+      <div class="saved-badge" id="saved-badge">
+        <svg
+          class="checkmark-svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path
+            class="checkmark-path"
+            d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke="#10B981"
+          />
+        </svg>
+        <span class="saved-badge-text">14 hrs/wk saved</span>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var beat = 5.88;
+
+      // Card entrance — slides up from below with blur clearing
+      tl.fromTo(
+        "#audit-card",
+        { y: 80, opacity: 0, filter: "blur(10px)" },
+        {
+          y: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 0.5,
+          ease: "expo.out",
+        },
+        0.2,
+      );
+
+      // Workflow rows cascade in
+      var targets = [60, 40, 75, 30, 55];
+      var rows = ["#wf-1", "#wf-2", "#wf-3", "#wf-4", "#wf-5"];
+      var bars = ["#bar-1", "#bar-2", "#bar-3", "#bar-4", "#bar-5"];
+      var pcts = ["#pct-1", "#pct-2", "#pct-3", "#pct-4", "#pct-5"];
+
+      rows.forEach(function (row, i) {
+        var t = 0.6 + i * 0.2;
+        tl.fromTo(
+          row,
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" },
+          t,
+        );
+        // Bar fills
+        var scaleX = targets[i] / 100;
+        tl.to(
+          bars[i],
+          { scaleX: scaleX, duration: 0.8, ease: "power2.out" },
+          t + 0.1,
+        );
+        // Counter animates
+        var counter = { val: 0 };
+        tl.to(
+          counter,
+          {
+            val: targets[i],
+            duration: 0.8,
+            ease: "power2.out",
+            onUpdate: function () {
+              document.querySelector(pcts[i]).textContent =
+                Math.round(counter.val) + "%";
+            },
+          },
+          t + 0.1,
+        );
+      });
+
+      // Saved badge entrance with pulse
+      tl.fromTo(
+        "#saved-badge",
+        { opacity: 0, scale: 0.85 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.5)" },
+        2.2,
+      );
+
+      // Checkmark SVG path draw
+      tl.to(
+        ".checkmark-path",
+        { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" },
+        2.3,
+      );
+
+      // Pulse glow on badge
+      tl.to(
+        "#saved-badge",
+        {
+          boxShadow: "0 0 20px rgba(16,185,129,0.3)",
+          duration: 0.8,
+          yoyo: true,
+          repeat: 3,
+          ease: "sine.inOut",
+        },
+        2.5,
+      );
+
+      // Decorative pulse dots entrance
+      tl.fromTo(
+        ".pulse-dot",
+        { opacity: 0, scale: 0 },
+        {
+          opacity: 0.6,
+          scale: 1,
+          duration: 0.3,
+          stagger: 0.15,
+          ease: "back.out(2)",
+        },
+        0.5,
+      );
+      // Pulse dots float
+      tl.to(
+        ".pulse-dot-1",
+        { y: "+=5", duration: 1.5, yoyo: true, repeat: 3, ease: "sine.inOut" },
+        0.8,
+      );
+      tl.to(
+        ".pulse-dot-2",
+        { y: "+=6", duration: 1.8, yoyo: true, repeat: 2, ease: "sine.inOut" },
+        1.0,
+      );
+      tl.to(
+        ".pulse-dot-3",
+        { y: "+=4", duration: 1.6, yoyo: true, repeat: 3, ease: "sine.inOut" },
+        0.9,
+      );
+
+      // Card subtle float
+      tl.to(
+        "#audit-card",
+        { y: "+=3", duration: 2.5, yoyo: true, repeat: 1, ease: "sine.inOut" },
+        1.5,
+      );
+
+      window.__timelines["beat2-discover"] = tl;
+    </script>
+  </div>
+</template>

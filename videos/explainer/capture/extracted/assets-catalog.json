@@ -1,0 +1,46 @@
+[
+  {
+    "url": "https://www.rizflow.co/grid.svg",
+    "type": "Background",
+    "contexts": ["css url()"],
+    "notes": null,
+    "nearestHeading": "Run Your Business From Your Phone",
+    "aboveFold": true
+  },
+  {
+    "url": "https://www.rizflow.co/favicon.svg",
+    "type": "Icon",
+    "contexts": ["link[rel=\"icon\"]"],
+    "notes": null
+  },
+  {
+    "url": "https://www.rizflow.co/assets/rolldown-runtime-COnpUsM8.js",
+    "type": "Other",
+    "contexts": ["link[rel=\"preload\"]"],
+    "notes": null
+  },
+  {
+    "url": "https://www.rizflow.co/assets/forms-gckrllKo.js",
+    "type": "Other",
+    "contexts": ["link[rel=\"preload\"]"],
+    "notes": null
+  },
+  {
+    "url": "https://www.rizflow.co/assets/vendor-BeameAzN.js",
+    "type": "Other",
+    "contexts": ["link[rel=\"preload\"]"],
+    "notes": null
+  },
+  {
+    "url": "https://rizflow.co/og-banner.png",
+    "type": "Image",
+    "contexts": ["meta[og:image]", "meta[twitter:image]"],
+    "notes": null
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap",
+    "type": "Other",
+    "contexts": ["css url()"],
+    "notes": null
+  }
+]

@@ -1,0 +1,418 @@
+<template id="beat4-scale-template">
+  <div
+    data-composition-id="beat4-scale"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="11.42"
+  >
+    <style>
+      [data-composition-id="beat4-scale"] {
+        font-family: "Inter", "Montserrat", sans-serif;
+        background: #0a0f1a;
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      [data-composition-id="beat4-scale"] .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 1;
+      }
+
+      [data-composition-id="beat4-scale"] .particle-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        z-index: 2;
+      }
+
+      /* Metric cards */
+      [data-composition-id="beat4-scale"] .metrics-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        z-index: 4;
+        width: 900px;
+      }
+
+      [data-composition-id="beat4-scale"] .metric-card {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        background: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 28px 36px;
+        box-shadow: 0 0 25px rgba(6, 182, 212, 0.06);
+        opacity: 0;
+      }
+
+      [data-composition-id="beat4-scale"] .metric-value {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 72px;
+        color: #ffffff;
+        min-width: 200px;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+      }
+
+      [data-composition-id="beat4-scale"] .metric-value .pct {
+        font-size: 42px;
+        color: #22d3ee;
+      }
+
+      [data-composition-id="beat4-scale"] .metric-info {
+        flex: 1;
+      }
+
+      [data-composition-id="beat4-scale"] .metric-label {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        color: #ffffff;
+        margin-bottom: 8px;
+        letter-spacing: 0.04em;
+      }
+
+      [data-composition-id="beat4-scale"] .metric-desc {
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #94a3b8;
+        line-height: 1.4;
+      }
+
+      [data-composition-id="beat4-scale"] .metric-bar-track {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 3px;
+        margin-top: 12px;
+        overflow: hidden;
+      }
+
+      [data-composition-id="beat4-scale"] .metric-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+        transform-origin: left center;
+        transform: scaleX(0);
+      }
+
+      [data-composition-id="beat4-scale"] .bar-teal {
+        background: linear-gradient(90deg, #06b6d4, #22d3ee);
+      }
+      [data-composition-id="beat4-scale"] .bar-emerald {
+        background: linear-gradient(90deg, #10b981, #34d399);
+      }
+      [data-composition-id="beat4-scale"] .bar-gold {
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      }
+
+      /* Bottom tagline */
+      [data-composition-id="beat4-scale"] .tagline {
+        position: absolute;
+        bottom: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
+        display: flex;
+        gap: 0.15em;
+      }
+
+      [data-composition-id="beat4-scale"] .tagline-word {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 32px;
+        color: #ffffff;
+        display: inline-block;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat4-scale"] .tagline-word.accent {
+        color: #22d3ee;
+      }
+    </style>
+
+    <!-- Background layers -->
+    <div class="grid-overlay"></div>
+    <canvas
+      class="particle-canvas"
+      id="beat4-canvas"
+      width="1920"
+      height="1080"
+    ></canvas>
+
+    <!-- Metric cards -->
+    <div class="metrics-container">
+      <div class="metric-card" id="metric-1">
+        <div class="metric-value">
+          <span id="counter-1">0</span><span class="pct">%</span>
+        </div>
+        <div class="metric-info">
+          <div class="metric-label">Operating Costs Cut</div>
+          <div class="metric-desc">
+            AI agents handle admin, comms, billing — 24/7
+          </div>
+          <div class="metric-bar-track">
+            <div class="metric-bar-fill bar-teal" id="bar-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-card" id="metric-2">
+        <div class="metric-value">
+          <span id="counter-2">0</span><span class="pct">+ hrs</span>
+        </div>
+        <div class="metric-info">
+          <div class="metric-label">Weekly Hours Reclaimed</div>
+          <div class="metric-desc">
+            Check everything from your phone in under 30 minutes
+          </div>
+          <div class="metric-bar-track">
+            <div class="metric-bar-fill bar-emerald" id="bar-2"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-card" id="metric-3">
+        <div class="metric-value">
+          <span id="counter-3">0</span><span class="pct">%</span>
+        </div>
+        <div class="metric-info">
+          <div class="metric-label">Revenue Growth</div>
+          <div class="metric-desc">Scale your business, not your workload</div>
+          <div class="metric-bar-track">
+            <div class="metric-bar-fill bar-gold" id="bar-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom tagline -->
+    <div class="tagline">
+      <span class="tagline-word">Scale</span>
+      <span class="tagline-word">your</span>
+      <span class="tagline-word">business.</span>
+      <span class="tagline-word accent">Not</span>
+      <span class="tagline-word">your</span>
+      <span class="tagline-word">workload.</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var beat = 11.42;
+
+      // Deterministic hash for particles
+      function hash(x, y) {
+        var n = x * 374761393 + y * 668265263;
+        n = (n ^ (n >> 13)) * 1274126177;
+        return ((n ^ (n >> 16)) & 0x7fffffff) / 0x7fffffff;
+      }
+
+      // Canvas 2D — bright neural network (fully formed)
+      var canvas4 = document.getElementById("beat4-canvas");
+      var ctx4 = canvas4.getContext("2d");
+      var proxy4 = { t: 0 };
+
+      function drawNetwork(time) {
+        ctx4.clearRect(0, 0, 1920, 1080);
+        var nodes = 80;
+        var positions = [];
+        for (var i = 0; i < nodes; i++) {
+          var bx = hash(i, 0) * 1920;
+          var by = hash(i, 1) * 1080;
+          var dx = Math.sin(time * 0.2 + i * 1.3) * 20;
+          var dy = Math.cos(time * 0.15 + i * 0.9) * 15;
+          var x = bx + dx;
+          var y = by + dy;
+          positions.push({ x: x, y: y });
+          var alpha = 0.3 + hash(i, 2) * 0.4;
+          var r = 2 + hash(i, 3) * 2.5;
+          // Bright node
+          ctx4.beginPath();
+          ctx4.arc(x, y, r, 0, Math.PI * 2);
+          ctx4.fillStyle = "rgba(6, 182, 212, " + alpha + ")";
+          ctx4.fill();
+          // Glow
+          ctx4.beginPath();
+          ctx4.arc(x, y, r * 2.5, 0, Math.PI * 2);
+          ctx4.fillStyle = "rgba(6, 182, 212, " + alpha * 0.15 + ")";
+          ctx4.fill();
+        }
+        // Connections
+        for (var i = 0; i < nodes; i++) {
+          for (var j = i + 1; j < nodes; j++) {
+            var dist = Math.sqrt(
+              Math.pow(positions[i].x - positions[j].x, 2) +
+                Math.pow(positions[i].y - positions[j].y, 2),
+            );
+            if (dist < 180) {
+              var lineAlpha = (1 - dist / 180) * 0.12;
+              ctx4.beginPath();
+              ctx4.moveTo(positions[i].x, positions[i].y);
+              ctx4.lineTo(positions[j].x, positions[j].y);
+              ctx4.strokeStyle = "rgba(6, 182, 212, " + lineAlpha + ")";
+              ctx4.lineWidth = 0.6;
+              ctx4.stroke();
+            }
+          }
+        }
+      }
+
+      tl.to(
+        proxy4,
+        {
+          t: beat,
+          duration: beat,
+          ease: "none",
+          onUpdate: function () {
+            drawNetwork(proxy4.t);
+          },
+        },
+        0,
+      );
+
+      // Metric cards cascade in
+      var cards = ["#metric-1", "#metric-2", "#metric-3"];
+      cards.forEach(function (card, i) {
+        tl.fromTo(
+          card,
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+          0.5 + i * 0.3,
+        );
+      });
+
+      // Counter 1: 60% (0 to 60 over 2s)
+      var c1 = { val: 0 };
+      tl.to(
+        c1,
+        {
+          val: 60,
+          duration: 2,
+          ease: "power2.out",
+          onUpdate: function () {
+            document.getElementById("counter-1").textContent = Math.round(
+              c1.val,
+            );
+          },
+        },
+        0.7,
+      );
+      tl.to(
+        "#bar-1",
+        { scaleX: 0.6, duration: 2.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" },
+        0.7,
+      );
+
+      // Counter 2: 20+ hrs (0 to 20 over 2s)
+      var c2 = { val: 0 };
+      tl.to(
+        c2,
+        {
+          val: 20,
+          duration: 2,
+          ease: "power2.out",
+          onUpdate: function () {
+            document.getElementById("counter-2").textContent = Math.round(
+              c2.val,
+            );
+          },
+        },
+        1.0,
+      );
+      tl.to(
+        "#bar-2",
+        { scaleX: 0.8, duration: 2.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" },
+        1.0,
+      );
+
+      // Counter 3: 40% (0 to 40 over 2s)
+      var c3 = { val: 0 };
+      tl.to(
+        c3,
+        {
+          val: 40,
+          duration: 2,
+          ease: "power2.out",
+          onUpdate: function () {
+            document.getElementById("counter-3").textContent = Math.round(
+              c3.val,
+            );
+          },
+        },
+        1.3,
+      );
+      tl.to(
+        "#bar-3",
+        { scaleX: 0.4, duration: 2.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" },
+        1.3,
+      );
+
+      // Metric cards subtle float
+      cards.forEach(function (card, i) {
+        tl.to(
+          card,
+          {
+            y: "+=4",
+            duration: 2.5,
+            yoyo: true,
+            repeat: 3,
+            ease: "sine.inOut",
+          },
+          2.0 + i * 0.2,
+        );
+      });
+
+      // Glow pulse behind each card
+      cards.forEach(function (card, i) {
+        tl.to(
+          card,
+          {
+            boxShadow: "0 0 35px rgba(6,182,212,0.15)",
+            duration: 1.2,
+            yoyo: true,
+            repeat: 4,
+            ease: "sine.inOut",
+          },
+          1.5 + i * 0.4,
+        );
+      });
+
+      // Bottom tagline — types on
+      var tagWords = document.querySelectorAll(
+        "[data-composition-id='beat4-scale'] .tagline-word",
+      );
+      tagWords.forEach(function (word, i) {
+        tl.fromTo(
+          word,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+          7.0 + i * 0.2,
+        );
+      });
+
+      window.__timelines["beat4-scale"] = tl;
+    </script>
+  </div>
+</template>

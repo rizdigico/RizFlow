@@ -1,0 +1,337 @@
+<template id="beat1-problem-template">
+  <div
+    data-composition-id="beat1-problem"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="7.36"
+  >
+    <style>
+      [data-composition-id="beat1-problem"] {
+        font-family: "Inter", "Montserrat", sans-serif;
+        background: #0a0f1a;
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Background grid overlay */
+      [data-composition-id="beat1-problem"] .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 1;
+      }
+
+      /* Radial glow bottom-left */
+      [data-composition-id="beat1-problem"] .radial-glow {
+        position: absolute;
+        bottom: -100px;
+        left: -100px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(6, 182, 212, 0.08) 0%,
+          transparent 70%
+        );
+        z-index: 1;
+      }
+
+      /* Canvas for particles */
+      [data-composition-id="beat1-problem"] .particle-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        z-index: 2;
+      }
+
+      /* Task labels */
+      [data-composition-id="beat1-problem"] .task-label {
+        position: absolute;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 52px;
+        color: #ffffff;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        z-index: 3;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat1-problem"] .task-bar {
+        position: absolute;
+        height: 4px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, #06b6d4, #22d3ee);
+        z-index: 3;
+        transform-origin: left center;
+        transform: scaleX(0);
+      }
+
+      [data-composition-id="beat1-problem"] #task-invoicing {
+        top: 220px;
+        left: 120px;
+      }
+      [data-composition-id="beat1-problem"] #task-invoicing-bar {
+        top: 285px;
+        left: 120px;
+        width: 320px;
+      }
+
+      [data-composition-id="beat1-problem"] #task-scheduling {
+        top: 360px;
+        left: 400px;
+      }
+      [data-composition-id="beat1-problem"] #task-scheduling-bar {
+        top: 425px;
+        left: 400px;
+        width: 280px;
+      }
+
+      [data-composition-id="beat1-problem"] #task-followups {
+        top: 500px;
+        left: 180px;
+      }
+      [data-composition-id="beat1-problem"] #task-followups-bar {
+        top: 565px;
+        left: 180px;
+        width: 380px;
+      }
+
+      [data-composition-id="beat1-problem"] #task-paperwork {
+        top: 640px;
+        left: 600px;
+      }
+      [data-composition-id="beat1-problem"] #task-paperwork-bar {
+        top: 705px;
+        left: 600px;
+        width: 300px;
+      }
+
+      /* Sound familiar text */
+      [data-composition-id="beat1-problem"] .sound-familiar {
+        position: absolute;
+        top: 830px;
+        left: 50%;
+        display: flex;
+        justify-content: center;
+        width: 1920px;
+        z-index: 4;
+      }
+      [data-composition-id="beat1-problem"] .sound-familiar-word {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 64px;
+        color: #22d3ee;
+        display: inline-block;
+        opacity: 0;
+        margin: 0 0.08em;
+      }
+    </style>
+
+    <!-- Background layers -->
+    <div class="grid-overlay"></div>
+    <div class="radial-glow"></div>
+    <canvas
+      class="particle-canvas"
+      id="beat1-canvas"
+      width="1920"
+      height="1080"
+    ></canvas>
+
+    <!-- Task labels -->
+    <div class="task-label" id="task-invoicing">INVOICING</div>
+    <div class="task-bar" id="task-invoicing-bar"></div>
+
+    <div class="task-label" id="task-scheduling">SCHEDULING</div>
+    <div class="task-bar" id="task-scheduling-bar"></div>
+
+    <div class="task-label" id="task-followups">CLIENT FOLLOW-UPS</div>
+    <div class="task-bar" id="task-followups-bar"></div>
+
+    <div class="task-label" id="task-paperwork">PAPERWORK</div>
+    <div class="task-bar" id="task-paperwork-bar"></div>
+
+    <!-- Sound familiar -->
+    <div class="sound-familiar">
+      <span class="sound-familiar-word">Sound</span>
+      <span class="sound-familiar-word">familiar?</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var beat = 7.36;
+
+      // Deterministic hash for particles
+      function hash(x, y) {
+        var n = x * 374761393 + y * 668265263;
+        n = (n ^ (n >> 13)) * 1274126177;
+        return ((n ^ (n >> 16)) & 0x7fffffff) / 0x7fffffff;
+      }
+
+      // Canvas 2D particle field
+      var canvas = document.getElementById("beat1-canvas");
+      var ctx = canvas.getContext("2d");
+      var proxy = { t: 0 };
+
+      function drawParticles(time) {
+        ctx.clearRect(0, 0, 1920, 1080);
+        var count = 60;
+        for (var i = 0; i < count; i++) {
+          var bx = hash(i, 0) * 1920;
+          var by = hash(i, 1) * 1080;
+          var dx = Math.sin(time * 0.3 + i * 0.7) * 15;
+          var dy = Math.cos(time * 0.25 + i * 0.5) * 10;
+          var x = bx + dx;
+          var y = by + dy;
+          var alpha = 0.15 + hash(i, 2) * 0.15;
+          var r = 1 + hash(i, 3) * 1.5;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(6, 182, 212, " + alpha + ")";
+          ctx.fill();
+          // Connection lines (dim, network not formed yet)
+          if (i > 0 && hash(i, 4) > 0.6) {
+            var pi = Math.floor(hash(i, 5) * i);
+            var px = hash(pi, 0) * 1920 + Math.sin(time * 0.3 + pi * 0.7) * 15;
+            var py = hash(pi, 1) * 1080 + Math.cos(time * 0.25 + pi * 0.5) * 10;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(px, py);
+            ctx.strokeStyle = "rgba(6, 182, 212, 0.06)";
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      tl.to(
+        proxy,
+        {
+          t: beat,
+          duration: beat,
+          ease: "none",
+          onUpdate: function () {
+            drawParticles(proxy.t);
+          },
+        },
+        0,
+      );
+
+      // Task label entrances — staggered slam-in with rotation
+      // INVOICING — slams from left
+      tl.fromTo(
+        "#task-invoicing",
+        { x: -200, rotation: -5, opacity: 0, scale: 1.1 },
+        {
+          x: 0,
+          rotation: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.35,
+          ease: "power3.out",
+        },
+        0.4,
+      );
+      tl.fromTo(
+        "#task-invoicing-bar",
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.3, ease: "power2.in" },
+        0.65,
+      );
+
+      // SCHEDULING — drops from top
+      tl.fromTo(
+        "#task-scheduling",
+        { y: -120, opacity: 0, scale: 1.05 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.35, ease: "power3.out" },
+        1.1,
+      );
+      tl.fromTo(
+        "#task-scheduling-bar",
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.3, ease: "power2.in" },
+        1.35,
+      );
+
+      // CLIENT FOLLOW-UPS — cascades in per-word
+      tl.fromTo(
+        "#task-followups",
+        { y: 80, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+        1.8,
+      );
+      tl.fromTo(
+        "#task-followups-bar",
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.3, ease: "power2.in" },
+        2.1,
+      );
+
+      // PAPERWORK — slides from right
+      tl.fromTo(
+        "#task-paperwork",
+        { x: 200, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" },
+        2.5,
+      );
+      tl.fromTo(
+        "#task-paperwork-bar",
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.3, ease: "power2.in" },
+        2.75,
+      );
+
+      // Brief dim — everything dims slightly
+      tl.to(
+        ".task-label, .task-bar",
+        { opacity: 0.3, duration: 0.3, ease: "power2.inOut" },
+        3.5,
+      );
+
+      // "Sound familiar?" — types on slowly
+      var sfWords = document.querySelectorAll(
+        "[data-composition-id='beat1-problem'] .sound-familiar-word",
+      );
+      sfWords.forEach(function (word, i) {
+        tl.fromTo(
+          word,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+          4.5 + i * 0.25,
+        );
+      });
+
+      // Ambient float on task labels
+      tl.to(
+        "#task-invoicing",
+        { y: "+=4", duration: 2, yoyo: true, repeat: 2, ease: "sine.inOut" },
+        1.5,
+      );
+      tl.to(
+        "#task-scheduling",
+        { y: "+=5", duration: 1.8, yoyo: true, repeat: 2, ease: "sine.inOut" },
+        2.2,
+      );
+      tl.to(
+        "#task-followups",
+        { y: "+=4", duration: 2.1, yoyo: true, repeat: 2, ease: "sine.inOut" },
+        2.8,
+      );
+
+      window.__timelines["beat1-problem"] = tl;
+    </script>
+  </div>
+</template>
