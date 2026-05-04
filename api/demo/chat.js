@@ -97,6 +97,7 @@ async function tryVpsProxy(messages) {
   const timeoutId = setTimeout(() => controller.abort(), PROXY_TIMEOUT_MS);
 
   try {
+    console.log(`VPS proxy: calling ${VPS_PROXY}`);
     const response = await fetch(VPS_PROXY, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -105,20 +106,28 @@ async function tryVpsProxy(messages) {
     });
 
     clearTimeout(timeoutId);
+    console.log(`VPS proxy: response status ${response.status}`);
 
     if (!response.ok) {
-      console.error(`VPS proxy failed: ${response.status}`);
+      const errBody = await response.text().catch(() => "");
+      console.error(
+        `VPS proxy failed: ${response.status} ${errBody.slice(0, 200)}`,
+      );
       throw new Error(`VPS proxy: ${response.status}`);
     }
 
     const data = await response.json();
     if (data.reply && data.reply.length >= 5) {
+      console.log(`VPS proxy: success, model=${data.model}`);
       return { reply: data.reply, model: data.model };
     }
 
     throw new Error("VPS proxy: empty response");
   } catch (err) {
     clearTimeout(timeoutId);
+    console.error(
+      `VPS proxy error: ${err.name}: ${err.message?.slice(0, 300)}`,
+    );
     throw err;
   }
 }
