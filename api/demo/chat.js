@@ -9,7 +9,8 @@ const MODEL_CHAIN = [
   "nvidia/nemotron-3-super-120b-a12b:free",
 ];
 
-const VPS_PROXY = "http://37.60.226.100:3002/api/demo/chat";
+const VPS_PROXY =
+  "https://variations-phillips-ringtones-laundry.trycloudflare.com/api/demo/chat";
 const REQUEST_TIMEOUT_MS = 15000;
 const PROXY_TIMEOUT_MS = 25000;
 
