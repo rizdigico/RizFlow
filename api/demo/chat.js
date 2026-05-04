@@ -12,6 +12,19 @@ const MODEL_CHAIN = [
 const REQUEST_TIMEOUT_MS = 15000; // 15s per model (Vercel maxDuration is 30s)
 
 export default async function handler(req, res) {
+  // Health check endpoint — reports API key status and tests first model
+  if (req.method === "GET") {
+    const key = process.env.OPENROUTER_API_KEY;
+    const keyStatus = key
+      ? `set (${key.slice(0, 8)}...${key.slice(-4)})`
+      : "NOT SET";
+    return res.status(200).json({
+      status: key ? "key-configured" : "key-missing",
+      keyStatus,
+      models: MODEL_CHAIN,
+    });
+  }
+
   // CORS preflight
   if (req.method === "OPTIONS") {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -54,8 +67,11 @@ export default async function handler(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     return res.status(200).json(result);
   } catch (err) {
-    console.error("Demo chat API error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    console.error("Demo chat API error:", err.message || err);
+    return res.status(500).json({
+      error: "Internal server error",
+      detail: err.message?.slice(0, 200),
+    });
   }
 }
 
@@ -121,7 +137,7 @@ async function callModel(model, messages) {
     if (!response.ok) {
       const errBody = await response.text().catch(() => "");
       console.error(
-        `Model ${model} failed: ${response.status} ${errBody.slice(0, 200)}`,
+        `Model ${model} failed: status=${response.status} body=${errBody.slice(0, 300)}`,
       );
       // Throw to trigger fallback in Promise.any / sequential fallback
       throw new Error(`Model ${model}: ${response.status}`);
