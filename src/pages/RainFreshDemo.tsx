@@ -608,7 +608,8 @@ export function RainFreshDemo() {
               </h2>
               <p className="text-slate-400 mb-6 max-w-md mx-auto">
                 RainFreshSG went from 2-3 hours/day on manual ops to fully
-                automated TikTok Shop orders, Alibaba restocking, and social scheduling. See what RizFlow can do for you.
+                automated TikTok Shop orders, Alibaba restocking, and social
+                scheduling. See what RizFlow can do for you.
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <Link

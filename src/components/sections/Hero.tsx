@@ -182,24 +182,33 @@ function AgentNetworkSVG() {
   useEffect(() => {
     const tasks = [
       {
-        text: "[INTAKE] New customer inquiry received — auto-qualifying...",
+        text: "[ADMIN] Client report generated and filed — no manual entry needed",
         node: 0,
       },
-      { text: "[WORKFLOW] Order #1847 assigned to fulfilment queue.", node: 1 },
-      { text: "[ORCHESTRATOR] Routing data to Comms Agent...", node: 5 },
       {
-        text: "[COMMS] Customer update drafted — matching your brand tone...",
-        node: 3,
-      },
-      { text: "[QA] Delivery checklist verified. All checks passed.", node: 4 },
-      { text: "[COMMS] Status update sent to customer via WhatsApp.", node: 3 },
-      {
-        text: "[WORKFLOW] Inventory alert triggered — restock recommended.",
+        text: "[PROJECTS] Deliverable #3 marked complete — client notified.",
         node: 1,
       },
-      { text: "[ORCHESTRATOR] Rescheduling daily report for 5 PM...", node: 5 },
       {
-        text: "[BILLING] Payment reminder sent for Invoice #2045.",
+        text: "[ORCHESTRATOR] Routing weekly summary to Comms Agent...",
+        node: 5,
+      },
+      {
+        text: "[COMMS] Follow-up email drafted — matching your brand tone...",
+        node: 3,
+      },
+      {
+        text: "[SOCIAL] Instagram post scheduled for peak engagement window.",
+        node: 4,
+      },
+      { text: "[COMMS] Status update sent to client via WhatsApp.", node: 3 },
+      {
+        text: "[PROJECTS] Deadline alert — milestone review in 2 days.",
+        node: 1,
+      },
+      { text: "[ORCHESTRATOR] Running daily operations report...", node: 5 },
+      {
+        text: "[FINANCE] Invoice #2045 sent — payment tracked automatically.",
         node: 2,
       },
     ];
@@ -213,11 +222,11 @@ function AgentNetworkSVG() {
   }, []);
 
   const nodes = [
-    { cx: 130, cy: 110, label: "Intake Agent", icon: "📥", isCenter: false },
-    { cx: 360, cy: 90, label: "Workflow Agent", icon: "📊", isCenter: false },
-    { cx: 400, cy: 230, label: "Billing Agent", icon: "💳", isCenter: false },
+    { cx: 130, cy: 110, label: "Admin Agent", icon: "📋", isCenter: false },
+    { cx: 360, cy: 90, label: "Projects Agent", icon: "📊", isCenter: false },
+    { cx: 400, cy: 230, label: "Finance Agent", icon: "💳", isCenter: false },
     { cx: 250, cy: 310, label: "Comms Agent", icon: "📩", isCenter: false },
-    { cx: 110, cy: 260, label: "QA Agent", icon: "✅", isCenter: false },
+    { cx: 110, cy: 260, label: "Social Agent", icon: "📱", isCenter: false },
     { cx: 255, cy: 200, label: "Orchestrator", icon: "🧠", isCenter: true },
   ];
 

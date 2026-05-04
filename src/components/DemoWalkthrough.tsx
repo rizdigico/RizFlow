@@ -7,10 +7,11 @@ const STEPS = [
   {
     icon: "😫",
     title: "Running a business shouldn't feel like this",
-    subtitle: "The stuff that eats your day",
+    subtitle: "The manual work that eats your day",
     bullets: [
-      "Repeating the same tasks over and over — orders, follow-ups, updates",
-      "Things slip through the cracks — missed replies, forgotten reorders",
+      "Admin tasks, follow-ups, and reports pile up — every single week",
+      "Client updates slip through the cracks, deadlines get missed",
+      "Orders, stock, and supplier coordination eat hours — whether you run e-commerce, F&B, or services",
       "You're the bottleneck — nothing moves until you handle it personally",
       "Hiring help is expensive, training takes months, people leave",
     ],
@@ -20,13 +21,15 @@ const STEPS = [
   },
   {
     icon: "⚡",
-    title: "An AI team that never sleeps",
-    subtitle: "Works inside the tools you already use",
+    title: "An AI agent team that never sleeps",
+    subtitle: "Works inside the tools you already use — from your phone",
     bullets: [
-      "Handles orders, enquiries, and follow-ups — instantly, 24/7",
-      "Tracks stock, reorders supplies, and updates your records — on its own",
-      "Posts to your socials, replies to customers, and keeps things moving",
-      "Connects to WhatsApp, Gmail, Sheets, Shopify — no new software needed",
+      "Automates admin work, client communications, and reporting — 24/7",
+      "Tracks project deliverables, deadlines, and progress — on its own",
+      "Manages social media, invoicing, and operations — all hands-free",
+      "Process orders, track stock, manage suppliers from Shopee, Shopify, and more",
+      "Save 10–20+ hours per week and cut costs by up to 60% — focus on scaling while AI handles up to 90% of manual operations",
+      "Run it all from Telegram, WhatsApp, or Slack — no new software needed",
     ],
     color: "text-teal-400",
     borderColor: "border-teal-500/30",
@@ -37,9 +40,10 @@ const STEPS = [
     title: "See it for yourself",
     subtitle: "Watch a real AI agent handle your type of business",
     bullets: [
-      "Pick your industry — or describe YOUR business",
+      "Pick your industry — services, e-commerce, F&B, or describe YOUR business",
       "Chat with a live AI agent that actually takes action",
-      "Watch it send emails, update spreadsheets, place orders — in real time",
+      "Watch it send emails, update reports, process orders, manage projects — in real time",
+      "See the time and cost savings stack up — real results from day one",
       "No setup, no login, no credit card — just see what's possible",
     ],
     color: "text-cyan-400",
@@ -106,7 +110,7 @@ export function DemoWalkthrough({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3 }}
-          className="relative w-full max-w-lg bg-[#0A0F1A] border border-slate-700/60 rounded-2xl overflow-hidden shadow-[0_0_80px_rgba(0,229,255,0.12)]"
+          className="relative w-full max-w-2xl bg-[#0A0F1A] border border-slate-700/60 rounded-2xl overflow-hidden shadow-[0_0_80px_rgba(0,229,255,0.12)]"
         >
           {/* Top accent line */}
           <div className="h-[2px] bg-gradient-to-r from-red-500 via-teal-500 to-cyan-500" />
@@ -173,23 +177,34 @@ export function DemoWalkthrough({
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="flex flex-wrap justify-center gap-2 mb-2"
+                    className="mb-2"
                   >
-                    {[
-                      "WhatsApp",
-                      "Gmail",
-                      "Google Sheets",
-                      "Shopify",
-                      "Instagram",
-                      "Slack",
-                    ].map((tool, i) => (
-                      <span
-                        key={i}
-                        className="px-2.5 py-1 rounded-md text-xs text-slate-400 bg-slate-800/60 border border-slate-700/40"
-                      >
-                        {tool}
-                      </span>
-                    ))}
+                    <div className="flex flex-wrap justify-center gap-2 mb-2">
+                      {[
+                        "Telegram",
+                        "WhatsApp",
+                        "Slack",
+                        "Gmail",
+                        "Google Sheets",
+                        "Notion",
+                        "Trello",
+                        "QuickBooks",
+                        "Instagram",
+                        "Xero",
+                        "HubSpot",
+                        "Zapier",
+                      ].map((tool, i) => (
+                        <span
+                          key={i}
+                          className="px-2.5 py-1 rounded-md text-xs text-slate-400 bg-slate-800/60 border border-slate-700/40"
+                        >
+                          {tool}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-center text-[11px] text-slate-500 mt-1">
+                      Connects to your existing software & 100+ tools/apps
+                    </p>
                   </motion.div>
                 )}
               </motion.div>

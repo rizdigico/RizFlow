@@ -15,33 +15,33 @@ import { cn } from "@/lib/utils";
 const features = [
   {
     Icon: InboxIcon,
-    title: "Customer Intake Agent",
-    desc: "Auto-qualifies leads, captures enquiries, and handles onboarding. New customers get instant, personalized responses 24/7 — no leads slip through.",
+    title: "Admin Automation Agent",
+    desc: "Handles paperwork, data entry, filing, and routine admin tasks 24/7. Free yourself from the repetitive work that keeps you stuck at your desk.",
   },
   {
     Icon: ClipboardDocumentCheckIcon,
-    title: "Workflow & Tracking Agent",
-    desc: "Real-time task assignment, deadline tracking, and proactive status updates sent automatically. Never miss a milestone or delivery again.",
+    title: "Project & Deliverables Agent",
+    desc: "Tracks client deliverables, deadlines, and progress in real time. Sends proactive status updates so nothing falls through the cracks.",
   },
   {
     Icon: UserGroupIcon,
-    title: "Scheduling & Allocation Agent",
-    desc: "Smart matching of resources to jobs based on skills, capacity, and deadlines. Eliminate the scheduling spreadsheet and manual coordination.",
+    title: "Scheduling & Coordination Agent",
+    desc: "Smart scheduling, resource allocation, and team coordination. Eliminate the back-and-forth and let your calendar run itself.",
   },
   {
     Icon: BanknotesIcon,
     title: "Billing & Finance Agent",
-    desc: "Auto-billing, payment reminders, expense tracking, and revenue forecasting. Your cash flow runs on autopilot.",
+    desc: "Auto-invoicing, payment reminders, expense tracking, and revenue forecasting. Your cash flow runs on autopilot.",
   },
   {
     Icon: ChatBubbleLeftRightIcon,
-    title: "Communication Agent",
-    desc: "Drafts and sends status updates, schedules meetings, and handles customer follow-ups — all matching your brand tone.",
+    title: "Communications Agent",
+    desc: "Drafts and sends updates, handles client follow-ups, and manages responses across email, messaging, and social — all matching your brand tone.",
   },
   {
     Icon: Cog6ToothIcon,
     title: "Custom Agent Builder",
-    desc: "Need something unique? We build fully custom agents tailored to your specific business processes — inventory, compliance, reporting, or anything else.",
+    desc: "Need something unique? We build fully custom agents for any business process — social media, compliance, reporting, operations, or anything else.",
   },
 ];
 
@@ -85,8 +85,8 @@ export function FeaturesGrid() {
             className="text-lg text-slate-400"
           >
             Pick the agents your business needs, customize them to your
-            workflows, and let them run your operations — so you can focus on
-            growth.
+            workflows, and let them run your operations — from your phone — so
+            you can focus on growth.
           </motion.p>
         </div>
 

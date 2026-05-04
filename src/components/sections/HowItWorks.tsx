@@ -55,7 +55,7 @@ const steps = [
     Icon: MagnifyingGlassIcon,
     title: "Discover",
     description:
-      "We map your business workflows, identify bottlenecks, and show you exactly how many hours are lost to manual operations each week — and which agents can fix them.",
+      "We map your business workflows, identify bottlenecks, and show you exactly how many hours are lost to manual operations each week — and which agents can automate them.",
     cta: "Start Your Audit",
     ctaHref: "/audit",
     visual: <AuditCard />,
@@ -65,7 +65,7 @@ const steps = [
     Icon: CpuChipIcon,
     title: "Build & Deploy",
     description:
-      "We design and build custom AI agents tailored to your business, then integrate them into your existing tools. No rip-and-replace. You're live within 2-4 weeks.",
+      "We design and build custom AI agents tailored to your business, then integrate them into your existing tools — no rip-and-replace. Run everything from Telegram, WhatsApp, or Slack. Live in 2-4 weeks.",
     cta: "See Integrations",
     ctaHref: "#integrations",
     visual: <DeployCard />,
@@ -75,7 +75,7 @@ const steps = [
     Icon: RocketLaunchIcon,
     title: "Scale",
     description:
-      "Your custom AI agents handle repetitive work around the clock. Review outputs in under 30 minutes per week — from your phone — and invest reclaimed hours into growing your business.",
+      "Your custom AI agents handle admin, communications, reporting, and project tracking around the clock — saving 10–20+ hours per week and cutting operational costs by up to 60%. Review outputs in under 30 minutes per week — from your phone — and invest reclaimed hours into growing your business.",
     cta: "View Case Studies",
     ctaHref: "/case-study/rainfresh-sg",
     visual: <GrowCard />,
@@ -111,7 +111,7 @@ export function HowItWorks() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="flex flex-col gap-8">
           {steps.map((step, i) => (
             <div
               key={i}
@@ -125,12 +125,12 @@ export function HowItWorks() {
             >
               {/* Connector line (hidden on mobile, visible on desktop) */}
               {i < steps.length - 1 && (
-                <div className="hidden md:block absolute top-12 left-[60%] w-[80%] border-t border-dashed border-white/10" />
+                <div className="hidden md:block absolute top-1/2 right-[-4%] w-[8%] border-t border-dashed border-white/10" />
               )}
 
-              <div className="relative bg-navy-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-5 sm:p-8 h-full flex flex-col hover:border-teal/30 transition-colors duration-300">
-                <div className="flex items-center gap-4 mb-6 relative z-10">
-                  <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center border border-teal/20 group-hover:bg-teal/20 transition-colors duration-300 shadow-[0_0_15px_rgba(45,212,191,0.2)]">
+              <div className="relative bg-navy-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-6 sm:p-8 h-full flex flex-col md:flex-row md:items-start gap-6 md:gap-8 hover:border-teal/30 transition-colors duration-300">
+                <div className="flex items-center gap-4 md:min-w-[220px] relative z-10 md:flex-col md:items-start md:gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center border border-teal/20 group-hover:bg-teal/20 transition-colors duration-300 shadow-[0_0_15px_rgba(45,212,191,0.2)] flex-shrink-0">
                     <step.Icon className="w-6 h-6 text-teal-400" />
                   </div>
                   <div>
@@ -143,15 +143,17 @@ export function HowItWorks() {
                   </div>
                 </div>
 
-                <p className="text-slate-400 text-sm leading-relaxed mb-8 flex-grow">
-                  {step.description}
-                </p>
+                <div className="flex-1 flex flex-col">
+                  <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                    {step.description}
+                  </p>
 
-                <div className="w-full mb-8 relative">
-                  {/* Subtle highlight effect behind visual */}
-                  <div className="absolute inset-0 bg-teal/5 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10 transform group-hover:scale-[1.02] transition-transform duration-300">
-                    {step.visual}
+                  <div className="w-full relative">
+                    {/* Subtle highlight effect behind visual */}
+                    <div className="absolute inset-0 bg-teal/5 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative z-10 transform group-hover:scale-[1.02] transition-transform duration-300">
+                      {step.visual}
+                    </div>
                   </div>
                 </div>
 
@@ -183,10 +185,10 @@ export function HowItWorks() {
 
 function AuditCard() {
   const rows = [
-    { label: "Customer Intake", pct: 60 },
-    { label: "Workflow Tracking", pct: 40 },
-    { label: "Invoicing", pct: 75 },
-    { label: "Communications", pct: 30 },
+    { label: "Admin & Reporting", pct: 70 },
+    { label: "Client Deliverables", pct: 55 },
+    { label: "Communications", pct: 65 },
+    { label: "Social Media", pct: 45 },
   ];
   return (
     <div className="bg-[#0A0F1A] rounded-xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] border border-teal-500/20 w-full relative overflow-hidden group">
@@ -253,10 +255,19 @@ function AuditCard() {
 function DeployCard() {
   const tools = [
     {
-      name: "HubSpot",
+      name: "Telegram",
       icon: (
-        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-[#FF7A59]">
-          <path d="M12.026 21.393c-4.494 0-8.158-3.64-8.158-8.134 0-.825.123-1.637.362-2.42l-2.433-2.18c-.144.608-.225 1.23-.225 1.868 0 5.4 4.378 9.778 9.778 9.778 2.052 0 3.966-.64 5.545-1.722l-2.02-2.585c-.815.545-1.782.868-2.85.868zm10.37-6.064c-.386-3.774-2.73-6.953-6.196-8.23l-.936 3.125c2.083.84 3.593 2.802 3.86 5.17l3.272-.065zm-11.75-9.35c.783 0 1.54.145 2.247.412l2.365-2.22C14.07 3.52 12.87 3.2 11.588 3.2 8.358 3.2 5.518 5.13 4.148 7.89l2.76 1.76c.86-2.17 2.94-3.67 5.34-3.67zm1.196 9.61c-1.258 0-2.28-1.01-2.28-2.257s1.022-2.257 2.28-2.257 2.28 1.01 2.28 2.257-1.022 2.257-2.28 2.257z" />
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-[#26A5E4]">
+          <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12.056 0h-.112zm4.962 7.224c.1-.02.21-.02.32.01.1.03.19.09.26.17.07.08.12.18.14.29.02.11.01.22-.02.31l-2.97 13.51c-.05.2-.18.36-.36.46-.18.1-.39.12-.58.06l-3.86-1.56-2.12 2.29c-.14.15-.34.24-.55.24h-.01c-.1 0-.2-.02-.3-.07-.1-.04-.18-.1-.26-.18-.07-.08-.13-.18-.16-.29-.04-.1-.05-.22-.03-.33l.6-3.16 5.93-5.59c.12-.11.12-.22.02-.3-.1-.09-.22-.07-.35.02L6.93 14.37l-3.6-1.2c-.21-.07-.38-.22-.48-.42-.1-.2-.12-.43-.05-.64.07-.21.22-.38.42-.48L16.62 7.28c.09-.04.19-.06.28-.06z" />
+        </svg>
+      ),
+      connected: true,
+    },
+    {
+      name: "WhatsApp",
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-[#25D366]">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.491 0 1.472 1.035 2.91 1.177 3.108.142.198 2.098 3.2 5.078 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.881 11.881 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
         </svg>
       ),
       connected: true,
@@ -302,10 +313,43 @@ function DeployCard() {
       connected: true,
     },
     {
-      name: "Asana",
+      name: "Gmail",
       icon: (
-        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-[#F06A6A]">
-          <path d="M12 1.343a4.707 4.707 0 1 0 0 9.413 4.707 4.707 0 0 0 0-9.413zm-6.85 11.23a4.707 4.707 0 1 0 0 9.414 4.707 4.707 0 0 0 0-9.413zm13.7 0a4.707 4.707 0 1 0 0 9.414 4.707 4.707 0 0 0 0-9.413z" />
+        <svg viewBox="0 0 24 24" className="w-4 h-4">
+          <path
+            fill="#EA4335"
+            d="M5.266 9.764A7.077 7.077 0 0 1 12 4.908c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.054 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.114z"
+          />
+          <path
+            fill="#34A853"
+            d="M16.04 18.013C14.85 18.72 13.462 19.092 12 19.092c-2.7 0-4.996-1.562-6.116-3.826l-4.04 3.062C3.755 22.25 7.562 24 12 24c2.934 0 5.738-1.014 7.91-2.918l-3.87-3.07z"
+          />
+          <path
+            fill="#4A90D9"
+            d="M19.91 21.082C22.16 19.092 24 15.894 24 12c0-.714-.074-1.43-.218-2.118H12v4.636h6.734c-.332 1.662-1.184 2.938-2.356 3.795l3.532 2.77z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M5.884 14.268A7.123 7.123 0 0 1 4.908 12c0-.778.13-1.528.358-2.236L1.24 6.65A11.95 11.95 0 0 0 0 12c0 1.94.466 3.774 1.24 5.428l4.644-3.16z"
+          />
+        </svg>
+      ),
+      connected: true,
+    },
+    {
+      name: "Notion",
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
+          <path d="M4.459 4.208c.746.606 1.026.56 2.928.46l15.342-.592c.39 0 .064-.39-.057-.446L20.12 2.28c-.736-.562-1.644-1.212-3.406-1.112L1.69 2.58c-.612.056-.735.378-.735.78v13.6c0 .504.25.673.78.617l2.724-.335V4.208zm4.977 6.44v8.58c0 .505.116.617.56.673l3.356.168V11.676l-3.916-.028zm-3.91-.058v9.477l3.91-.168V11.05l-3.91-.058zm14.672-5.66l-15.338.899v1.743l15.338-.9V5.03zM15.628 9.4l-3.916.028v9.028l3.916-.168V9.4zm4.488-.338l-3.916.058v8.9l3.916.168V9.062zm2.244-1.685l-1.68.056V9.4l1.68-.028V7.377zm0 3.19l-1.68.028v8.976l1.68-.168V10.567zm0 0" />
+        </svg>
+      ),
+      connected: true,
+    },
+    {
+      name: "QuickBooks",
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-[#2CA01C]">
+          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.848 12.87h-1.065V8.382h1.065v4.487zm-5.193 0h-1.065V8.382h1.065v4.487zm-4.676 0H6.914V8.382h1.065v4.487zm-2.876 0H4.038V8.382h1.065v4.487zm2.876 4.678h-2.81v-1.066h2.81v1.066zm5.193 0h-2.81v-1.066h2.81v1.066zm5.193 0h-2.81v-1.066h2.81v1.066z" />
         </svg>
       ),
       connected: true,
@@ -329,38 +373,43 @@ function DeployCard() {
       <div className="relative z-10">
         <p className="text-[10px] text-cyan-400 font-bold font-mono uppercase tracking-widest mb-4 flex items-center gap-2">
           <span className="w-1.5 h-1.5 bg-cyan-400 rounded-sm animate-pulse" />
-          Neural Integrations
+          Connects to Your Tools
         </p>
-        <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
           {tools.map((tool, i) => (
             <div
               key={tool.name}
               className="flex items-center justify-between"
-              style={{ animation: `fadeIn 0.5s ease-out ${i * 0.2}s both` }}
+              style={{ animation: `fadeIn 0.5s ease-out ${i * 0.15}s both` }}
             >
-              <div className="flex items-center gap-3">
-                <span className="w-7 h-7 rounded bg-white/5 border border-cyan-500/20 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(0,229,255,0.1)]">
+              <div className="flex items-center gap-2.5">
+                <span className="w-6 h-6 rounded bg-white/5 border border-cyan-500/20 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(0,229,255,0.1)]">
                   {tool.icon}
                 </span>
                 <span className="text-slate-200 text-xs font-medium font-mono">
                   {tool.name}
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              <div className="flex items-center gap-1 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_rgba(52,211,153,0.8)]" />
-                <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider font-mono">
-                  Syncing
+                <span className="text-[8px] font-bold text-emerald-400 uppercase tracking-wider font-mono">
+                  Live
                 </span>
               </div>
             </div>
           ))}
         </div>
-        <div className="mt-4 pt-3 border-t border-cyan-500/20 flex items-center justify-between">
-          <span className="text-slate-400 text-[10px] font-mono tracking-widest uppercase">
-            Agent Status:
+        <div className="mt-3 text-center">
+          <span className="text-[10px] text-slate-500 font-mono tracking-wider">
+            + 100 more tools & apps
+          </span>
+        </div>
+        <div className="mt-3 pt-3 border-t border-cyan-500/20 flex items-center justify-between">
+          <span className="text-slate-400 text-[10px] font-mono tracking-widest uppercase flex items-center gap-1.5">
+            <CpuChipIcon className="w-3 h-3" /> Run from:
           </span>
           <span className="text-cyan-400 font-bold text-[10px] uppercase tracking-widest flex items-center gap-1.5 font-mono bg-cyan-500/10 px-2 py-1 rounded shadow-[0_0_10px_rgba(0,229,255,0.2)]">
-            <CpuChipIcon className="w-3.5 h-3.5" /> Core Online
+            Phone via Telegram, WhatsApp, Slack
           </span>
         </div>
       </div>
