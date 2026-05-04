@@ -1,18 +1,20 @@
-// Free-only model cascade with parallel requests and smart fallback
+// Free-only model cascade with parallel requests and VPS proxy fallback
 // Uses OpenRouter's free models only — no paid models
+// If all direct OpenRouter calls fail from Vercel, falls back to VPS proxy
 
 const MODEL_CHAIN = [
-  "google/gemma-4-31b-it:free", // Best free model for chat, 256K context
-  "openai/gpt-oss-120b:free", // 120B, strong alternative
-  "minimax/minimax-m2.5:free", // 196K context, good availability
-  "nvidia/nemotron-3-super-120b-a12b:free", // 120B MoE, decent fallback
+  "openai/gpt-oss-120b:free",
+  "meta-llama/llama-4-maverick-17b-128e-instruct:free",
+  "google/gemma-4-31b-it:free",
+  "minimax/minimax-m2.5:free",
+  "nvidia/nemotron-3-super-120b-a12b:free",
 ];
 
-// Reduced timeout per model — with parallel requests, we don't need 25s
-const REQUEST_TIMEOUT_MS = 15000; // 15s per model (Vercel maxDuration is 30s)
+const VPS_PROXY = "http://37.60.226.100:3002/api/demo/chat";
+const REQUEST_TIMEOUT_MS = 18000;
+const PROXY_TIMEOUT_MS = 25000;
 
 export default async function handler(req, res) {
-  // Health check endpoint — reports API key status and tests first model
   if (req.method === "GET") {
     const key = process.env.OPENROUTER_API_KEY;
     const keyStatus = key
@@ -25,7 +27,6 @@ export default async function handler(req, res) {
     });
   }
 
-  // CORS preflight
   if (req.method === "OPTIONS") {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -38,14 +39,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-  if (!OPENROUTER_API_KEY) {
-    console.error("OPENROUTER_API_KEY not set in environment");
-    return res
-      .status(500)
-      .json({ error: "Demo is being set up. Please try again in a moment." });
-  }
-
   try {
     const { messages, industry } = req.body;
 
@@ -53,9 +46,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Messages array required" });
     }
 
-    // Strategy: Try models in parallel (first 2), then fallback to remaining
-    // This maximizes success rate within Vercel's 30s function limit
-    const result = await tryModelsWithFallback(messages);
+    // Try direct OpenRouter first, then fall back to VPS proxy
+    const result = await tryWithFallback(messages);
 
     if (!result) {
       return res.status(502).json({
@@ -75,39 +67,82 @@ export default async function handler(req, res) {
   }
 }
 
-/**
- * Try models with a parallel-then-serial fallback strategy:
- * 1. Fire first 2 models in parallel (race)
- * 2. If both fail, try remaining models one by one
- * 3. Returns first successful result or null
- */
-async function tryModelsWithFallback(messages) {
-  // Phase 1: Try first 2 models in parallel (race)
-  const primaryModels = MODEL_CHAIN.slice(0, 2);
-  const fallbackModels = MODEL_CHAIN.slice(2);
+async function tryWithFallback(messages) {
+  // Try direct OpenRouter calls (works if env key is valid)
+  const directResult = await tryDirectOpenRouter(messages);
+  if (directResult) return directResult;
 
-  const primaryResult = await Promise.any(
-    primaryModels.map((model) => callModel(model, messages)),
-  ).catch(() => null);
+  // Fallback: proxy through VPS (has known-good API key)
+  console.log("Direct OpenRouter failed, trying VPS proxy fallback");
+  return await tryVpsProxy(messages);
+}
 
-  if (primaryResult) {
-    return primaryResult;
-  }
+async function tryDirectOpenRouter(messages) {
+  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+  if (!OPENROUTER_API_KEY) return null;
+
+  const errors = [];
+  const primaryModels = MODEL_CHAIN.slice(0, 3);
+  const fallbackModels = MODEL_CHAIN.slice(3);
+
+  // Phase 1: Try first 3 models in parallel (race)
+  const primaryPromises = primaryModels.map((model) =>
+    callModel(model, messages, OPENROUTER_API_KEY).catch((err) => {
+      errors.push({ model, status: err.status });
+      throw err;
+    }),
+  );
+
+  const primaryResult = await Promise.any(primaryPromises).catch(() => null);
+  if (primaryResult) return primaryResult;
 
   // Phase 2: Try fallback models sequentially
   for (const model of fallbackModels) {
-    const result = await callModel(model, messages).catch(() => null);
+    const result = await callModel(model, messages, OPENROUTER_API_KEY).catch(
+      () => null,
+    );
     if (result) return result;
   }
 
+  console.error(
+    `Direct OpenRouter all models failed: ${errors.map((e) => `${e.model}:${e.status}`).join("|")}`,
+  );
   return null;
 }
 
-/**
- * Call a single OpenRouter model and return the result.
- * Returns null on failure (caller handles fallback).
- */
-async function callModel(model, messages) {
+async function tryVpsProxy(messages) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), PROXY_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(VPS_PROXY, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      console.error(`VPS proxy failed: ${response.status}`);
+      return null;
+    }
+
+    const data = await response.json();
+    if (data.reply && data.reply.length >= 5) {
+      return { reply: data.reply, model: data.model };
+    }
+
+    return null;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    console.error(`VPS proxy error: ${err.message}`);
+    return null;
+  }
+}
+
+async function callModel(model, messages, apiKey) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
@@ -117,7 +152,7 @@ async function callModel(model, messages) {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
           "HTTP-Referer": "https://rizflow.co",
           "X-Title": "RizFlow Demo",
@@ -136,44 +171,37 @@ async function callModel(model, messages) {
 
     if (!response.ok) {
       const errBody = await response.text().catch(() => "");
-      console.error(
-        `Model ${model} failed: status=${response.status} body=${errBody.slice(0, 300)}`,
+      const err = new Error(
+        `Model ${model}: ${response.status} ${errBody.slice(0, 200)}`,
       );
-      // Throw to trigger fallback in Promise.any / sequential fallback
-      throw new Error(`Model ${model}: ${response.status}`);
+      err.status = response.status;
+      throw err;
     }
 
     const data = await response.json();
     let reply = data.choices?.[0]?.message?.content || "";
-
-    // Some models return reasoning in content — extract only the actual response
-    // If the reply looks like reasoning/thinking, try to extract the real content
     reply = cleanModelResponse(reply);
 
     if (!reply || reply.length < 5) {
-      throw new Error(`Model ${model}: empty or too-short response`);
+      const err = new Error(`Model ${model}: empty or too-short response`);
+      err.status = 204;
+      throw err;
     }
 
     return { reply, model: data.model };
   } catch (err) {
     clearTimeout(timeoutId);
-    throw err; // Re-throw so Promise.any and sequential fallback work
+    if (!err.status) err.status = err.name === "AbortError" ? 408 : 500;
+    throw err;
   }
 }
 
-/**
- * Clean model responses that include reasoning/thinking tokens in content.
- * Some free models (nemotron, hy3) return their reasoning process as content.
- */
 function cleanModelResponse(content) {
   if (!content) return "";
 
-  // Remove <think>...</think> blocks (common with reasoning models)
   let cleaned = content.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
 
-  // If content looks like internal reasoning (starts with thinking markers)
   if (/^(Okay|Let me|Hmm|I need to|The user|So,|Well,)/i.test(cleaned)) {
-    // Try to find the actual response after reasoning
     const sentences = cleaned.split(/\.\s+/);
     const meaningfulStart = sentences.findIndex(
       (s) =>
@@ -185,8 +213,6 @@ function cleanModelResponse(content) {
     }
   }
 
-  // Remove reasoning_details artifacts
   cleaned = cleaned.replace(/reasoning_details?\s*:\s*\[.*?\]/gs, "").trim();
-
-  return cleaned || content; // Fall back to original if cleaning stripped everything
+  return cleaned || content;
 }

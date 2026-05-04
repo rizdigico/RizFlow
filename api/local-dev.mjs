@@ -1,32 +1,28 @@
 #!/usr/bin/env node
 // Local dev API server for the demo chat endpoint
 // Proxies chat requests to OpenRouter with free-model cascade
-// In production, Vercel serverless functions handle this
+// In production, Vercel serverless functions handle this (with VPS proxy fallback)
 
 import http from "node:http";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const PORT = 3002;
-const REQUEST_TIMEOUT_MS = 15000;
+const REQUEST_TIMEOUT_MS = 18000;
 
 // Free-only model cascade: tries models in parallel then falls back
 const MODEL_CHAIN = [
-  "google/gemma-4-31b-it:free", // Best free model for chat, 256K context
-  "openai/gpt-oss-120b:free", // 120B, strong alternative
-  "minimax/minimax-m2.5:free", // 196K context, good availability
-  "nvidia/nemotron-3-super-120b-a12b:free", // 120B MoE, decent fallback
+  "openai/gpt-oss-120b:free",
+  "meta-llama/llama-4-maverick-17b-128e-instruct:free",
+  "google/gemma-4-31b-it:free",
+  "minimax/minimax-m2.5:free",
+  "nvidia/nemotron-3-super-120b-a12b:free",
 ];
 
-/**
- * Clean model responses that include reasoning/thinking tokens in content.
- */
 function cleanModelResponse(content) {
   if (!content) return "";
 
-  // Remove <think>...</think> blocks
   let cleaned = content.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
 
-  // If content looks like internal reasoning, extract the actual response
   if (/^(Okay|Let me|Hmm|I need to|The user|So,|Well,)/i.test(cleaned)) {
     const sentences = cleaned.split(/\.\s+/);
     const meaningfulStart = sentences.findIndex(
@@ -39,9 +35,7 @@ function cleanModelResponse(content) {
     }
   }
 
-  // Remove reasoning_details artifacts
   cleaned = cleaned.replace(/reasoning_details?\s*:\s*\[.*?\]/gs, "").trim();
-
   return cleaned || content;
 }
 
@@ -96,9 +90,9 @@ async function callModel(messages, model) {
 }
 
 async function tryModelsWithFallback(messages) {
-  // Phase 1: Try first 2 models in parallel (race)
-  const primaryModels = MODEL_CHAIN.slice(0, 2);
-  const fallbackModels = MODEL_CHAIN.slice(2);
+  // Phase 1: Try first 3 models in parallel (race)
+  const primaryModels = MODEL_CHAIN.slice(0, 3);
+  const fallbackModels = MODEL_CHAIN.slice(3);
 
   const primaryResult = await Promise.any(
     primaryModels.map((model) => callModel(messages, model)),
@@ -116,7 +110,6 @@ async function tryModelsWithFallback(messages) {
 }
 
 const server = http.createServer(async (req, res) => {
-  // CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
