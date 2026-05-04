@@ -221,7 +221,20 @@ async function callModel(model, messages, apiKey) {
 function cleanModelResponse(content) {
   if (!content) return "";
 
-  let cleaned = content.replace(/<think[\s\S]*?<\/think>/g, "").trim();
+  let cleaned = content
+    // Strip <think>...</think> blocks
+    .replace(/<think[\s\S]*?<\/think>/g, "")
+    // Strip markdown-style internal reasoning (*Brainstorming:..., *Self-check:..., etc.)
+    .replace(
+      /\*(?:Brainstorming|Self-check|Checking rules|Avoiding scope creep|Final|Important|Note):[^*]*\*/gi,
+      "",
+    )
+    // Strip *thought process* lines that start with common internal-reasoning patterns
+    .replace(
+      /\*(?:First, I need to|Hmm\.\.\.|Let me think|I should|I'll focus|I need to)[^*]*\*/gi,
+      "",
+    )
+    .trim();
 
   if (/^(Okay|Let me|Hmm|I need to|The user|So,|Well,)/i.test(cleaned)) {
     const sentences = cleaned.split(/\.\s+/);
