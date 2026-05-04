@@ -198,13 +198,13 @@ const steps = [
   {
     step: "02",
     emoji: "⚙️",
-    title: "Agent Configuration (1-2 days)",
+    title: "Agent Configuration (2-3 weeks)",
     desc: "We set up AI agents tailored to YOUR specific workflows. No templates, no one-size-fits-all.",
   },
   {
     step: "03",
     emoji: "🧪",
-    title: "Testing & Approval (1 day)",
+    title: "Testing & Approval (1 week)",
     desc: "You review everything before it goes live. All actions are logged and transparent.",
   },
   {
