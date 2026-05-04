@@ -12,10 +12,10 @@ const REQUEST_TIMEOUT_MS = 18000;
 // Free-only model cascade: tries models in parallel then falls back
 const MODEL_CHAIN = [
   "openai/gpt-oss-120b:free",
-  "meta-llama/llama-4-maverick-17b-128e-instruct:free",
-  "google/gemma-4-31b-it:free",
-  "minimax/minimax-m2.5:free",
+  "openai/gpt-oss-20b:free",
   "nvidia/nemotron-3-super-120b-a12b:free",
+  "google/gemma-3-27b-it:free",
+  "meta-llama/llama-3.3-70b-instruct:free",
 ];
 
 function cleanModelResponse(content) {
@@ -75,6 +75,11 @@ async function callModel(messages, model) {
 
     const data = await response.json();
     let reply = data.choices?.[0]?.message?.content || "";
+    // Some reasoning models return content:null with reasoning in a separate field
+    if (!reply) {
+      const reasoning = data.choices?.[0]?.message?.reasoning || "";
+      if (reasoning) reply = reasoning;
+    }
 
     reply = cleanModelResponse(reply);
 

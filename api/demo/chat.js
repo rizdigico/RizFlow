@@ -1,12 +1,19 @@
 // Demo chat API — races VPS proxy + direct OpenRouter in parallel
 // Uses free models only. VPS proxy ensures reliability from Vercel.
 
+// Tested reliable free models (May 2026):
+// - gpt-oss-120b: consistently available
+// - gpt-oss-20b: fast, good availability
+// - nemotron-3-super: large, reliable
+// - gemma-3-27b: good when not rate-limited
+// - llama-3.3-70b: fallback
+// Removed: llama-4-maverick (no endpoints), minimax-m2.5 (rate-limited)
 const MODEL_CHAIN = [
   "openai/gpt-oss-120b:free",
-  "meta-llama/llama-4-maverick-17b-128e-instruct:free",
-  "google/gemma-4-31b-it:free",
-  "minimax/minimax-m2.5:free",
+  "openai/gpt-oss-20b:free",
   "nvidia/nemotron-3-super-120b-a12b:free",
+  "google/gemma-3-27b-it:free",
+  "meta-llama/llama-3.3-70b-instruct:free",
 ];
 
 const VPS_PROXY =
@@ -190,6 +197,11 @@ async function callModel(model, messages, apiKey) {
 
     const data = await response.json();
     let reply = data.choices?.[0]?.message?.content || "";
+    // Some reasoning models return content:null with reasoning in a separate field
+    if (!reply) {
+      const reasoning = data.choices?.[0]?.message?.reasoning || "";
+      if (reasoning) reply = reasoning;
+    }
     reply = cleanModelResponse(reply);
 
     if (!reply || reply.length < 5) {
