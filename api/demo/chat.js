@@ -1,6 +1,5 @@
-// Free-only model cascade with parallel requests and VPS proxy fallback
-// Uses OpenRouter's free models only — no paid models
-// If all direct OpenRouter calls fail from Vercel, falls back to VPS proxy
+// Demo chat API — races VPS proxy + direct OpenRouter in parallel
+// Uses free models only. VPS proxy ensures reliability from Vercel.
 
 const MODEL_CHAIN = [
   "openai/gpt-oss-120b:free",
@@ -11,7 +10,7 @@ const MODEL_CHAIN = [
 ];
 
 const VPS_PROXY = "http://37.60.226.100:3002/api/demo/chat";
-const REQUEST_TIMEOUT_MS = 18000;
+const REQUEST_TIMEOUT_MS = 15000;
 const PROXY_TIMEOUT_MS = 25000;
 
 export default async function handler(req, res) {
@@ -46,8 +45,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Messages array required" });
     }
 
-    // Try direct OpenRouter first, then fall back to VPS proxy
-    const result = await tryWithFallback(messages);
+    // Race VPS proxy + direct OpenRouter — first successful response wins
+    const result = await raceAllSources(messages);
 
     if (!result) {
       return res.status(502).json({
@@ -67,47 +66,30 @@ export default async function handler(req, res) {
   }
 }
 
-async function tryWithFallback(messages) {
-  // Try direct OpenRouter calls (works if env key is valid)
-  const directResult = await tryDirectOpenRouter(messages);
-  if (directResult) return directResult;
+/**
+ * Race VPS proxy and direct OpenRouter models simultaneously.
+ * Returns the first successful result from any source.
+ */
+async function raceAllSources(messages) {
+  const sources = [];
 
-  // Fallback: proxy through VPS (has known-good API key)
-  console.log("Direct OpenRouter failed, trying VPS proxy fallback");
-  return await tryVpsProxy(messages);
-}
+  // Always try VPS proxy (known-good key, works from VPS)
+  sources.push(tryVpsProxy(messages).catch(() => null));
 
-async function tryDirectOpenRouter(messages) {
+  // Also try direct OpenRouter (works if Vercel env key is valid)
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-  if (!OPENROUTER_API_KEY) return null;
-
-  const errors = [];
-  const primaryModels = MODEL_CHAIN.slice(0, 3);
-  const fallbackModels = MODEL_CHAIN.slice(3);
-
-  // Phase 1: Try first 3 models in parallel (race)
-  const primaryPromises = primaryModels.map((model) =>
-    callModel(model, messages, OPENROUTER_API_KEY).catch((err) => {
-      errors.push({ model, status: err.status });
-      throw err;
-    }),
-  );
-
-  const primaryResult = await Promise.any(primaryPromises).catch(() => null);
-  if (primaryResult) return primaryResult;
-
-  // Phase 2: Try fallback models sequentially
-  for (const model of fallbackModels) {
-    const result = await callModel(model, messages, OPENROUTER_API_KEY).catch(
-      () => null,
-    );
-    if (result) return result;
+  if (OPENROUTER_API_KEY) {
+    // Race top 3 models in parallel
+    for (const model of MODEL_CHAIN.slice(0, 3)) {
+      sources.push(
+        callModel(model, messages, OPENROUTER_API_KEY).catch(() => null),
+      );
+    }
   }
 
-  console.error(
-    `Direct OpenRouter all models failed: ${errors.map((e) => `${e.model}:${e.status}`).join("|")}`,
-  );
-  return null;
+  // Promise.any: first successful result wins
+  const result = await Promise.any(sources).catch(() => null);
+  return result;
 }
 
 async function tryVpsProxy(messages) {
@@ -126,7 +108,7 @@ async function tryVpsProxy(messages) {
 
     if (!response.ok) {
       console.error(`VPS proxy failed: ${response.status}`);
-      return null;
+      throw new Error(`VPS proxy: ${response.status}`);
     }
 
     const data = await response.json();
@@ -134,11 +116,10 @@ async function tryVpsProxy(messages) {
       return { reply: data.reply, model: data.model };
     }
 
-    return null;
+    throw new Error("VPS proxy: empty response");
   } catch (err) {
     clearTimeout(timeoutId);
-    console.error(`VPS proxy error: ${err.message}`);
-    return null;
+    throw err;
   }
 }
 
@@ -199,7 +180,7 @@ async function callModel(model, messages, apiKey) {
 function cleanModelResponse(content) {
   if (!content) return "";
 
-  let cleaned = content.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+  let cleaned = content.replace(/<think[\s\S]*?<\/think>/g, "").trim();
 
   if (/^(Okay|Let me|Hmm|I need to|The user|So,|Well,)/i.test(cleaned)) {
     const sentences = cleaned.split(/\.\s+/);
