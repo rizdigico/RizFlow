@@ -12,7 +12,9 @@ import {
   SCENARIO_FOLLOWUPS,
   type Industry,
   type IndustryScenario,
+  type ActionStep,
 } from "@/data/demo-industries";
+import { generateActions } from "@/lib/action-generator";
 import {
   ArrowRightIcon,
   PaperAirplaneIcon,
@@ -107,11 +109,13 @@ function LiveChat({
   scenario,
   onStatsUpdate,
   customFollowUps,
+  onUserMessage,
 }: {
   industry: Industry;
   scenario: IndustryScenario | null;
   onStatsUpdate: (stats: SessionStats) => void;
   customFollowUps?: string[];
+  onUserMessage?: (message: string) => void;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -240,6 +244,7 @@ function LiveChat({
     setInput("");
     setSuggestedPrompts([]);
     setMessageCount((prev) => prev + 1);
+    onUserMessage?.(trimmed);
 
     sendToAI(newMessages, industry);
   }
@@ -425,11 +430,15 @@ export function Demo() {
   const [reopenWalkthrough, setReopenWalkthrough] = useState(false);
   const [customBusiness, setCustomBusiness] = useState("");
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
+  const [dynamicActions, setDynamicActions] = useState<ActionStep[]>([]);
+  const [actionTriggerKey, setActionTriggerKey] = useState("");
 
   // Track industry selection for analytics
   const handleIndustrySelect = useCallback((industry: Industry) => {
     setSelectedIndustry(industry);
     setSelectedScenario(null);
+    setDynamicActions([]);
+    setActionTriggerKey("");
     setPhase("demo");
     setSessionStats({
       messagesHandled: 0,
@@ -442,6 +451,18 @@ export function Demo() {
   const handleScenarioSelect = useCallback(
     (scenario: IndustryScenario) => {
       setSelectedScenario(scenario);
+      // Use preset actions if available, otherwise generate dynamically
+      if (scenario.actions && scenario.actions.length > 0) {
+        setDynamicActions(scenario.actions);
+        setActionTriggerKey(scenario.id);
+      } else {
+        const actions = generateActions(
+          selectedIndustry?.name || "",
+          scenario.firstMessage,
+        );
+        setDynamicActions(actions);
+        setActionTriggerKey(scenario.id);
+      }
       trackDemoEvent("scenario_selected", {
         industry: selectedIndustry?.id,
         scenario: scenario.id,
@@ -453,8 +474,12 @@ export function Demo() {
   const handleBack = useCallback(() => {
     if (selectedScenario) {
       setSelectedScenario(null);
+      setDynamicActions([]);
+      setActionTriggerKey("");
     } else {
       setSelectedIndustry(null);
+      setDynamicActions([]);
+      setActionTriggerKey("");
       setPhase("select");
     }
   }, [selectedScenario]);
@@ -495,6 +520,15 @@ export function Demo() {
 
     setSelectedIndustry(customIndustry);
     setSelectedScenario(customIndustry.scenarios[0]);
+
+    // Generate actions for custom industry
+    const actions = generateActions(
+      business,
+      customIndustry.scenarios[0].firstMessage,
+    );
+    setDynamicActions(actions);
+    setActionTriggerKey("custom-start");
+
     setPhase("demo");
     setSessionStats({
       messagesHandled: 0,
@@ -505,6 +539,19 @@ export function Demo() {
     setIsCreatingCustom(false);
     setCustomBusiness("");
   }, [customBusiness]);
+
+  // Generate dynamic actions when user sends a follow-up message
+  const handleUserMessage = useCallback(
+    (message: string) => {
+      const actions = generateActions(
+        selectedIndustry?.name || "",
+        message,
+      );
+      setDynamicActions(actions);
+      setActionTriggerKey((prev) => `${prev}-msg-${Date.now()}`);
+    },
+    [selectedIndustry],
+  );
 
   // Suggested follow-ups for the current scenario
   const currentFollowUps = selectedScenario
@@ -915,12 +962,12 @@ export function Demo() {
                           scenario={selectedScenario}
                           onStatsUpdate={setSessionStats}
                           customFollowUps={currentFollowUps}
+                          onUserMessage={handleUserMessage}
                         />
                       </div>
 
                       {/* Action Timeline — shows automated actions after AI response */}
-                      {selectedScenario?.actions &&
-                        selectedScenario.actions.length > 0 && (
+                      {dynamicActions.length > 0 && (
                           <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -928,8 +975,8 @@ export function Demo() {
                             className="mt-3 rounded-xl border border-slate-700/40 bg-[#0A0F1A]/80 p-3"
                           >
                             <ActionTimeline
-                              actions={selectedScenario.actions}
-                              triggerKey={selectedScenario.id}
+                              actions={dynamicActions}
+                              triggerKey={actionTriggerKey}
                             />
                           </motion.div>
                         )}
