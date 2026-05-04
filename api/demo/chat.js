@@ -48,6 +48,9 @@ export default async function handler(req, res) {
 
     // Race VPS proxy + direct OpenRouter — first successful response wins
     const result = await raceAllSources(messages);
+    console.log(
+      `Final result: ${result ? `model=${result.model} reply=${result.reply?.slice(0, 50)}` : "null"}`,
+    );
 
     if (!result) {
       return res.status(502).json({
@@ -70,27 +73,42 @@ export default async function handler(req, res) {
 /**
  * Race VPS proxy and direct OpenRouter models simultaneously.
  * Returns the first successful result from any source.
+ *
+ * IMPORTANT: We do NOT catch individual promises before passing to Promise.any.
+ * Promise.any fulfills as soon as ONE promise fulfills; it only rejects with
+ * AggregateError if ALL promises reject. Catching individual promises converts
+ * rejections into null resolutions, which makes Promise.any fulfill with null
+ * instead of propagating the rejection — that was the 502 bug.
  */
 async function raceAllSources(messages) {
   const sources = [];
 
   // Always try VPS proxy (known-good key, works from VPS)
-  sources.push(tryVpsProxy(messages).catch(() => null));
+  sources.push(tryVpsProxy(messages));
 
   // Also try direct OpenRouter (works if Vercel env key is valid)
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
   if (OPENROUTER_API_KEY) {
-    // Race top 3 models in parallel
     for (const model of MODEL_CHAIN.slice(0, 3)) {
-      sources.push(
-        callModel(model, messages, OPENROUTER_API_KEY).catch(() => null),
-      );
+      sources.push(callModel(model, messages, OPENROUTER_API_KEY));
     }
   }
 
-  // Promise.any: first successful result wins
-  const result = await Promise.any(sources).catch(() => null);
-  return result;
+  // Promise.any: first successful result wins; AggregateError if all fail
+  try {
+    const result = await Promise.any(sources);
+    console.log(`raceAllSources: got result from model=${result?.model}`);
+    return result;
+  } catch (aggErr) {
+    // All sources failed — log each error for debugging
+    const errors = aggErr instanceof AggregateError ? aggErr.errors : [aggErr];
+    for (const e of errors) {
+      console.error(
+        `raceAllSources: source failed — ${e?.message?.slice(0, 200)}`,
+      );
+    }
+    return null;
+  }
 }
 
 async function tryVpsProxy(messages) {
