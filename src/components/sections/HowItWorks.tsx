@@ -53,7 +53,7 @@ const steps = [
     title: "Discover",
     subtitle: "Audit & Analysis",
     description:
-      "We map your business workflows, identify bottlenecks, and show you exactly how many hours & cost are lost to manual operations each week — and which agents can fix them.",
+      "We map your business workflows, identify bottlenecks, and show you exactly how many hours each week & cost are lost to manual operations — and which agents can fix them.",
     cta: "Start Your Audit",
     ctaHref: "/audit",
     visual: "audit" as const,
