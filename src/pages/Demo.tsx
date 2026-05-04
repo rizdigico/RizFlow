@@ -501,7 +501,7 @@ export function Demo() {
       gradientTo: "to-cyan-500",
       tagline: `AI agents tailored for ${business}`,
       description: `See how RizFlow agents can automate operations for your ${business} business — orders, inquiries, scheduling, and more.`,
-      systemPrompt: `You are a RizFlow AI agent demo for a ${business} business in Singapore. You are demonstrating how an AI agent handles operations for this type of business. Be helpful, professional, and concise — respond in 2-4 short paragraphs max. Suggest specific automations this business could benefit from. Use realistic details (prices, product names, customer scenarios). You handle: customer inquiries, scheduling, inventory, social media, follow-ups, and more. Always demonstrate how automation saves time compared to manual handling.`,
+      systemPrompt: `You are a RizFlow AI agent demo for a ${business} business in Singapore. You demonstrate how AI automation handles day-to-day operations for this specific type of business. Rules: 1) Be concise — 2-3 short paragraphs max. 2) Be SPECIFIC to ${business} — mention realistic items, prices, customer names, and scenarios that would actually happen in this business. 3) In EVERY response, explicitly state 2-3 automated actions you're taking behind the scenes (e.g. "I've checked our ${business} calendar for open slots", "A confirmation WhatsApp has been sent", "I've flagged the ${business} inventory system for reorder"). 4) Show how each automation saves time vs manual handling. 5) If the user asks something outside your scope, redirect to ${business} operations you can help with. 6) Always sound professional but approachable — like a helpful operations assistant.`,
       scenarios: [
         {
           id: "custom-start",
@@ -543,10 +543,7 @@ export function Demo() {
   // Generate dynamic actions when user sends a follow-up message
   const handleUserMessage = useCallback(
     (message: string) => {
-      const actions = generateActions(
-        selectedIndustry?.name || "",
-        message,
-      );
+      const actions = generateActions(selectedIndustry?.name || "", message);
       setDynamicActions(actions);
       setActionTriggerKey((prev) => `${prev}-msg-${Date.now()}`);
     },
@@ -968,18 +965,18 @@ export function Demo() {
 
                       {/* Action Timeline — shows automated actions after AI response */}
                       {dynamicActions.length > 0 && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3, duration: 0.3 }}
-                            className="mt-3 rounded-xl border border-slate-700/40 bg-[#0A0F1A]/80 p-3"
-                          >
-                            <ActionTimeline
-                              actions={dynamicActions}
-                              triggerKey={actionTriggerKey}
-                            />
-                          </motion.div>
-                        )}
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3, duration: 0.3 }}
+                          className="mt-3 rounded-xl border border-slate-700/40 bg-[#0A0F1A]/80 p-3"
+                        >
+                          <ActionTimeline
+                            actions={dynamicActions}
+                            triggerKey={actionTriggerKey}
+                          />
+                        </motion.div>
+                      )}
 
                       {/* Social proof banner */}
                       {sessionStats.messagesHandled > 0 && (

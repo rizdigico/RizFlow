@@ -1,42 +1,118 @@
 #!/usr/bin/env node
 // Local dev API server for the demo chat endpoint
-// This proxies chat requests to OpenRouter during development
+// Proxies chat requests to OpenRouter with free-model cascade
 // In production, Vercel serverless functions handle this
 
-import http from "http";
+import http from "node:http";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const PORT = 3002;
+const REQUEST_TIMEOUT_MS = 15000;
 
-const PRIMARY_MODEL = "meta-llama/llama-4-maverick-17b-128e-instruct";
-const FALLBACK_MODEL = "google/gemma-3-27b-it:free";
+// Free-only model cascade: tries models in parallel then falls back
+const MODEL_CHAIN = [
+  "google/gemma-4-31b-it:free", // Best free model for chat, 256K context
+  "openai/gpt-oss-120b:free", // 120B, strong alternative
+  "minimax/minimax-m2.5:free", // 196K context, good availability
+  "nvidia/nemotron-3-super-120b-a12b:free", // 120B MoE, decent fallback
+];
 
-async function callOpenRouter(messages, model) {
-  const response = await fetch(
-    "https://openrouter.ai/api/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://rizflow.co",
-        "X-Title": "RizFlow Demo (dev)",
-      },
-      body: JSON.stringify({
-        model,
-        messages,
-        max_tokens: 500,
-        temperature: 0.7,
-      }),
-    },
-  );
+/**
+ * Clean model responses that include reasoning/thinking tokens in content.
+ */
+function cleanModelResponse(content) {
+  if (!content) return "";
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`OpenRouter ${model}: ${response.status} ${errText}`);
+  // Remove <think>...</think> blocks
+  let cleaned = content.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+
+  // If content looks like internal reasoning, extract the actual response
+  if (/^(Okay|Let me|Hmm|I need to|The user|So,|Well,)/i.test(cleaned)) {
+    const sentences = cleaned.split(/\.\s+/);
+    const meaningfulStart = sentences.findIndex(
+      (s) =>
+        s.length > 20 &&
+        !/^(Okay|Let me|Hmm|I should|I'll|The user wants|So I|Well)/i.test(s),
+    );
+    if (meaningfulStart > 0) {
+      cleaned = sentences.slice(meaningfulStart).join(". ").trim();
+    }
   }
 
-  return response.json();
+  // Remove reasoning_details artifacts
+  cleaned = cleaned.replace(/reasoning_details?\s*:\s*\[.*?\]/gs, "").trim();
+
+  return cleaned || content;
+}
+
+async function callModel(messages, model) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://rizflow.co",
+          "X-Title": "RizFlow Demo (dev)",
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          max_tokens: 500,
+          temperature: 0.7,
+        }),
+        signal: controller.signal,
+      },
+    );
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errBody = await response.text().catch(() => "");
+      throw new Error(
+        `Model ${model}: ${response.status} ${errBody.slice(0, 200)}`,
+      );
+    }
+
+    const data = await response.json();
+    let reply = data.choices?.[0]?.message?.content || "";
+
+    reply = cleanModelResponse(reply);
+
+    if (!reply || reply.length < 5) {
+      throw new Error(`Model ${model}: empty or too-short response`);
+    }
+
+    return { reply, model: data.model };
+  } catch (err) {
+    clearTimeout(timeoutId);
+    throw err;
+  }
+}
+
+async function tryModelsWithFallback(messages) {
+  // Phase 1: Try first 2 models in parallel (race)
+  const primaryModels = MODEL_CHAIN.slice(0, 2);
+  const fallbackModels = MODEL_CHAIN.slice(2);
+
+  const primaryResult = await Promise.any(
+    primaryModels.map((model) => callModel(messages, model)),
+  ).catch(() => null);
+
+  if (primaryResult) return primaryResult;
+
+  // Phase 2: Try fallback models sequentially
+  for (const model of fallbackModels) {
+    const result = await callModel(messages, model).catch(() => null);
+    if (result) return result;
+  }
+
+  return null;
 }
 
 const server = http.createServer(async (req, res) => {
@@ -46,13 +122,14 @@ const server = http.createServer(async (req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Max-Age", "86400");
 
-  // Health check — before method check so GET works
+  // Health check
   if (req.url === "/health") {
     res.writeHead(200, { "Content-Type": "application/json" });
     return res.end(
       JSON.stringify({
         status: "ok",
         key: OPENROUTER_API_KEY ? "configured" : "missing",
+        models: MODEL_CHAIN,
       }),
     );
   }
@@ -89,35 +166,32 @@ const server = http.createServer(async (req, res) => {
         `[demo-api] Request for industry: ${industry || "unknown"}, messages: ${messages.length}`,
       );
 
-      let data;
-      try {
-        data = await callOpenRouter(messages, PRIMARY_MODEL);
-        console.log(`[demo-api] Primary model (${PRIMARY_MODEL}) succeeded`);
-      } catch (primaryErr) {
-        console.log(
-          `[demo-api] Primary model failed: ${primaryErr.message}, trying fallback...`,
+      if (!OPENROUTER_API_KEY) {
+        console.error("[demo-api] OPENROUTER_API_KEY not set");
+        res.writeHead(500, { "Content-Type": "application/json" });
+        return res.end(
+          JSON.stringify({
+            error: "Demo is being set up. Please try again in a moment.",
+          }),
         );
-        try {
-          data = await callOpenRouter(messages, FALLBACK_MODEL);
-          console.log(
-            `[demo-api] Fallback model (${FALLBACK_MODEL}) succeeded`,
-          );
-        } catch (fallbackErr) {
-          console.error(
-            `[demo-api] Fallback also failed: ${fallbackErr.message}`,
-          );
-          res.writeHead(502, { "Content-Type": "application/json" });
-          return res.end(
-            JSON.stringify({ error: "AI service temporarily unavailable" }),
-          );
-        }
       }
 
-      const reply =
-        data.choices?.[0]?.message?.content ||
-        "I apologize, I was unable to process that. Please try again.";
+      const result = await tryModelsWithFallback(messages);
+
+      if (!result) {
+        console.error("[demo-api] All models failed");
+        res.writeHead(502, { "Content-Type": "application/json" });
+        return res.end(
+          JSON.stringify({
+            error:
+              "AI service temporarily unavailable. Please try again in a moment.",
+          }),
+        );
+      }
+
+      console.log(`[demo-api] Model ${result.model} succeeded`);
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ reply, model: data.model }));
+      res.end(JSON.stringify(result));
     } catch (err) {
       console.error("[demo-api] Error:", err);
       res.writeHead(500, { "Content-Type": "application/json" });
@@ -131,6 +205,5 @@ server.listen(PORT, () => {
   console.log(
     `[demo-api] OpenRouter key: ${OPENROUTER_API_KEY ? "configured" : "MISSING"}`,
   );
-  console.log(`[demo-api] Primary model: ${PRIMARY_MODEL}`);
-  console.log(`[demo-api] Fallback model: ${FALLBACK_MODEL}`);
+  console.log(`[demo-api] Model cascade: ${MODEL_CHAIN.join(" → ")}`);
 });
