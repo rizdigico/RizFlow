@@ -47,17 +47,17 @@ export function Header() {
       transition={{ duration: 0.3 }}
     >
       <Container>
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-16 md:h-20 relative">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group z-10">
             <SMLogo />
             <span className="font-bold text-white tracking-wide text-xl group-hover:text-cyan-light transition-colors">
               RizFlow
             </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center justify-center flex-1 gap-0 ml-8">
+          {/* Desktop Nav — absolutely centered so it's not pushed by logo/CTA widths */}
+          <nav className="hidden md:flex items-center justify-center absolute inset-x-0 mr-56 gap-0 pointer-events-none">
             {NAV_LINKS.map((link, i) => (
               <motion.div
                 key={link.href}
@@ -65,7 +65,10 @@ export function Header() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Link to={link.href} className="relative group">
+                <Link
+                  to={link.href}
+                  className="relative group pointer-events-auto"
+                >
                   <span
                     className={cn(
                       "px-4 py-2 block text-sm font-medium transition-colors duration-200",
@@ -97,7 +100,7 @@ export function Header() {
           </nav>
 
           {/* CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3 z-10">
             <Link to="/demo">
               <Button
                 size="md"
