@@ -1,5 +1,970 @@
 import type { ActionStep } from "@/data/demo-industries";
 
+// ─── AI Response Action Extraction ──────────────────────────────────
+// Instead of keyword-matching templates, we parse the AI's response
+// to extract the actions it mentions. The system prompt tells the AI
+// to explicitly state actions, so we can parse them out.
+
+interface ExtractedAction {
+  label: string;
+  tool: string;
+  detail: string;
+}
+
+// Parse bracket-wrapped actions from AI response:
+// [ACTION: Checked availability via Google Calendar]
+// or [ACTION: Sent confirmation email — Customer booking confirmed]
+const ACTION_PATTERN = /\[ACTION:\s*(.+?)\]/gi;
+
+// Fallback: parse "I've X" or "I X" sentences that describe actions
+const ACTION_SENTENCE_PATTERNS = [
+  /(?:I've|I have|I've just|I just) ([^.]+)/gi,
+  /(?:A|An) (?:confirmation|notification|reminder|update|alert|report|invoice|quote|follow-up|message) (?:has been|is) ([^.]+)/gi,
+];
+
+// Map common action verbs to tool names
+const ACTION_TOOL_MAP: Record<string, string> = {
+  // Communication
+  email: "Email",
+  mail: "Email",
+  sent: "Email",
+  notification: "Email",
+  whatsapp: "WhatsApp Business",
+  sms: "Twilio",
+  message: "Email",
+  // Calendar/Scheduling
+  calendar: "Google Calendar",
+  appointment: "Google Calendar",
+  booking: "Booking System",
+  schedule: "Google Calendar",
+  reservation: "Reservation System",
+  // CRM
+  crm: "CRM",
+  lead: "CRM",
+  profile: "CRM",
+  customer: "CRM",
+  client: "CRM",
+  // Inventory
+  inventory: "Inventory System",
+  stock: "Inventory System",
+  reorder: "Procurement",
+  // Finance
+  payment: "Payment Gateway",
+  invoice: "Xero",
+  refund: "Payment Gateway",
+  quote: "Xero",
+  // Social
+  review: "Google Business",
+  social: "Social Media",
+  post: "Social Media",
+  // Project
+  task: "Asana",
+  project: "Asana",
+  board: "Asana",
+  // Collaboration
+  slack: "Slack",
+  team: "Slack",
+  flag: "Slack",
+  // Documents
+  report: "Google Docs",
+  document: "Google Docs",
+  brief: "Notion",
+  // Other
+  tracking: "Shipping API",
+  shipment: "Shipping API",
+  catalog: "Inventory System",
+  automation: "Zapier",
+  workflow: "Zapier",
+};
+
+function inferTool(actionText: string): string {
+  const lower = actionText.toLowerCase();
+  // Check each keyword, return first match
+  for (const [keyword, tool] of Object.entries(ACTION_TOOL_MAP)) {
+    if (lower.includes(keyword)) return tool;
+  }
+  return "Workflow";
+}
+
+const ACTION_ICONS: Record<string, string> = {
+  Calendar: "📅",
+  Booking: "📅",
+  Reservation: "📅",
+  Email: "📧",
+  WhatsApp: "💬",
+  Twilio: "📱",
+  CRM: "👥",
+  Inventory: "📦",
+  Procurement: "📦",
+  Payment: "💳",
+  Xero: "🧾",
+  "Google Business": "⭐",
+  "Social Media": "📱",
+  Asana: "📋",
+  Notion: "🗂️",
+  Slack: "🔔",
+  "Google Docs": "📄",
+  "Shipping API": "🚚",
+  Zapier: "⚡",
+  Workflow: "⚡",
+};
+
+function inferIcon(tool: string): string {
+  for (const [key, icon] of Object.entries(ACTION_ICONS)) {
+    if (tool.includes(key)) return icon;
+  }
+  return "⚡";
+}
+
+/**
+ * Extract actions from AI response text.
+ * First tries to parse [ACTION: ...] markers (structured format).
+ * Falls back to sentence-level extraction.
+ */
+function extractActionsFromResponse(responseText: string): ExtractedAction[] {
+  const actions: ExtractedAction[] = [];
+
+  // Try structured [ACTION: ...] format first
+  const structuredMatches = [...responseText.matchAll(ACTION_PATTERN)];
+  if (structuredMatches.length > 0) {
+    for (const match of structuredMatches) {
+      const raw = match[1].trim();
+      // Try to split on "—" or " - " for label + detail
+      const parts = raw.split(/[—–]\s*|-{2}\s*/);
+      const label = parts[0].trim();
+      const detail =
+        parts.length >= 2 ? parts.slice(1).join(" — ").trim() : raw;
+
+      // Reject placeholder text (model referencing the template format itself)
+      if (label === "Label" || detail === "Detail" || label.length < 3)
+        continue;
+
+      if (parts.length >= 2) {
+        actions.push({
+          label,
+          tool: inferTool(raw),
+          detail,
+        });
+      } else {
+        // No detail separator — use whole thing as label, generate detail
+        const shortLabel = raw.length > 50 ? raw.slice(0, 50) + "..." : raw;
+        actions.push({
+          label: shortLabel,
+          tool: inferTool(raw),
+          detail: raw,
+        });
+      }
+    }
+    // Only return if we got valid (non-placeholder) actions
+    if (actions.length > 0) return actions;
+  }
+
+  // Fallback: extract "I've X" sentences
+  for (const pattern of ACTION_SENTENCE_PATTERNS) {
+    pattern.lastIndex = 0; // reset regex state
+    const matches = [...responseText.matchAll(pattern)];
+    for (const match of matches) {
+      const text = match[1]?.trim();
+      if (!text || text.length < 10) continue;
+
+      // Keep it concise — truncate if too long
+      const label = text.length > 45 ? text.slice(0, 45) + "..." : text;
+      actions.push({
+        label,
+        tool: inferTool(text),
+        detail: text,
+      });
+    }
+  }
+
+  return actions;
+}
+
+// ─── Industry-specific template fallbacks ─────────────────────────────
+// When AI extraction yields nothing (API error, empty response),
+// use industry-specific templates instead of generic name interpolation.
+
+interface IndustryTemplate {
+  scenarios: Record<string, ActionStep[]>;
+  defaultActions: ActionStep[];
+  metrics: { label: string; value: string; icon: string }[];
+}
+
+const INDUSTRY_TEMPLATES: Record<string, IndustryTemplate> = {
+  // F&B / Restaurant
+  "fnb|restaurant|cafe|bakery|food|bar|catering|kitchen|bistro|bakehouse|eatery|diner":
+    {
+      scenarios: {
+        default: [
+          {
+            id: "t-1",
+            label: "Updated reservation",
+            tool: "Reservation System",
+            icon: "📅",
+            detail: "Party size and time updated, confirmation sent via SMS",
+            delayMs: 800,
+          },
+          {
+            id: "t-2",
+            label: "Sent confirmation SMS",
+            tool: "Twilio",
+            icon: "📱",
+            detail:
+              "Booking confirmation with date, time, and party size sent to customer",
+            delayMs: 1600,
+          },
+          {
+            id: "t-3",
+            label: "Flagged kitchen team",
+            tool: "Slack",
+            icon: "🔔",
+            detail:
+              "Kitchen notified of special requirements and updated prep quantities",
+            delayMs: 2400,
+          },
+          {
+            id: "t-4",
+            label: "Logged customer preference",
+            tool: "CRM",
+            icon: "📝",
+            detail:
+              "Customer preference noted for future visits and personalized service",
+            delayMs: 3200,
+          },
+        ],
+      },
+      defaultActions: [
+        {
+          id: "t-1",
+          label: "Confirmed reservation",
+          tool: "Reservation System",
+          icon: "📅",
+          detail: "Booking details confirmed and customer notified via SMS",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Sent confirmation",
+          tool: "Twilio",
+          icon: "📱",
+          detail: "Reservation confirmation with date, time, and party details",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Notified kitchen",
+          tool: "Slack",
+          icon: "🔔",
+          detail: "Kitchen team alerted for upcoming service requirements",
+          delayMs: 2400,
+        },
+      ],
+      metrics: [
+        { label: "Reservations handled", value: "847/mo", icon: "📅" },
+        { label: "Avg response time", value: "23s", icon: "⚡" },
+        { label: "Stock alerts caught", value: "23", icon: "📦" },
+        { label: "Hours saved/week", value: "14+", icon: "🕐" },
+      ],
+    },
+  // Real Estate
+  "real estate|property|agent|broker|listing|condo|hdb|mortgage|realtor": {
+    scenarios: {
+      default: [
+        {
+          id: "t-1",
+          label: "Created lead profile",
+          tool: "HubSpot",
+          icon: "👥",
+          detail:
+            "New lead added with budget, preferences, and timeline requirements",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Scheduled viewing",
+          tool: "Google Calendar",
+          icon: "📅",
+          detail:
+            "Property viewing booked, calendar invite sent to all parties",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Sent property pack",
+          tool: "Email",
+          icon: "📧",
+          detail: "Property factsheet with floor plan and comparables emailed",
+          delayMs: 2400,
+        },
+      ],
+    },
+    defaultActions: [
+      {
+        id: "t-1",
+        label: "Added lead to CRM",
+        tool: "HubSpot",
+        icon: "👥",
+        detail: "Lead profile created with requirements and budget tagged",
+        delayMs: 800,
+      },
+      {
+        id: "t-2",
+        label: "Sent property details",
+        tool: "Email",
+        icon: "📧",
+        detail: "Matching listings with photos and pricing sent to prospect",
+        delayMs: 1600,
+      },
+      {
+        id: "t-3",
+        label: "Set follow-up sequence",
+        tool: "CRM",
+        icon: "🔄",
+        detail: "Automated 24hr check-in + 7-day re-engagement scheduled",
+        delayMs: 2400,
+      },
+    ],
+    metrics: [
+      { label: "Leads qualified", value: "312/mo", icon: "🎯" },
+      { label: "Viewings scheduled", value: "89/mo", icon: "🏠" },
+      { label: "Follow-ups sent", value: "456/mo", icon: "📧" },
+      { label: "Hours saved/week", value: "18+", icon: "⚡" },
+    ],
+  },
+  // E-Commerce
+  "ecommerce|e-commerce|shop|store|retail|online shop|dropship|fashion|clothing|apparel":
+    {
+      scenarios: {
+        default: [
+          {
+            id: "t-1",
+            label: "Checked order status",
+            tool: "Shopify",
+            icon: "🔍",
+            detail:
+              "Order found and current status retrieved from fulfillment system",
+            delayMs: 800,
+          },
+          {
+            id: "t-2",
+            label: "Sent tracking update",
+            tool: "Email",
+            icon: "📧",
+            detail:
+              "Customer notified with tracking link and updated delivery estimate",
+            delayMs: 1600,
+          },
+          {
+            id: "t-3",
+            label: "Applied courtesy credit",
+            tool: "Stripe",
+            icon: "💳",
+            detail: "Store credit applied to account as goodwill gesture",
+            delayMs: 2400,
+          },
+        ],
+      },
+      defaultActions: [
+        {
+          id: "t-1",
+          label: "Pulled order details",
+          tool: "Shopify",
+          icon: "🔍",
+          detail: "Order information retrieved from store system",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Sent customer update",
+          tool: "Email",
+          icon: "📧",
+          detail: "Order status and next steps communicated to customer",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Updated inventory",
+          tool: "Inventory System",
+          icon: "📦",
+          detail: "Stock levels adjusted based on current order",
+          delayMs: 2400,
+        },
+      ],
+      metrics: [
+        { label: "Orders processed", value: "1,247/mo", icon: "📦" },
+        { label: "Carts recovered", value: "23%", icon: "🛒" },
+        { label: "Avg response time", value: "18s", icon: "⚡" },
+        { label: "Hours saved/week", value: "22+", icon: "🕐" },
+      ],
+    },
+  // Professional Services
+  "professional|consulting|legal|law|accounting|accountant|agency|advisory|freelance|b2b|saas":
+    {
+      scenarios: {
+        default: [
+          {
+            id: "t-1",
+            label: "Created client profile",
+            tool: "HubSpot",
+            icon: "👥",
+            detail: "New client intake completed with requirements and budget",
+            delayMs: 800,
+          },
+          {
+            id: "t-2",
+            label: "Scheduled discovery call",
+            tool: "Google Calendar",
+            icon: "📅",
+            detail: "Consultation booked with calendar invite and agenda sent",
+            delayMs: 1600,
+          },
+          {
+            id: "t-3",
+            label: "Sent intake form",
+            tool: "Typeform",
+            icon: "📋",
+            detail:
+              "Automated intake questionnaire sent for detailed requirements",
+            delayMs: 2400,
+          },
+        ],
+      },
+      defaultActions: [
+        {
+          id: "t-1",
+          label: "Logged client details",
+          tool: "CRM",
+          icon: "👥",
+          detail: "Client information and requirements captured in system",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Sent follow-up email",
+          tool: "Email",
+          icon: "📧",
+          detail: "Professional follow-up with next steps and timeline sent",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Set reminder",
+          tool: "Google Calendar",
+          icon: "📅",
+          detail: "Follow-up reminder scheduled for 48 hours",
+          delayMs: 2400,
+        },
+      ],
+      metrics: [
+        { label: "Clients onboarded", value: "34/mo", icon: "🤝" },
+        { label: "Proposals drafted", value: "67/mo", icon: "📋" },
+        { label: "Invoices followed up", value: "189/mo", icon: "💰" },
+        { label: "Hours saved/week", value: "16+", icon: "⚡" },
+      ],
+    },
+  // Construction / Trade
+  "construction|trade|builder|renovation|contractor|plumbing|electric|carpenter|hdb|renovation|plaster|painting|tiling":
+    {
+      scenarios: {
+        default: [
+          {
+            id: "t-1",
+            label: "Generated quote",
+            tool: "Xero",
+            icon: "📋",
+            detail: "Itemized quote created with cost breakdown and timeline",
+            delayMs: 800,
+          },
+          {
+            id: "t-2",
+            label: "Scheduled site visit",
+            tool: "Google Calendar",
+            icon: "📅",
+            detail: "On-site measurement visit booked with project team",
+            delayMs: 1600,
+          },
+          {
+            id: "t-3",
+            label: "Sent quote PDF",
+            tool: "Email",
+            icon: "📧",
+            detail:
+              "Formal quote document emailed with terms and validity period",
+            delayMs: 2400,
+          },
+        ],
+      },
+      defaultActions: [
+        {
+          id: "t-1",
+          label: "Created project entry",
+          tool: "Asana",
+          icon: "🗂️",
+          detail: "Project pipeline entry created with scope and timeline",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Sent follow-up",
+          tool: "Email",
+          icon: "📧",
+          detail: "Professional follow-up with quote and next steps sent",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Notified team",
+          tool: "Slack",
+          icon: "🔔",
+          detail:
+            "Project team alerted about new inquiry and potential timeline",
+          delayMs: 2400,
+        },
+      ],
+      metrics: [
+        { label: "Quotes generated", value: "156/mo", icon: "📋" },
+        { label: "Projects tracked", value: "23", icon: "🏗️" },
+        { label: "Delays caught early", value: "89%", icon: "⚡" },
+        { label: "Hours saved/week", value: "12+", icon: "🕐" },
+      ],
+    },
+  // Salon & Beauty
+  "salon|beauty|hair|nail|spa|barber|skincare|massage|wellness|grooming|stylist|cosmetic":
+    {
+      scenarios: {
+        default: [
+          {
+            id: "t-1",
+            label: "Checked availability",
+            tool: "Booking System",
+            icon: "📅",
+            detail: "Stylist availability found for requested service and time",
+            delayMs: 800,
+          },
+          {
+            id: "t-2",
+            label: "Booked appointment",
+            tool: "Booking System",
+            icon: "📅",
+            detail:
+              "Appointment confirmed with stylist, service details, and SMS notification sent",
+            delayMs: 1600,
+          },
+          {
+            id: "t-3",
+            label: "Sent prep instructions",
+            tool: "WhatsApp Business",
+            icon: "💬",
+            detail:
+              "Pre-appointment tips and preparation details sent to client",
+            delayMs: 2400,
+          },
+        ],
+      },
+      defaultActions: [
+        {
+          id: "t-1",
+          label: "Confirmed booking",
+          tool: "Booking System",
+          icon: "📅",
+          detail: "Appointment details confirmed and client notified",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Sent reminder",
+          tool: "WhatsApp Business",
+          icon: "💬",
+          detail: "24-hour appointment reminder queued with preparation tips",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Updated client profile",
+          tool: "CRM",
+          icon: "👥",
+          detail:
+            "Service preferences and history noted for personalized future visits",
+          delayMs: 2400,
+        },
+      ],
+      metrics: [
+        { label: "Appointments/mo", value: "420", icon: "📅" },
+        { label: "No-show reduction", value: "73%", icon: "📉" },
+        { label: "Rebooking rate", value: "68%", icon: "🔄" },
+        { label: "Hours saved/week", value: "11+", icon: "⚡" },
+      ],
+    },
+  // Dental / Medical / Healthcare
+  "dental|dentist|clinic|medical|doctor|physician|chiropractor|therapy|pharmacy|healthcare|hospital|physio|optometrist|vet|veterinary":
+    {
+      scenarios: {
+        default: [
+          {
+            id: "t-1",
+            label: "Checked appointment slots",
+            tool: "Google Calendar",
+            icon: "📅",
+            detail: "Available time slots found for the requested service",
+            delayMs: 800,
+          },
+          {
+            id: "t-2",
+            label: "Booked patient appointment",
+            tool: "Booking System",
+            icon: "📅",
+            detail:
+              "Appointment confirmed with practitioner, SMS confirmation sent",
+            delayMs: 1600,
+          },
+          {
+            id: "t-3",
+            label: "Sent pre-visit instructions",
+            tool: "WhatsApp Business",
+            icon: "💬",
+            detail:
+              "Pre-appointment guidelines and preparation details sent to patient",
+            delayMs: 2400,
+          },
+        ],
+      },
+      defaultActions: [
+        {
+          id: "t-1",
+          label: "Confirmed appointment",
+          tool: "Booking System",
+          icon: "📅",
+          detail:
+            "Patient appointment details confirmed with practitioner assignment",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Sent confirmation SMS",
+          tool: "Twilio",
+          icon: "📱",
+          detail:
+            "Appointment reminder with date, time, and preparation notes sent",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Updated patient record",
+          tool: "CRM",
+          icon: "📋",
+          detail:
+            "Patient history and preferences noted for continuity of care",
+          delayMs: 2400,
+        },
+      ],
+      metrics: [
+        { label: "Appointments/mo", value: "560", icon: "📅" },
+        { label: "No-show reduction", value: "81%", icon: "📉" },
+        { label: "Patient follow-ups", value: "340/mo", icon: "📧" },
+        { label: "Hours saved/week", value: "15+", icon: "⚡" },
+      ],
+    },
+  // Fitness / Gym / Coaching
+  "gym|fitness|coaching|trainer|yoga|pilates|crossfit|personal training|martial arts|boxing|dance studio":
+    {
+      scenarios: {
+        default: [
+          {
+            id: "t-1",
+            label: "Checked class availability",
+            tool: "Booking System",
+            icon: "📅",
+            detail: "Available slots found for requested class type and time",
+            delayMs: 800,
+          },
+          {
+            id: "t-2",
+            label: "Booked session",
+            tool: "Booking System",
+            icon: "📅",
+            detail:
+              "Session confirmed with instructor, confirmation sent via app and SMS",
+            delayMs: 1600,
+          },
+          {
+            id: "t-3",
+            label: "Sent welcome pack",
+            tool: "Email",
+            icon: "📧",
+            detail:
+              "New member info pack with schedule, guidelines, and first-visit tips sent",
+            delayMs: 2400,
+          },
+        ],
+      },
+      defaultActions: [
+        {
+          id: "t-1",
+          label: "Confirmed booking",
+          tool: "Booking System",
+          icon: "📅",
+          detail: "Session details confirmed and member notified",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Sent reminder",
+          tool: "WhatsApp Business",
+          icon: "💬",
+          detail: "24-hour session reminder with check-in instructions sent",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Updated member profile",
+          tool: "CRM",
+          icon: "👥",
+          detail:
+            "Fitness goals and preferences logged for personalized service",
+          delayMs: 2400,
+        },
+      ],
+      metrics: [
+        { label: "Bookings/mo", value: "380", icon: "📅" },
+        { label: "No-show reduction", value: "65%", icon: "📉" },
+        { label: "Member retention", value: "+23%", icon: "🔄" },
+        { label: "Hours saved/week", value: "10+", icon: "⚡" },
+      ],
+    },
+  // Education / Tutoring
+  "tutor|tuition|education|school|training|course|academy|learning|enrichment|preschool|childcare|music|language|driving":
+    {
+      scenarios: {
+        default: [
+          {
+            id: "t-1",
+            label: "Checked class schedule",
+            tool: "Google Calendar",
+            icon: "📅",
+            detail:
+              "Available time slots found for the requested subject and level",
+            delayMs: 800,
+          },
+          {
+            id: "t-2",
+            label: "Enrolled student",
+            tool: "CRM",
+            icon: "📋",
+            detail:
+              "Student enrollment confirmed with class assignment and welcome email sent",
+            delayMs: 1600,
+          },
+          {
+            id: "t-3",
+            label: "Sent class materials",
+            tool: "Email",
+            icon: "📧",
+            detail: "Pre-class materials and syllabus overview sent to student",
+            delayMs: 2400,
+          },
+        ],
+      },
+      defaultActions: [
+        {
+          id: "t-1",
+          label: "Confirmed enrollment",
+          tool: "CRM",
+          icon: "📋",
+          detail: "Student details and class assignment confirmed in system",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Sent confirmation",
+          tool: "Email",
+          icon: "📧",
+          detail:
+            "Enrollment confirmation with schedule, location, and materials list sent",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Set attendance reminder",
+          tool: "Google Calendar",
+          icon: "📅",
+          detail: "Class reminders scheduled for student and instructor",
+          delayMs: 2400,
+        },
+      ],
+      metrics: [
+        { label: "Enrollments/mo", value: "120", icon: "📋" },
+        { label: "Attendance rate", value: "94%", icon: "📅" },
+        { label: "Parent follow-ups", value: "280/mo", icon: "📧" },
+        { label: "Hours saved/week", value: "8+", icon: "⚡" },
+      ],
+    },
+  // Landscaping / Gardening
+  "landscaping|garden|lawn|tree service|irrigation|horticulture|landscape|nursery":
+    {
+      scenarios: {
+        default: [
+          {
+            id: "t-1",
+            label: "Created service quote",
+            tool: "Xero",
+            icon: "📋",
+            detail:
+              "Detailed quote with scope, materials, and timeline generated",
+            delayMs: 800,
+          },
+          {
+            id: "t-2",
+            label: "Scheduled site visit",
+            tool: "Google Calendar",
+            icon: "📅",
+            detail: "On-site assessment booked with crew assignment",
+            delayMs: 1600,
+          },
+          {
+            id: "t-3",
+            label: "Sent quote email",
+            tool: "Email",
+            icon: "📧",
+            detail:
+              "Professional quote with terms, photos, and validity period sent",
+            delayMs: 2400,
+          },
+        ],
+      },
+      defaultActions: [
+        {
+          id: "t-1",
+          label: "Logged service request",
+          tool: "CRM",
+          icon: "📋",
+          detail: "Client requirements and property details captured",
+          delayMs: 800,
+        },
+        {
+          id: "t-2",
+          label: "Scheduled assessment",
+          tool: "Google Calendar",
+          icon: "📅",
+          detail: "On-site visit booked with team assignment",
+          delayMs: 1600,
+        },
+        {
+          id: "t-3",
+          label: "Sent follow-up",
+          tool: "Email",
+          icon: "📧",
+          detail: "Service overview and next steps communicated to client",
+          delayMs: 2400,
+        },
+      ],
+      metrics: [
+        { label: "Quotes/mo", value: "85", icon: "📋" },
+        { label: "Jobs scheduled", value: "42/mo", icon: "📅" },
+        { label: "Client retention", value: "78%", icon: "🔄" },
+        { label: "Hours saved/week", value: "9+", icon: "⚡" },
+      ],
+    },
+};
+
+// Match a business type string to the best template
+function findIndustryTemplate(businessType: string): IndustryTemplate | null {
+  const lower = businessType.toLowerCase();
+  for (const [keyPattern, template] of Object.entries(INDUSTRY_TEMPLATES)) {
+    const patterns = keyPattern.split("|");
+    if (patterns.some((p) => lower.includes(p.trim()))) {
+      return template;
+    }
+  }
+  return null;
+}
+
+// ─── Smart defaults by business category ────────────────────────────
+
+function getSmartDefaults(businessType: string): string[] {
+  const biz = businessType.toLowerCase();
+
+  if (
+    biz.match(
+      /clinic|dental|medical|salon|spa|barber|hair|gym|fitness|studio|tutor|tuition|yoga|pilates|massage|therapy|coaching|consulting|trainer|physician|chiropractor|acupuncture|nail|beauty|skincare|photography|childcare|preschool|driving|music|language/,
+    )
+  ) {
+    return ["scheduling", "crm", "email"];
+  }
+  if (
+    biz.match(
+      /retail|shop|store|ecommerce|e-commerce|f&b|restaurant|cafe|bakery|grocery|supermarket|construction|hardware|manufacturing|warehouse|pharmacy|fashion|apparel|clothing|electronics|automotive|printing|florist|pet shop|book store|convenience|mini|mart|dispensary/,
+    )
+  ) {
+    return ["inventory", "payment", "email"];
+  }
+  if (
+    biz.match(
+      /marketing|agency|brand|lifestyle|influencer|content|advertising|pr|event/,
+    )
+  ) {
+    return ["social", "crm", "email"];
+  }
+  if (
+    biz.match(
+      /real estate|property|insurance|legal|mortgage|recruitment|staffing|accounting|wealth|advisory/,
+    )
+  ) {
+    return ["crm", "scheduling", "email"];
+  }
+
+  return ["crm", "email", "notification"];
+}
+
+// ─── Context-aware template actions (fallback when AI extraction fails) ──
+
+function getTemplateActions(
+  businessType: string,
+  message: string,
+): ActionStep[] {
+  const template = findIndustryTemplate(businessType);
+  if (template) {
+    // Use industry-specific default actions (which are already context-aware)
+    return [...template.defaultActions];
+  }
+
+  // Generic fallback: use keyword scoring with better detail text
+  const ctx: ActionContext = {
+    businessType: businessType.toLowerCase(),
+    messageSnippet: message.slice(0, 60),
+  };
+
+  const defaults = getSmartDefaults(businessType);
+  const actions: ActionStep[] = [];
+  let delay = 800;
+
+  for (const category of defaults) {
+    if (actions.length >= 3) break;
+    const pool = TEMPLATES[category];
+    if (!pool) continue;
+
+    // Pick a context-relevant action from the pool
+    const action = pool[0]; // First action in each pool is most representative
+    actions.push({
+      id: `fb-${actions.length + 1}`,
+      label: action.label,
+      tool: action.tool,
+      icon: action.icon,
+      detail: action.detailFn(ctx),
+      delayMs: delay,
+    });
+    delay += 800;
+  }
+
+  return actions.length >= 3 ? actions : actions;
+}
+
+// ─── Context type for detail functions ──────────────────────────────
+
+interface ActionContext {
+  businessType: string;
+  messageSnippet: string;
+}
+
 interface ActionTemplate {
   label: string;
   tool: string;
@@ -7,86 +972,52 @@ interface ActionTemplate {
   detailFn: (ctx: ActionContext) => string;
 }
 
-interface ActionContext {
-  businessType: string;
-  messageSnippet: string;
-}
-
-// ─── Template pools (9 categories with diverse actions) ────────────
-
+// Minimal template pools (only used as last resort for completely unknown industries)
 const TEMPLATES: Record<string, ActionTemplate[]> = {
   scheduling: [
     {
       label: "Checked availability",
       tool: "Google Calendar",
       icon: "📅",
-      detailFn: (c) =>
-        `Scanned ${c.businessType} calendar for open slots this week`,
+      detailFn: (c: ActionContext) =>
+        `Scanned calendar for open slots matching your request`,
     },
     {
       label: "Booked appointment",
       tool: "Calendar API",
       icon: "📅",
-      detailFn: (c) =>
-        `New ${c.businessType} appointment created with confirmation sent`,
+      detailFn: (c: ActionContext) =>
+        `Appointment confirmed with notification sent`,
     },
     {
       label: "Sent reminder",
       tool: "Email",
       icon: "📧",
-      detailFn: (c) =>
-        `24h reminder queued for upcoming ${c.businessType} appointment`,
-    },
-    {
-      label: "Rescheduled booking",
-      tool: "Calendar API",
-      icon: "🔄",
-      detailFn: (c) =>
-        `Updated ${c.businessType} appointment time, notifications sent`,
-    },
-    {
-      label: "Added to waitlist",
-      tool: "CRM",
-      icon: "📋",
-      detailFn: (c) =>
-        `Customer added to ${c.businessType} waitlist, auto-notify when slot opens`,
+      detailFn: (c: ActionContext) =>
+        `Automated reminder queued for the upcoming appointment`,
     },
   ],
   crm: [
     {
-      label: "Looked up customer",
+      label: "Updated customer record",
       tool: "CRM",
       icon: "👤",
-      detailFn: (c) =>
-        `Retrieved customer profile and ${c.businessType} interaction history`,
+      detailFn: (c: ActionContext) =>
+        `Customer details and interaction history updated`,
     },
     {
       label: "Created lead",
       tool: "CRM",
       icon: "🎯",
-      detailFn: (c) =>
-        `New lead added to ${c.businessType} pipeline with source tagging`,
+      detailFn: (c: ActionContext) =>
+        `New lead added to pipeline with source tagging`,
     },
     {
-      label: "Updated customer record",
-      tool: "CRM",
-      icon: "📝",
-      detailFn: (c) =>
-        `${c.businessType} customer details and interaction notes updated`,
-    },
-    {
-      label: "Set follow-up sequence",
+      label: "Set follow-up",
       tool: "CRM",
       icon: "🔄",
-      detailFn: (c) =>
-        `Automated ${c.businessType} follow-up: 24hr check-in + 7-day re-engagement`,
-    },
-    {
-      label: "Segmented customer",
-      tool: "CRM",
-      icon: "📊",
-      detailFn: (c) =>
-        `Tagged customer by ${c.businessType} segment for targeted outreach`,
+      detailFn: (c: ActionContext) =>
+        `Automated follow-up sequence: 24hr check-in + 7-day re-engagement`,
     },
   ],
   email: [
@@ -94,34 +1025,20 @@ const TEMPLATES: Record<string, ActionTemplate[]> = {
       label: "Sent confirmation email",
       tool: "Email",
       icon: "📧",
-      detailFn: (c) => `Confirmation email sent for ${c.businessType} request`,
-    },
-    {
-      label: "Drafted follow-up email",
-      tool: "Email",
-      icon: "✉️",
-      detailFn: (c) =>
-        `Personalized ${c.businessType} follow-up email composed and queued`,
-    },
-    {
-      label: "Sent quote",
-      tool: "Email",
-      icon: "📄",
-      detailFn: (c) =>
-        `Pricing quote with ${c.businessType} details generated and sent`,
+      detailFn: (c: ActionContext) => `Confirmation email with details sent`,
     },
     {
       label: "Sent WhatsApp message",
       tool: "WhatsApp Business",
       icon: "💬",
-      detailFn: (c) =>
-        `Quick ${c.businessType} update sent via WhatsApp for faster response`,
+      detailFn: (c: ActionContext) =>
+        `Quick update sent via WhatsApp for faster response`,
     },
     {
       label: "Sent SMS notification",
       tool: "Twilio",
       icon: "📱",
-      detailFn: (c) => `SMS confirmation sent for ${c.businessType} action`,
+      detailFn: (c: ActionContext) => `SMS confirmation sent`,
     },
   ],
   inventory: [
@@ -129,29 +1046,15 @@ const TEMPLATES: Record<string, ActionTemplate[]> = {
       label: "Checked stock levels",
       tool: "Inventory System",
       icon: "📦",
-      detailFn: (c) =>
-        `Current ${c.businessType} inventory checked for availability`,
+      detailFn: (c: ActionContext) =>
+        `Current inventory checked for availability`,
     },
     {
       label: "Created reorder",
       tool: "Procurement",
       icon: "📦",
-      detailFn: (c) =>
-        `Purchase order generated for low-stock ${c.businessType} items`,
-    },
-    {
-      label: "Updated catalog",
-      tool: "Inventory System",
-      icon: "📋",
-      detailFn: (c) =>
-        `${c.businessType} product availability synced across channels`,
-    },
-    {
-      label: "Reserved stock",
-      tool: "Inventory System",
-      icon: "🔒",
-      detailFn: (c) =>
-        `Items reserved in ${c.businessType} inventory, preventing oversell`,
+      detailFn: (c: ActionContext) =>
+        `Purchase order generated for low-stock items`,
     },
   ],
   payment: [
@@ -159,56 +1062,13 @@ const TEMPLATES: Record<string, ActionTemplate[]> = {
       label: "Processed payment",
       tool: "Payment Gateway",
       icon: "💳",
-      detailFn: (c) => `Payment initiated for ${c.businessType} order`,
+      detailFn: (c: ActionContext) => `Payment initiated and confirmed`,
     },
     {
       label: "Generated invoice",
-      tool: "Accounting",
+      tool: "Xero",
       icon: "🧾",
-      detailFn: (c) => `Invoice created and sent for ${c.businessType} service`,
-    },
-    {
-      label: "Updated order status",
-      tool: "Order System",
-      icon: "📋",
-      detailFn: (c) => `${c.businessType} order marked as confirmed in system`,
-    },
-    {
-      label: "Issued refund",
-      tool: "Payment Gateway",
-      icon: "💸",
-      detailFn: (c) =>
-        `Refund processed for ${c.businessType} customer, confirmation sent`,
-    },
-  ],
-  social: [
-    {
-      label: "Drafted social response",
-      tool: "Social Media",
-      icon: "💬",
-      detailFn: (c) =>
-        `Professional reply to ${c.businessType} customer review prepared`,
-    },
-    {
-      label: "Scheduled post",
-      tool: "Social Media",
-      icon: "📱",
-      detailFn: (c) =>
-        `${c.businessType} content queued for optimal engagement time`,
-    },
-    {
-      label: "Sent goodwill gesture",
-      tool: "Email",
-      icon: "🎁",
-      detailFn: (c) =>
-        `Complimentary ${c.businessType} voucher sent to reviewer`,
-    },
-    {
-      label: "Escalated review",
-      tool: "Slack",
-      icon: "🔔",
-      detailFn: (c) =>
-        `Negative ${c.businessType} review flagged to manager for personal follow-up`,
+      detailFn: (c: ActionContext) => `Invoice created and sent`,
     },
   ],
   notification: [
@@ -216,821 +1076,136 @@ const TEMPLATES: Record<string, ActionTemplate[]> = {
       label: "Sent team alert",
       tool: "Slack",
       icon: "🔔",
-      detailFn: (c) =>
-        `Team notified about ${c.businessType} update requiring attention`,
+      detailFn: (c: ActionContext) =>
+        `Team notified about update requiring attention`,
     },
     {
       label: "Logged in system",
       tool: "Database",
       icon: "📝",
-      detailFn: (c) =>
-        `${c.businessType} event logged for audit trail and reporting`,
+      detailFn: (c: ActionContext) =>
+        `Event logged for audit trail and reporting`,
     },
     {
       label: "Triggered automation",
       tool: "Zapier",
       icon: "⚡",
-      detailFn: (c) =>
-        `Workflow triggered for ${c.businessType} process automation`,
-    },
-  ],
-  complaint: [
-    {
-      label: "Acknowledged concern",
-      tool: "Email",
-      icon: "📨",
-      detailFn: (c) =>
-        `Empathetic response sent to ${c.businessType} customer within 2 minutes`,
-    },
-    {
-      label: "Escalated to manager",
-      tool: "Slack",
-      icon: "🔔",
-      detailFn: (c) =>
-        `${c.businessType} complaint flagged to management for resolution`,
-    },
-    {
-      label: "Applied goodwill credit",
-      tool: "Payment Gateway",
-      icon: "🎁",
-      detailFn: (c) =>
-        `Complimentary ${c.businessType} credit applied to customer account`,
-    },
-    {
-      label: "Sent follow-up survey",
-      tool: "Email",
-      icon: "📋",
-      detailFn: (c) =>
-        `Satisfaction survey queued for ${c.businessType} customer post-resolution`,
-    },
-  ],
-  shipping: [
-    {
-      label: "Tracked shipment",
-      tool: "Shipping API",
-      icon: "📍",
-      detailFn: (c) =>
-        `Real-time ${c.businessType} order tracking retrieved for customer`,
-    },
-    {
-      label: "Updated delivery status",
-      tool: "Order System",
-      icon: "🚚",
-      detailFn: (c) =>
-        `${c.businessType} delivery status updated, customer notified automatically`,
-    },
-    {
-      label: "Scheduled pickup",
-      tool: "Shipping API",
-      icon: "📦",
-      detailFn: (c) => `Pickup scheduled for ${c.businessType} return/exchange`,
-    },
-  ],
-  review: [
-    {
-      label: "Sent thank you",
-      tool: "Email",
-      icon: "⭐",
-      detailFn: (c) =>
-        `Personalized thank-you sent to ${c.businessType} reviewer`,
-    },
-    {
-      label: "Requested review",
-      tool: "Email",
-      icon: "📝",
-      detailFn: (c) =>
-        `Automated review request sent to satisfied ${c.businessType} customer`,
-    },
-    {
-      label: "Drafted public reply",
-      tool: "Google Business",
-      icon: "💬",
-      detailFn: (c) =>
-        `Professional response drafted for ${c.businessType} public review`,
+      detailFn: (c: ActionContext) =>
+        `Workflow triggered for process automation`,
     },
   ],
 };
-
-// ─── Weighted keyword scoring ─────────────────────────────────────
-
-interface KeywordEntry {
-  word: string;
-  weight: number;
-}
-
-const KEYWORD_ENTRIES: Record<string, KeywordEntry[]> = {
-  scheduling: [
-    { word: "book", weight: 3 },
-    { word: "schedule", weight: 3 },
-    { word: "appointment", weight: 3 },
-    { word: "reservation", weight: 3 },
-    { word: "slot", weight: 2 },
-    { word: "viewing", weight: 2 },
-    { word: "calendar", weight: 2 },
-    { word: "meeting", weight: 2 },
-    { word: "visit", weight: 1 },
-    { word: "available", weight: 1 },
-    { word: "check-in", weight: 2 },
-    { word: "pickup", weight: 1 },
-    { word: "reschedule", weight: 3 },
-    { word: "cancel", weight: 2 },
-    { word: "confirm", weight: 1 },
-    { word: "remind", weight: 1 },
-    { word: "timing", weight: 1 },
-    { word: "session", weight: 2 },
-    { word: "class", weight: 2 },
-    { word: "consultation", weight: 3 },
-    { word: "intake", weight: 2 },
-    { word: "enrollment", weight: 2 },
-    { word: "walk-in", weight: 1 },
-  ],
-  crm: [
-    { word: "customer", weight: 3 },
-    { word: "client", weight: 3 },
-    { word: "lead", weight: 3 },
-    { word: "inquiry", weight: 2 },
-    { word: "prospect", weight: 2 },
-    { word: "returning", weight: 2 },
-    { word: "new customer", weight: 2 },
-    { word: "family", weight: 1 },
-    { word: "tenant", weight: 2 },
-    { word: "buyer", weight: 2 },
-    { word: "profile", weight: 1 },
-    { word: "contact", weight: 1 },
-    { word: "onboard", weight: 2 },
-    { word: "welcome", weight: 1 },
-    { word: "membership", weight: 2 },
-    { word: "subscriber", weight: 2 },
-    { word: "retention", weight: 2 },
-    { word: "churn", weight: 2 },
-    { word: "loyalty", weight: 2 },
-    { word: "referral", weight: 2 },
-  ],
-  email: [
-    { word: "email", weight: 2 },
-    { word: "notify", weight: 1 },
-    { word: "send", weight: 1 },
-    { word: "follow up", weight: 2 },
-    { word: "reply", weight: 1 },
-    { word: "response", weight: 1 },
-    { word: "reach out", weight: 2 },
-    { word: "message", weight: 1 },
-    { word: "whatsapp", weight: 2 },
-    { word: "communication", weight: 1 },
-    { word: "newsletter", weight: 2 },
-    { word: "campaign", weight: 2 },
-    { word: "outreach", weight: 2 },
-    { word: "confirm", weight: 1 },
-    { word: "receipt", weight: 1 },
-    { word: "acknowledge", weight: 2 },
-  ],
-  inventory: [
-    { word: "stock", weight: 3 },
-    { word: "inventory", weight: 3 },
-    { word: "supply", weight: 2 },
-    { word: "reorder", weight: 3 },
-    { word: "material", weight: 2 },
-    { word: "product", weight: 2 },
-    { word: "out of stock", weight: 3 },
-    { word: "low stock", weight: 3 },
-    { word: "quantity", weight: 1 },
-    { word: "restock", weight: 3 },
-    { word: "shortage", weight: 2 },
-    { word: "running low", weight: 2 },
-    { word: "catalog", weight: 1 },
-    { word: "item", weight: 1 },
-    { word: "ingredient", weight: 2 },
-    { word: "parts", weight: 2 },
-    { word: "equipment", weight: 2 },
-    { word: "medicine", weight: 2 },
-    { word: "spare", weight: 2 },
-  ],
-  payment: [
-    { word: "pay", weight: 3 },
-    { word: "invoice", weight: 3 },
-    { word: "quote", weight: 3 },
-    { word: "price", weight: 2 },
-    { word: "cost", weight: 2 },
-    { word: "bill", weight: 2 },
-    { word: "receipt", weight: 2 },
-    { word: "deposit", weight: 3 },
-    { word: "payment", weight: 3 },
-    { word: "refund", weight: 3 },
-    { word: "pricing", weight: 2 },
-    { word: "budget", weight: 1 },
-    { word: "fee", weight: 2 },
-    { word: "charge", weight: 2 },
-    { word: "checkout", weight: 2 },
-    { word: "subscription", weight: 2 },
-    { word: "salary", weight: 2 },
-    { word: "payroll", weight: 3 },
-    { word: "tax", weight: 2 },
-    { word: "commission", weight: 2 },
-  ],
-  social: [
-    { word: "review", weight: 2 },
-    { word: "post", weight: 2 },
-    { word: "social", weight: 2 },
-    { word: "instagram", weight: 3 },
-    { word: "tiktok", weight: 3 },
-    { word: "facebook", weight: 2 },
-    { word: "feedback", weight: 2 },
-    { word: "rating", weight: 3 },
-    { word: "google review", weight: 3 },
-    { word: "comment", weight: 1 },
-    { word: "mention", weight: 1 },
-    { word: "viral", weight: 1 },
-    { word: "engagement", weight: 2 },
-    { word: "content", weight: 1 },
-    { word: "caption", weight: 2 },
-    { word: "linkedin", weight: 2 },
-    { word: "marketing", weight: 2 },
-    { word: "brand", weight: 2 },
-    { word: "ad", weight: 2 },
-    { word: "promote", weight: 2 },
-  ],
-  notification: [
-    { word: "alert", weight: 3 },
-    { word: "team", weight: 1 },
-    { word: "staff", weight: 1 },
-    { word: "manager", weight: 2 },
-    { word: "urgent", weight: 3 },
-    { word: "incident", weight: 2 },
-    { word: "flag", weight: 2 },
-    { word: "escalate", weight: 3 },
-    { word: "slipped", weight: 1 },
-    { word: "report", weight: 1 },
-    { word: "dashboard", weight: 1 },
-    { word: "monitor", weight: 1 },
-  ],
-  complaint: [
-    { word: "complaint", weight: 3 },
-    { word: "complain", weight: 3 },
-    { word: "unhappy", weight: 3 },
-    { word: "dissatisfied", weight: 3 },
-    { word: "angry", weight: 2 },
-    { word: "issue", weight: 2 },
-    { word: "problem", weight: 2 },
-    { word: "wrong", weight: 2 },
-    { word: "terrible", weight: 2 },
-    { word: "disappointed", weight: 2 },
-    { word: "unacceptable", weight: 3 },
-    { word: "apologize", weight: 2 },
-    { word: "compensation", weight: 2 },
-    { word: "make it right", weight: 3 },
-    { word: "refund", weight: 2 },
-    { word: "fix", weight: 1 },
-    { word: "broken", weight: 2 },
-    { word: "delay", weight: 1 },
-    { word: "mistake", weight: 2 },
-  ],
-  shipping: [
-    { word: "shipping", weight: 3 },
-    { word: "delivery", weight: 3 },
-    { word: "ship", weight: 2 },
-    { word: "deliver", weight: 2 },
-    { word: "tracking", weight: 3 },
-    { word: "package", weight: 2 },
-    { word: "arrive", weight: 1 },
-    { word: "dispatch", weight: 2 },
-    { word: "courier", weight: 2 },
-    { word: "freight", weight: 2 },
-    { word: "return", weight: 2 },
-    { word: "exchange", weight: 2 },
-  ],
-  review: [
-    { word: "leave a review", weight: 3 },
-    { word: "5 stars", weight: 3 },
-    { word: "google review", weight: 3 },
-    { word: "feedback request", weight: 2 },
-    { word: "testimonial", weight: 2 },
-    { word: "satisfied", weight: 1 },
-    { word: "happy customer", weight: 2 },
-    { word: "positive review", weight: 3 },
-    { word: "reputation", weight: 2 },
-    { word: "online presence", weight: 2 },
-  ],
-};
-
-// ─── Business type patterns (expanded with many more industries) ──
-
-const BUSINESS_PATTERNS: Record<string, Record<string, number>> = {
-  scheduling: {
-    clinic: 3,
-    dental: 3,
-    dentist: 3,
-    medical: 3,
-    salon: 3,
-    spa: 3,
-    barber: 3,
-    hair: 3,
-    gym: 2,
-    fitness: 2,
-    studio: 2,
-    tutor: 2,
-    tuition: 2,
-    class: 2,
-    lesson: 2,
-    restaurant: 2,
-    cafe: 1,
-    hotel: 2,
-    resort: 2,
-    massage: 3,
-    therapy: 2,
-    yoga: 3,
-    pilates: 3,
-    "pet groom": 3,
-    vet: 2,
-    "car detail": 2,
-    laundry: 1,
-    coaching: 3,
-    consulting: 2,
-    trainer: 3,
-    physician: 3,
-    chiropractor: 3,
-    acupuncture: 3,
-    tattoo: 2,
-    nail: 3,
-    beauty: 3,
-    skincare: 3,
-    photography: 2,
-    event: 2,
-    catering: 2,
-    "real estate": 2,
-    property: 2,
-    "car rental": 2,
-    coworking: 2,
-    childcare: 3,
-    preschool: 3,
-    enrichment: 3,
-    driving: 2,
-    music: 2,
-    language: 2,
-  },
-  crm: {
-    "real estate": 3,
-    property: 2,
-    agent: 2,
-    broker: 2,
-    insurance: 2,
-    legal: 2,
-    consulting: 2,
-    agency: 2,
-    finance: 1,
-    mortgage: 2,
-    b2b: 2,
-    saas: 1,
-    coaching: 2,
-    "personal training": 2,
-    recruitment: 3,
-    staffing: 3,
-    hr: 2,
-    accounting: 2,
-    "wealth management": 2,
-    advisory: 2,
-    nonprofit: 2,
-    charity: 2,
-    "auto dealer": 2,
-    travel: 2,
-  },
-  inventory: {
-    retail: 2,
-    shop: 2,
-    store: 2,
-    ecommerce: 3,
-    "e-commerce": 3,
-    "f&b": 3,
-    restaurant: 3,
-    cafe: 2,
-    bakery: 2,
-    grocery: 3,
-    supermarket: 3,
-    construction: 3,
-    trade: 2,
-    hardware: 3,
-    manufacturing: 3,
-    warehouse: 3,
-    pharmacy: 2,
-    dispensary: 2,
-    fashion: 2,
-    apparel: 2,
-    clothing: 2,
-    electronics: 2,
-    automotive: 2,
-    printing: 2,
-    florist: 2,
-    "pet shop": 2,
-    "book store": 2,
-    convenience: 2,
-    mini: 2,
-    mart: 2,
-  },
-  payment: {
-    ecommerce: 3,
-    "e-commerce": 3,
-    retail: 2,
-    shop: 2,
-    store: 2,
-    subscription: 3,
-    saas: 3,
-    "f&b": 2,
-    restaurant: 2,
-    invoice: 3,
-    billing: 3,
-    finance: 2,
-    accounting: 2,
-    freelance: 2,
-    consulting: 1,
-    legal: 1,
-    agency: 1,
-  },
-  social: {
-    marketing: 3,
-    agency: 2,
-    brand: 3,
-    fashion: 3,
-    beauty: 3,
-    lifestyle: 3,
-    influencer: 3,
-    content: 3,
-    restaurant: 1,
-    cafe: 1,
-    hotel: 1,
-    photography: 2,
-    event: 2,
-    fitness: 1,
-    travel: 2,
-    "food truck": 2,
-    bakery: 1,
-    "pet groom": 1,
-    salon: 1,
-  },
-  complaint: {
-    restaurant: 1,
-    retail: 1,
-    ecommerce: 1,
-    "e-commerce": 1,
-    service: 1,
-    hotel: 1,
-    delivery: 1,
-    healthcare: 1,
-    telecom: 1,
-    utility: 1,
-  },
-  shipping: {
-    ecommerce: 3,
-    "e-commerce": 3,
-    retail: 2,
-    store: 2,
-    "f&b": 1,
-    restaurant: 1,
-    logistics: 3,
-    warehouse: 2,
-    manufacturing: 2,
-    "auto parts": 2,
-    furniture: 2,
-    appliance: 2,
-  },
-  review: {
-    restaurant: 2,
-    cafe: 2,
-    hotel: 2,
-    salon: 2,
-    dental: 2,
-    clinic: 2,
-    "real estate": 1,
-    retail: 1,
-    service: 1,
-    spa: 2,
-    gym: 1,
-    automotive: 1,
-    healthcare: 1,
-  },
-};
-
-// ─── Semantic intent detection from message content ───────────────
-// Detects what the user is ASKING about, not just what keywords match
-
-const INTENT_PATTERNS: Record<
-  string,
-  { patterns: RegExp[]; weight: number }[]
-> = {
-  scheduling: [
-    { patterns: [/want to (book|schedule|reserve|set up)/i], weight: 4 },
-    { patterns: [/need (an? )?appointment/i], weight: 4 },
-    { patterns: [/when (is|are|can|could)/i], weight: 2 },
-    { patterns: [/available (slot|time|date|schedule)/i], weight: 3 },
-    { patterns: [/(change|move|reschedule|cancel) (my|the|our)/i], weight: 3 },
-  ],
-  crm: [
-    { patterns: [/who is (this|that) (customer|client)/i], weight: 4 },
-    {
-      patterns: [/(customer|client) (history|record|profile|details)/i],
-      weight: 4,
-    },
-    {
-      patterns: [/(new|potential|prospective) (customer|client|lead)/i],
-      weight: 3,
-    },
-    { patterns: [/(onboard|welcome|intake) (new|a|the)/i], weight: 3 },
-  ],
-  inventory: [
-    {
-      patterns: [
-        /(how many|how much|do we have|is there) (left|available|in stock|remaining)/i,
-      ],
-      weight: 4,
-    },
-    {
-      patterns: [
-        /(low|out of|running out of|no more) (stock|supply|inventory)/i,
-      ],
-      weight: 4,
-    },
-    {
-      patterns: [/(need to|should|time to) (reorder|restock|order more)/i],
-      weight: 4,
-    },
-    {
-      patterns: [/check (the |our )?(inventory|stock|supply|warehouse)/i],
-      weight: 3,
-    },
-  ],
-  payment: [
-    {
-      patterns: [/(how much|what('s| is) the) (price|cost|fee|rate)/i],
-      weight: 4,
-    },
-    {
-      patterns: [/(need to|want to|please) (pay|invoice|bill|charge)/i],
-      weight: 4,
-    },
-    {
-      patterns: [
-        /(send|generate|create|issue) (an? )?(invoice|quote|receipt|bill)/i,
-      ],
-      weight: 4,
-    },
-    { patterns: [/(refund|credit|discount|waive)/i], weight: 3 },
-  ],
-  social: [
-    {
-      patterns: [
-        /(post|share|publish|upload) (to|on|a|this) (social|instagram|facebook|tiktok|linkedin)/i,
-      ],
-      weight: 4,
-    },
-    {
-      patterns: [
-        /(respond|reply|answer) to (the|a|this) (review|comment|post)/i,
-      ],
-      weight: 4,
-    },
-    {
-      patterns: [
-        /(social media|marketing|content) (strategy|plan|campaign|schedule)/i,
-      ],
-      weight: 3,
-    },
-  ],
-  complaint: [
-    {
-      patterns: [
-        /(unhappy|disappointed|frustrated|angry|upset) (about|with|that)/i,
-      ],
-      weight: 4,
-    },
-    { patterns: [/(complain|escalate|manager|supervisor)/i], weight: 3 },
-    {
-      patterns: [/this is (unacceptable|ridiculous|terrible|wrong)/i],
-      weight: 4,
-    },
-  ],
-  shipping: [
-    {
-      patterns: [
-        /(where is|track|status of) (my|the|our) (order|package|delivery|shipment)/i,
-      ],
-      weight: 4,
-    },
-    {
-      patterns: [
-        /(when (will|does|is)|has) (my|the|our) (order|package|delivery) (arrive|deliver|ship|dispatch)/i,
-      ],
-      weight: 4,
-    },
-    { patterns: [/(return|exchange|send back)/i], weight: 3 },
-  ],
-  email: [
-    {
-      patterns: [
-        /(send|write|draft|compose) (an? )?(email|message|notification|follow-up)/i,
-      ],
-      weight: 4,
-    },
-    {
-      patterns: [
-        /(confirm|acknowledge|notify|inform) (the|a|our) (customer|client|team)/i,
-      ],
-      weight: 3,
-    },
-  ],
-  notification: [
-    {
-      patterns: [
-        /(alert|notify|inform|tell|flag) (the|our|my) (team|staff|manager|kitchen)/i,
-      ],
-      weight: 4,
-    },
-    { patterns: [/(urgent|emergency|critical|asap|immediately)/i], weight: 3 },
-  ],
-  review: [
-    {
-      patterns: [
-        /(ask|request|prompt|encourage) (for|to leave|to write) (a|an? )?(review|feedback|rating)/i,
-      ],
-      weight: 4,
-    },
-    {
-      patterns: [/(google|online|public) (review|rating|reputation)/i],
-      weight: 3,
-    },
-  ],
-};
-
-// ─── Scoring engine ───────────────────────────────────────────────
-
-function scoreCategories(
-  text: string,
-  businessType: string,
-): Map<string, number> {
-  const lower = text.toLowerCase();
-  const scores = new Map<string, number>();
-
-  // Score by message keywords (weighted)
-  for (const [category, entries] of Object.entries(KEYWORD_ENTRIES)) {
-    let score = 0;
-    for (const entry of entries) {
-      if (lower.includes(entry.word)) score += entry.weight;
-    }
-    if (score > 0) scores.set(category, score);
-  }
-
-  // Score by business type patterns (weighted)
-  const bizLower = businessType.toLowerCase();
-  for (const [category, patterns] of Object.entries(BUSINESS_PATTERNS)) {
-    for (const [pattern, weight] of Object.entries(patterns)) {
-      if (bizLower.includes(pattern)) {
-        scores.set(category, (scores.get(category) || 0) + weight);
-      }
-    }
-  }
-
-  // Score by semantic intent patterns (highest signal — what user is asking about)
-  for (const [category, intents] of Object.entries(INTENT_PATTERNS)) {
-    for (const intent of intents) {
-      for (const pattern of intent.patterns) {
-        if (pattern.test(text)) {
-          scores.set(category, (scores.get(category) || 0) + intent.weight);
-        }
-      }
-    }
-  }
-
-  return scores;
-}
-
-// ─── Smart fallback by business type ───────────────────────────────
-// When keyword/intent matching yields <2 categories, pick based on industry
-
-function getSmartDefaults(businessType: string): string[] {
-  const biz = businessType.toLowerCase();
-  const defaults: string[] = [];
-
-  // Service-type businesses → scheduling + CRM
-  if (
-    biz.match(
-      /clinic|dental|medical|salon|spa|barber|hair|gym|fitness|studio|tutor|tuition|yoga|pilates|massage|therapy|coaching|consulting|trainer|physician|chiropractor|acupuncture|nail|beauty|skincare|photography|childcare|preschool|driving|music|language|real estate|property|insurance|legal|accounting|recruitment|staffing|advisory|nonprofit|charity/,
-    )
-  ) {
-    defaults.push("scheduling", "crm", "email");
-  }
-  // Retail/product businesses → inventory + payment
-  else if (
-    biz.match(
-      /retail|shop|store|ecommerce|e-commerce|f&b|restaurant|cafe|bakery|grocery|supermarket|construction|hardware|manufacturing|warehouse|pharmacy|fashion|apparel|clothing|electronics|automotive|printing|florist|pet shop|book store|convenience|mini|mart|dispensary/,
-    )
-  ) {
-    defaults.push("inventory", "payment", "email");
-  }
-  // Marketing/brand businesses → social + CRM
-  else if (
-    biz.match(
-      /marketing|agency|brand|fashion|beauty|lifestyle|influencer|content|advertising|pr|event/,
-    )
-  ) {
-    defaults.push("social", "crm", "email");
-  }
-  // Default generic
-  else {
-    defaults.push("crm", "email", "notification");
-  }
-
-  return defaults;
-}
 
 // ─── Public API ────────────────────────────────────────────────────
 
 /**
- * Generate automated action steps for a custom prompt.
- * Uses keyword scoring + business-type patterns + semantic intent detection.
- * Returns 3-4 ActionSteps that match the user's business type and message content.
+ * Generate automated action steps.
+ *
+ * PRIMARY: Parse actions from the AI model's response (most context-aware).
+ * FALLBACK: Use industry-specific templates (better than generic name interpolation).
+ * LAST RESORT: Use keyword-scored templates with generic detail text.
  */
 export function generateActions(
   businessType: string,
   message: string,
+  aiResponse?: string,
 ): ActionStep[] {
-  const ctx: ActionContext = {
-    businessType: businessType.toLowerCase(),
-    messageSnippet: message.slice(0, 60),
-  };
-
-  const scores = scoreCategories(message, businessType);
-
-  // Sort categories by score (descending)
-  const sorted = [...scores.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([cat]) => cat);
-
-  // Filter out categories with very low scores (<2 is noise)
-  const significant = sorted.filter((cat) => (scores.get(cat) || 0) >= 2);
-
-  // Fallback: if not enough categories matched, use smart defaults
-  if (significant.length < 2) {
-    const defaults = getSmartDefaults(businessType);
-    for (const d of defaults) {
-      if (!significant.includes(d)) significant.push(d);
+  // ── Strategy 1: Extract actions from AI response ────────────────
+  if (aiResponse && aiResponse.length > 20) {
+    const extracted = extractActionsFromResponse(aiResponse);
+    if (extracted.length >= 2) {
+      // Convert extracted actions to ActionStep format
+      let delay = 800;
+      return extracted.slice(0, 4).map((action, idx) => ({
+        id: `ai-${idx + 1}`,
+        label: action.label,
+        tool: action.tool,
+        icon: inferIcon(action.tool),
+        detail: action.detail,
+        delayMs: delay + idx * 800,
+      }));
     }
   }
 
-  // Pick 3-4 actions across top categories, prioritizing higher-scored ones
-  const actions: ActionStep[] = [];
-  const usedLabels = new Set<string>();
-  let delay = 800;
-  let id = 0;
-
-  const categoriesToUse = significant.length > 0 ? significant : sorted;
-
-  for (const category of categoriesToUse) {
-    if (actions.length >= 4) break;
-    const pool = TEMPLATES[category];
-    if (!pool) continue;
-
-    // Top category gets 2 actions, rest get 1
-    const pickCount = actions.length === 0 ? 2 : 1;
-    let picked = 0;
-
-    for (const template of pool) {
-      if (picked >= pickCount || actions.length >= 4) break;
-      if (usedLabels.has(template.label)) continue;
-
-      usedLabels.add(template.label);
-      actions.push({
-        id: `gen-${++id}`,
-        label: template.label,
-        tool: template.tool,
-        icon: template.icon,
-        detail: template.detailFn(ctx),
-        delayMs: delay,
-      });
-      delay += 800;
-      picked++;
-    }
+  // ── Strategy 2: Industry-specific templates ─────────────────────
+  const industryTemplate = findIndustryTemplate(businessType);
+  if (industryTemplate) {
+    // Try to find a scenario match based on message keywords
+    const lower = message.toLowerCase();
+    const scenarioActions = Object.entries(industryTemplate.scenarios);
+    // For now, always use default actions from industry template
+    return [...industryTemplate.defaultActions];
   }
 
-  // Ensure we always return at least 3 actions
-  if (actions.length < 3) {
-    const fallbackCategories = ["notification", "email", "scheduling", "crm"];
-    for (const cat of fallbackCategories) {
-      if (actions.length >= 3) break;
-      const pool = TEMPLATES[cat];
-      if (!pool) continue;
-      for (const template of pool) {
-        if (actions.length >= 3) break;
-        if (usedLabels.has(template.label)) continue;
-        usedLabels.add(template.label);
-        actions.push({
-          id: `gen-${++id}`,
-          label: template.label,
-          tool: template.tool,
-          icon: template.icon,
-          detail: template.detailFn(ctx),
-          delayMs: delay,
-        });
-        delay += 800;
-      }
-    }
+  // ── Strategy 3: Keyword-scored templates (last resort) ──────────
+  return getTemplateActions(businessType, message);
+}
+
+/**
+ * Get industry-specific metrics for a business type.
+ * Returns matching industry metrics or generates reasonable defaults.
+ */
+export function getIndustryMetrics(
+  businessType: string,
+): { label: string; value: string; icon: string }[] {
+  const template = findIndustryTemplate(businessType);
+  if (template) {
+    return template.metrics;
   }
 
-  return actions;
+  // Generate context-aware defaults based on business type
+  const lower = businessType.toLowerCase();
+
+  if (
+    lower.match(
+      /clinic|dental|medical|physician|therapy|pharmacy|health|chiropractor|vet/,
+    )
+  ) {
+    return [
+      { label: "Appointments/mo", value: "560", icon: "📅" },
+      { label: "No-show reduction", value: "81%", icon: "📉" },
+      { label: "Patient follow-ups", value: "340/mo", icon: "📧" },
+      { label: "Hours saved/week", value: "15+", icon: "⚡" },
+    ];
+  }
+  if (
+    lower.match(
+      /gym|fitness|coach|yoga|pilates|personal training|martial|dance|boxing/,
+    )
+  ) {
+    return [
+      { label: "Bookings/mo", value: "380", icon: "📅" },
+      { label: "No-show reduction", value: "65%", icon: "📉" },
+      { label: "Member retention", value: "+23%", icon: "🔄" },
+      { label: "Hours saved/week", value: "10+", icon: "⚡" },
+    ];
+  }
+  if (
+    lower.match(
+      /tutor|tuition|education|school|training|course|academy|learning|enrichment|preschool|childcare|music|language|driving/,
+    )
+  ) {
+    return [
+      { label: "Enrollments/mo", value: "120", icon: "📋" },
+      { label: "Attendance rate", value: "94%", icon: "📅" },
+      { label: "Parent follow-ups", value: "280/mo", icon: "📧" },
+      { label: "Hours saved/week", value: "8+", icon: "⚡" },
+    ];
+  }
+  if (lower.match(/landscape|garden|lawn|tree|irrigation|nursery/)) {
+    return [
+      { label: "Quotes/mo", value: "85", icon: "📋" },
+      { label: "Jobs scheduled", value: "42/mo", icon: "📅" },
+      { label: "Client retention", value: "78%", icon: "🔄" },
+      { label: "Hours saved/week", value: "9+", icon: "⚡" },
+    ];
+  }
+
+  // Generic defaults
+  return [
+    { label: "Tasks automated", value: "50+", icon: "⚡" },
+    { label: "Response time", value: "<5s", icon: "⏱️" },
+    { label: "Hours saved/wk", value: "10+", icon: "🕐" },
+    { label: "Accuracy", value: "99%", icon: "✓" },
+  ];
 }

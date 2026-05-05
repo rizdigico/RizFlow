@@ -222,8 +222,13 @@ function cleanModelResponse(content) {
   if (!content) return "";
 
   let cleaned = content
-    // Strip <think>...</think> blocks
-    .replace(/<think[\s\S]*?<\/think>/g, "")
+    // Strip <thinking>...</thinking> or <think>...</think> blocks
+    .replace(/<think(?:ing)?[\s\S]*?<\/think(?:ing)?>/gi, "")
+    // Strip ### Thinking / ## Reasoning markdown sections
+    .replace(
+      /^#{1,3}\s+(?:Thinking|Reasoning|Analysis|My thought|Thought process|Internal)[\s\S]*?(?=\n#{1,3}\s|\n[A-Z][a-z]|\[ACTION|$)/gim,
+      "",
+    )
     // Strip markdown-style internal reasoning (*Brainstorming:..., *Self-check:..., etc.)
     .replace(
       /\*(?:Brainstorming|Self-check|Checking rules|Avoiding scope creep|Final|Important|Note):[^*]*\*/gi,
@@ -236,10 +241,11 @@ function cleanModelResponse(content) {
     )
     // Strip reasoning_details JSON artifacts
     .replace(/reasoning_details?\s*:\s*\[.*?\]/gs, "")
+    // Strip [ACTION: ...] markers from visible response (parsed client-side)
+    .replace(/\[ACTION:\s*[^[\]]+\]/gi, "")
     .trim();
 
   // Strip sentences that are clearly internal reasoning (plain text, no markers)
-  // These are meta-commentary about the model's own process, not the user-facing answer
   const reasoningPatterns = [
     /^(?:From what I know|As far as I know|Based on my knowledge|I think I recall)/i,
     /^(?:First, I need to|First, I should|I need to figure out|I should consider|I should check|I should verify|Let me think about|Let me consider|Let me recall|Hmm,? let me)/i,
@@ -249,6 +255,10 @@ function cleanModelResponse(content) {
     /^(?:Okay,? so|Okay,? let me|Alright,? let me|So,? I (?:need|should|think|will|can))/i,
     /^(?:Let me (?:check|verify|look|think|consider|recall|think about|figure)|Hmm|I wonder)/i,
     /^(?:For a (?:hair|nail|beauty|salon|dental|restaurant|fitness|law|account|real)[\w\s]*,?(?:I|they|we|you)\s+(?:need|should|could|might|want|probably|would))/i,
+    /^(?:I (?:understand|know|see|recall|remember|think|believe|will|can|should|would|need to|have to|am going to))/i,
+    /^(?:Now,? (?:I|let me|the|this)|Next,? (?:I|let me|we|the)|Then,? (?:I|let me|we|the))/i,
+    /^(?:My (?:approach|response|answer|plan|strategy)|Here(?:'s| is) (?:my|what|how|the))/i,
+    /^(?:To (?:answer|respond|help|address|provide|handle|assist))/i,
   ];
 
   const sentences = cleaned.split(/(?<=[.!?])\s+/);

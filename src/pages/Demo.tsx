@@ -14,7 +14,7 @@ import {
   type IndustryScenario,
   type ActionStep,
 } from "@/data/demo-industries";
-import { generateActions } from "@/lib/action-generator";
+import { generateActions, getIndustryMetrics } from "@/lib/action-generator";
 import {
   ArrowRightIcon,
   PaperAirplaneIcon,
@@ -110,12 +110,14 @@ function LiveChat({
   onStatsUpdate,
   customFollowUps,
   onUserMessage,
+  onAIResponse,
 }: {
   industry: Industry;
   scenario: IndustryScenario | null;
   onStatsUpdate: (stats: SessionStats) => void;
   customFollowUps?: string[];
   onUserMessage?: (message: string) => void;
+  onAIResponse?: (response: string) => void;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -210,6 +212,11 @@ function LiveChat({
       };
       setMessages((prev) => [...prev, assistantMsg]);
       setMessageCount((prev) => prev + 1);
+
+      // Extract actions from AI response for more context-aware action timeline
+      if (onAIResponse) {
+        onAIResponse(result.reply);
+      }
     } catch (err) {
       const errorMessage =
         err instanceof Error
@@ -501,7 +508,18 @@ export function Demo() {
       gradientTo: "to-cyan-500",
       tagline: `AI agents tailored for ${business}`,
       description: `See how RizFlow agents can automate operations for your ${business} business — orders, inquiries, scheduling, and more.`,
-      systemPrompt: `You are a RizFlow AI agent demo for a ${business} business in Singapore. You demonstrate how AI automation handles day-to-day operations for this specific type of business. Rules: 1) Be concise — 2-3 short paragraphs max. 2) Be SPECIFIC to ${business} — mention realistic items, prices, customer names, and scenarios that would actually happen in this business. 3) In EVERY response, explicitly state 2-3 automated actions you're taking behind the scenes (e.g. "I've checked our ${business} calendar for open slots", "A confirmation WhatsApp has been sent", "I've flagged the ${business} inventory system for reorder"). 4) Show how each automation saves time vs manual handling. 5) If the user asks something outside your scope, redirect to ${business} operations you can help with. 6) Always sound professional but approachable — like a helpful operations assistant.`,
+      systemPrompt: `You are a RizFlow AI agent demo for a ${business} business in Singapore. You demonstrate how AI automation handles day-to-day operations for this specific type of business.
+
+Rules:
+1) Be concise — 2-3 short paragraphs max.
+2) Be SPECIFIC to ${business} — mention realistic items, prices, customer names, and scenarios that would actually happen in this business.
+3) In EVERY response, you MUST explicitly state 2-3 automated actions you're taking behind the scenes. Format each action as: [ACTION: Label — Detail]
+   Example for a dental clinic: [ACTION: Checked schedule — Found 3 available slots this week for Dr. Tan] [ACTION: Sent confirmation — SMS sent to patient with appointment details]
+   Example for a landscaping company: [ACTION: Generated quote — Itemized quote for garden maintenance with materials and labor] [ACTION: Scheduled assessment — On-site visit booked for Thursday morning]
+   The label should be short (2-4 words). The detail should be specific to ${business}, not generic.
+4) Show how each automation saves time vs manual handling.
+5) If the user asks something outside your scope, redirect to ${business} operations you can help with.
+6) Always sound professional but approachable — like a helpful operations assistant.`,
       scenarios: [
         {
           id: "custom-start",
@@ -510,12 +528,7 @@ export function Demo() {
           firstMessage: `I run a ${business} business in Singapore. What can you help me automate?`,
         },
       ],
-      metrics: [
-        { label: "Tasks automated", value: "50+", icon: "⚡" },
-        { label: "Response time", value: "<5s", icon: "⏱️" },
-        { label: "Hours saved/wk", value: "10+", icon: "🕐" },
-        { label: "Accuracy", value: "99%", icon: "✓" },
-      ],
+      metrics: getIndustryMetrics(business),
     };
 
     setSelectedIndustry(customIndustry);
@@ -543,9 +556,27 @@ export function Demo() {
   // Generate dynamic actions when user sends a follow-up message
   const handleUserMessage = useCallback(
     (message: string) => {
+      // Actions will be regenerated from the AI response in sendToAI callback
+      // For now, use keyword-based fallback until AI response arrives
       const actions = generateActions(selectedIndustry?.name || "", message);
       setDynamicActions(actions);
       setActionTriggerKey((prev) => `${prev}-msg-${Date.now()}`);
+    },
+    [selectedIndustry],
+  );
+
+  // Regenerate actions from AI response (much more context-aware than keyword matching)
+  const handleAIResponse = useCallback(
+    (responseText: string) => {
+      const actions = generateActions(
+        selectedIndustry?.name || "",
+        "",
+        responseText, // Pass AI response for extraction
+      );
+      if (actions.length >= 2) {
+        setDynamicActions(actions);
+        setActionTriggerKey((prev) => `${prev}-ai-${Date.now()}`);
+      }
     },
     [selectedIndustry],
   );
@@ -971,6 +1002,7 @@ export function Demo() {
                           onStatsUpdate={setSessionStats}
                           customFollowUps={currentFollowUps}
                           onUserMessage={handleUserMessage}
+                          onAIResponse={handleAIResponse}
                         />
                       </div>
 
