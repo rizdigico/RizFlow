@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { Hero } from "@/components/sections/Hero";
+import { Testimonial } from "@/components/sections/Testimonial";
 import { SocialProofLogos } from "@/components/sections/SocialProofLogos";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FeaturesGrid } from "@/components/sections/FeaturesGrid";
@@ -65,21 +66,21 @@ const jsonLd = {
         itemListElement: [
           {
             "@type": "Offer",
-            name: "Essential",
+            name: "Starter",
             description:
-              "Core agent stack for small businesses — customer intake, workflow tracking, scheduling, and billing automation",
+              "1-2 custom AI agents, single channel integration, basic admin automation for solo operators",
           },
           {
             "@type": "Offer",
-            name: "Professional",
+            name: "Growth",
             description:
-              "Full agent suite with custom agents, predictive analytics, and autonomous communications for growing businesses",
+              "3-5 custom AI agents, multi-channel integration, full operations coverage with 90-day guarantee",
           },
           {
             "@type": "Offer",
-            name: "Enterprise",
+            name: "Scale",
             description:
-              "Full-scale automation with unlimited custom agents, white-label portals, and API access for complex operations",
+              "5+ custom agents, unlimited scope, all channels, dedicated account manager for established businesses",
           },
         ],
       },
@@ -145,6 +146,7 @@ export function Home() {
 
         <div className="relative z-10 w-full">
           <Hero />
+          <Testimonial />
           <HowItWorks />
           <FeaturesGrid />
         </div>

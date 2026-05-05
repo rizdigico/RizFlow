@@ -41,7 +41,7 @@ export function Hero() {
                   className="text-sm text-slate-200 font-medium tracking-wide"
                   style={{ transform: "translateX(-5px)" }}
                 >
-                  Custom Agentic-AI for Your Business
+                  15-25 hours/week saved. No new software required.
                 </span>
               </div>
             </motion.div>
@@ -57,9 +57,10 @@ export function Hero() {
                 </span>
               </h1>
               <p className="text-base sm:text-xl text-slate-300 leading-relaxed max-w-lg font-light">
-                Custom agentic-AI systems tailored to your business. Choose the
-                agents you need, automate your operations, and reclaim your time
-                — all from your phone.
+                Not another DIY automation tool. We build, run, and maintain AI
+                agents that actually run your operations — admin, billing,
+                scheduling, everything. You don&apos;t build it. You don&apos;t
+                babysit it. You just check your phone.
               </p>
             </motion.div>
 
@@ -81,8 +82,13 @@ export function Hero() {
                     </div>
                   </Button>
                 </Link>
-                <p className="text-sm text-blue-200/40 flex items-center gap-1.5">
-                  <span>✓ No commitment required</span>
+                <p className="text-sm text-blue-200/40 flex items-center justify-center gap-3 w-full">
+                  <span>✓ Free audit, no commitment</span>
+                  <span className="text-emerald-400/70">·</span>
+                  <span className="text-emerald-400/70 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+                    90-day guarantee
+                  </span>
                 </p>
               </div>
               <a href="#how-it-works" className="w-full sm:w-auto">
@@ -100,24 +106,40 @@ export function Hero() {
               className="flex flex-wrap items-center gap-6 pt-6 border-t border-white/10"
               variants={ANIMATION_VARIANTS.fadeIn}
             >
-              {[
-                "PDPA Compliant",
-                "Bank-Grade Security",
-                "Live in 1-2 Weeks",
-                "Fully Customizable",
-              ].map((item, i) => (
-                <motion.div
-                  key={item}
-                  className="flex items-center gap-2 text-slate-300 text-sm font-medium"
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <CheckCircleIcon className="w-5 h-5 text-teal filter drop-shadow-[0_0_5px_rgba(0,229,255,0.5)]" />
-                  {item}
-                </motion.div>
-              ))}
+              <div className="flex flex-wrap justify-center gap-6">
+                {[
+                  "Based in Singapore 🇸🇬",
+                  "PDPA Compliant",
+                  "Live in 2-4 Weeks",
+                ].map((item, i) => (
+                  <motion.div
+                    key={item}
+                    className="flex items-center gap-2 text-slate-300 text-sm font-medium"
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <CheckCircleIcon className="w-5 h-5 text-teal filter drop-shadow-[0_0_5px_rgba(0,229,255,0.5)]" />
+                    {item}
+                  </motion.div>
+                ))}
+              </div>
+              <div className="flex flex-wrap justify-center gap-6 mt-3 pl-20">
+                {["Bank-Grade Security", "90-Day Results"].map((item, i) => (
+                  <motion.div
+                    key={item}
+                    className="flex items-center gap-2 text-slate-300 text-sm font-medium"
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (i + 3) * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <CheckCircleIcon className="w-5 h-5 text-teal filter drop-shadow-[0_0_5px_rgba(0,229,255,0.5)]" />
+                    {item}
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
           </motion.div>
 

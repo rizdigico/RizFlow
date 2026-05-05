@@ -7,7 +7,6 @@ import { Home } from "@/pages/Home";
 import { About } from "@/pages/About";
 import { Services } from "@/pages/Services";
 import { Audit } from "@/pages/Audit";
-import { Contact } from "@/pages/Contact";
 import { FAQ } from "@/pages/FAQ";
 import { PrivacyTerms } from "@/pages/PrivacyTerms";
 import { ThankYou } from "@/pages/ThankYou";
@@ -37,7 +36,7 @@ function AppRoutes() {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/audit" element={<Audit />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/contact" element={<Audit />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy-terms" element={<PrivacyTerms />} />
           <Route path="/thank-you" element={<ThankYou />} />

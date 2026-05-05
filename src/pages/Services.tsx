@@ -70,21 +70,21 @@ const jsonLd = {
   offers: [
     {
       "@type": "Offer",
-      name: "Essential",
+      name: "Starter",
       description:
-        "Core agent stack for small businesses — customer intake, workflow tracking, scheduling, and billing automation",
+        "Core automation for solo operators — 1-2 custom AI agents, single channel integration, basic admin automation",
     },
     {
       "@type": "Offer",
-      name: "Professional",
+      name: "Growth",
       description:
-        "Full agent suite with custom agents, predictive analytics, and autonomous communications for growing businesses",
+        "Full operations coverage for growing businesses — 3-5 custom AI agents, multi-channel integration, 90-day guarantee",
     },
     {
       "@type": "Offer",
-      name: "Enterprise",
+      name: "Scale",
       description:
-        "Full-scale automation with unlimited custom agents, white-label portals, and API access for complex operations",
+        "Comprehensive automation for established businesses — 5+ agents, unlimited scope, dedicated account manager",
     },
   ],
 };
@@ -153,15 +153,16 @@ export function Services() {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-500/30 bg-[#0A0F1A]/80 backdrop-blur-md mb-8 shadow-[0_0_15px_rgba(0,229,255,0.15)]">
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
               <span className="text-xs font-mono text-teal-400 tracking-widest uppercase">
-                Implementation Tiers
+                Pricing
               </span>
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white mb-6 leading-tight drop-shadow-[0_0_20px_rgba(0,229,255,0.3)]">
-              Choose Your <span className="text-teal-400">Agent Stack</span>
+              Starting from <span className="text-teal-400">$1,800/mo</span>
             </h1>
-            <p className="text-xl text-slate-400 max-w-xl mx-auto font-mono text-sm tracking-wide">
-              &gt; Transparent provisioning. No hidden runtime fees. Commit when
-              you're confident in the system ROI.
+            <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-mono text-sm tracking-wide leading-relaxed">
+              &gt; Transparent provisioning. No hidden runtime fees. Custom
+              pricing based on your agent count and workflow complexity. Free
+              audit, exact quote, no surprises.
             </p>
           </Container>
         </section>

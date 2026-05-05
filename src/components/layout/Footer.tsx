@@ -8,13 +8,13 @@ const footerLinks = {
   Product: [
     { label: "Home", href: "/" },
     { label: "Services", href: "/services" },
-    { label: "Discovery Audit", href: "/audit" },
+    { label: "Free Audit", href: "/audit" },
     { label: "About", href: "/about" },
   ],
   Resources: [
     { label: "FAQ", href: "/faq" },
     { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/contact" },
+    { label: "Case Studies", href: "/case-study/rainfresh-sg" },
   ],
   Legal: [{ label: "Privacy & Terms", href: "/privacy-terms" }],
 };
@@ -36,7 +36,7 @@ export function Footer() {
               </Link>
               <p className="text-slate-300 text-sm leading-relaxed max-w-xs mb-6">
                 Agentic-AI powered operations that give business owners back
-                15-25 hours every week. Based in Singapore, serving SEA.
+                15-25 hours every week. Based in Singapore 🇸🇬, serving SEA.
               </p>
               <div className="flex items-center gap-3">
                 <a

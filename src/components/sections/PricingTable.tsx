@@ -3,67 +3,53 @@ import { Button } from "@/components/ui/Button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 
-const plans = [
+const engagements = [
   {
-    name: "Essential",
+    name: "Starter",
     price: "1,800",
-    tagline: "Core automation for small businesses",
+    tagline: "1-2 agents, single channel",
     description:
-      "Essential agent stack to automate your daily operations and reclaim hours every week.",
+      "Core automation for solo operators — handle admin, scheduling, or billing through one platform.",
     features: [
-      "Customer Intake Agent",
-      "Workflow & Tracking Agent",
-      "Scheduling & Allocation Agent",
-      "Billing & Finance Agent",
-      "Weekly performance report",
-      "Email support",
-      "Up to 3 integrations",
+      "1-2 custom AI agents",
+      "Single channel integration (Telegram or WhatsApp)",
+      "Basic admin automation",
+      "Monthly performance report",
+      "Email & chat support",
     ],
-    cta: "GET STARTED",
-    highlighted: false,
-    status: "ONLINE",
+    highlight: false,
   },
   {
-    name: "Professional",
+    name: "Growth",
     price: "3,000",
-    tagline: "Full automation for growing businesses",
+    tagline: "3-5 agents, multi-channel",
     description:
-      "Complete agent suite with custom agents, predictive analytics, and autonomous communications.",
+      "Full operations coverage for growing businesses — admin, billing, scheduling, and communications running on autopilot.",
     features: [
-      "Everything in Essential",
-      "Communication Agent",
-      "Quality Assurance Agent",
-      "1 Custom Agent of your choice",
-      "Revenue forecasting",
-      "Analytics dashboard",
-      "Priority support",
-      "Up to 8 integrations",
-      "Monthly strategy sync",
+      "3-5 custom AI agents",
+      "Multi-channel (Telegram, WhatsApp, Slack, Email)",
+      "Admin, scheduling & billing automation",
+      "Weekly performance reports",
+      "Priority support & onboarding calls",
+      "90-day time-savings (money-back guaranteed)",
     ],
-    cta: "DEPLOY PRO STACK",
-    highlighted: true,
-    status: "RECOMMENDED",
+    highlight: true,
   },
   {
-    name: "Enterprise",
+    name: "Scale",
     price: "4,500",
-    tagline: "Full-scale AI for complex operations",
+    tagline: "5+ agents, full stack",
     description:
-      "Full-scale automation with unlimited custom agents, white-label portals, and API access.",
+      "Comprehensive automation for established businesses — unlimited agents, custom integrations, and a dedicated point of contact.",
     features: [
-      "Everything in Professional",
-      "Unlimited custom agents",
-      "Customer Success Agent",
-      "Financial forecasting",
-      "White-label portal",
-      "Direct API access",
-      "Unlimited integrations",
-      "Dedicated deployment manager",
-      "Quarterly system review",
+      "5+ custom agents, unlimited scope",
+      "All channels + custom integrations",
+      "Full operations automation",
+      "Real-time dashboards & analytics",
+      "Dedicated account manager",
+      "SLA-backed uptime guarantee",
     ],
-    cta: "CONTACT SALES",
-    highlighted: false,
-    status: "CUSTOM",
+    highlight: false,
   },
 ];
 
@@ -72,7 +58,7 @@ export function PricingTable() {
 
   return (
     <section className="relative section-padding bg-transparent overflow-visible">
-      {/* Premium ambient glow background - subtle since it's shared now */}
+      {/* Premium ambient glow background */}
       <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-teal-900/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container-width relative z-10">
@@ -86,31 +72,37 @@ export function PricingTable() {
           <div className="inline-flex items-center justify-center gap-2 mb-4">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
             <span className="text-sm font-semibold text-cyan-400 uppercase tracking-widest font-mono">
-              Implementation Tiers
+              Pricing
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-4 drop-shadow-[0_0_15px_rgba(0,229,255,0.2)]">
-            Custom AI, Transparent Pricing
+            Starting from $1,800/mo
           </h2>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto font-mono text-sm">
-            Choose your agent stack. Every plan is tailored to your business.
+            Every business is different. Your price depends on how many agents
+            you need and how complex your workflows are. After your free audit,
+            you'll get an exact quote — no surprises.
+          </p>
+          <p className="text-sm text-teal-400/80 font-mono mt-3 flex items-center justify-center gap-2">
+            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+            90-day time-savings on all engagements, if not money-back guaranteed
           </p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 items-stretch">
-          {plans.map((plan) => (
+          {engagements.map((plan) => (
             <div
               key={plan.name}
               className={cn(
                 "relative rounded-xl p-5 sm:p-8 flex flex-col transition-all duration-500",
-                plan.highlighted
+                plan.highlight
                   ? "bg-[#0A0F1A]/95 backdrop-blur-3xl text-white shadow-[0_0_30px_rgba(0,229,255,0.3)] sm:scale-[1.02] border-2 border-teal-400/50 z-10"
                   : "bg-[#0A0F1A]/80 backdrop-blur-xl border border-teal-500/20 hover:border-teal-500/50 hover:shadow-[0_0_30px_rgba(0,229,255,0.1)]",
               )}
             >
               {/* Internal overflow container for animations */}
               <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
-                {plan.highlighted && (
+                {plan.highlight && (
                   <div
                     className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-50"
                     style={{ animation: "slideRight 3s ease-in-out infinite" }}
@@ -118,12 +110,12 @@ export function PricingTable() {
                 )}
               </div>
 
-              {plan.highlighted && (
+              {plan.highlight && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
                   <div className="flex items-center gap-2 px-4 py-1.5 bg-[#050A14] border border-teal-400/50 rounded-full shadow-[0_0_20px_rgba(0,229,255,0.4)]">
                     <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
                     <span className="text-[10px] font-mono text-teal-300 uppercase tracking-widest font-bold">
-                      {plan.status}
+                      Most Common
                     </span>
                   </div>
                 </div>
@@ -133,7 +125,7 @@ export function PricingTable() {
                 <h3
                   className={cn(
                     "text-2xl font-bold font-mono tracking-tight mb-2",
-                    plan.highlighted
+                    plan.highlight
                       ? "text-white drop-shadow-[0_0_10px_rgba(0,229,255,0.5)]"
                       : "text-slate-200",
                   )}
@@ -143,10 +135,11 @@ export function PricingTable() {
                 <p className="text-xs font-mono text-slate-400 tracking-widest uppercase mb-6 h-8">
                   {plan.tagline}
                 </p>
-                <div className="flex items-baseline gap-2 mb-4">
+                <div className="flex items-baseline gap-1 mb-4">
                   <span className="text-4xl sm:text-5xl font-black font-heading text-white tracking-tighter">
-                    Custom
+                    ${plan.price}
                   </span>
+                  <span className="text-slate-400 font-mono text-sm">/mo</span>
                 </div>
                 <p className="text-sm font-mono leading-relaxed text-slate-400">
                   {plan.description}
@@ -170,19 +163,24 @@ export function PricingTable() {
 
               <Link to="/audit" className="w-full block mt-auto">
                 <Button
-                  variant={plan.highlighted ? "cta" : "outline"}
+                  variant={plan.highlight ? "cta" : "outline"}
                   className={cn(
                     "w-full font-mono uppercase tracking-widest text-sm",
-                    !plan.highlighted &&
+                    !plan.highlight &&
                       "border-teal-500/30 text-teal-400 hover:bg-teal-500/10 hover:border-teal-400/50",
                   )}
                 >
-                  {plan.cta}
+                  Get Free Audit
                 </Button>
               </Link>
             </div>
           ))}
         </div>
+
+        <p className="text-center text-xs text-slate-500 font-mono mt-8 tracking-wide">
+          All prices are in SGD. Custom scope quoted after your free audit. No
+          lock-in contracts.
+        </p>
       </div>
     </section>
   );

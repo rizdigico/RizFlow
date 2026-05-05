@@ -252,6 +252,21 @@ const improvements = [
   "100% automated confirmation & shipping emails",
 ];
 
+const dayBefore = [
+  { time: "6:00 AM", task: "Check Alibaba for restock updates" },
+  { time: "7:00 AM", task: "Manually process TikTok Shop orders" },
+  { time: "9:00 AM", task: "Reply to Instagram DMs one by one" },
+  { time: "11:00 AM", task: "Manually count inventory — again" },
+  { time: "2:00 PM", task: "Chase unpaid invoices and follow up" },
+  { time: "4:00 PM", task: "Try to post on social media (if time left)" },
+];
+
+const dayAfter = [
+  { time: "10:00 AM", task: "Check phone — everything's handled" },
+  { time: "10:05 AM", task: "Review agent dashboard for the day" },
+  { time: "10:15 AM", task: "Focus on growing the business" },
+];
+
 // ── Component ────────────────────────────────────────────────────────
 export function CaseStudy() {
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation();
@@ -400,6 +415,95 @@ export function CaseStudy() {
               </div>
             ))}
           </div>
+
+          {/* ── Day in the Life ────────────────────────── */}
+          <motion.div
+            ref={challengeRef}
+            className={cn(
+              "bg-[#0A0F1A] border border-teal-500/20 rounded-2xl p-8 mb-8 shadow-[0_0_40px_rgba(0,229,255,0.08)] relative overflow-hidden transition-all duration-700",
+              challengeVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8",
+            )}
+          >
+            {/* Grid overlay */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:10px_10px]" />
+
+            <div className="relative z-10">
+              <h2 className="text-2xl font-bold font-heading text-white mb-6 flex items-center gap-3">
+                <span className="text-3xl">📅</span> A Day in the Life
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold text-red-400 mb-3 flex items-center gap-2 font-mono text-sm uppercase tracking-wider">
+                    <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(248,113,113,0.8)]" />
+                    Before RizFlow
+                  </h3>
+                  <div className="space-y-3">
+                    {dayBefore.map((item) => (
+                      <div key={item.time} className="flex items-start gap-3">
+                        <span className="text-xs font-mono text-red-400/80 min-w-[52px] pt-0.5">
+                          {item.time}
+                        </span>
+                        <span className="text-sm text-slate-300">
+                          {item.task}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-emerald-400 mb-3 flex items-center gap-2 font-mono text-sm uppercase tracking-wider">
+                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                    After RizFlow
+                  </h3>
+                  <div className="space-y-3">
+                    {dayAfter.map((item) => (
+                      <div key={item.time} className="flex items-start gap-3">
+                        <span className="text-xs font-mono text-emerald-400/80 min-w-[52px] pt-0.5">
+                          {item.time}
+                        </span>
+                        <span className="text-sm text-slate-300">
+                          {item.task}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ── Testimonial ────────────────────────── */}
+          <motion.div className="bg-[#0A0F1A] border border-teal-500/20 rounded-2xl p-8 mb-8 shadow-[0_0_40px_rgba(0,229,255,0.08)] relative overflow-hidden">
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:10px_10px]" />
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-teal-400/30 to-transparent" />
+
+            <div className="relative z-10 text-center">
+              <p className="text-xl md:text-2xl font-heading text-white leading-relaxed mb-6">
+                "Before RizFlow, I was spending 3-4 hours a day just on TikTok
+                Shop orders and inventory. Now my agents handle all of it
+                automatically — orders, restocking, social posts, customer
+                messages. I just check my phone in the morning and everything's
+                done."
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <img
+                  src="/rainfresh-logo-sm.png"
+                  alt="RainFreshSG"
+                  className="w-10 h-10 rounded-full object-cover shadow-[0_0_15px_rgba(45,212,191,0.4)] border border-teal-500/30"
+                />
+                <div className="text-left">
+                  <p className="text-white font-semibold font-heading text-sm">
+                    RainFreshSG
+                  </p>
+                  <p className="text-slate-400 text-xs font-mono">
+                    Singapore Home Fragrance Brand
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
           {/* ── How It Works ────────────────────────── */}
           <motion.div
