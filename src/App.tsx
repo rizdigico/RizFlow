@@ -36,7 +36,6 @@ function AppRoutes() {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/audit" element={<Audit />} />
-          <Route path="/contact" element={<Audit />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy-terms" element={<PrivacyTerms />} />
           <Route path="/thank-you" element={<ThankYou />} />

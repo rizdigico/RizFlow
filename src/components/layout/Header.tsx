@@ -57,7 +57,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-0 ml-8">
+          <nav className="hidden md:flex items-center justify-center flex-1 gap-0 ml-8">
             {NAV_LINKS.map((link, i) => (
               <motion.div
                 key={link.href}
