@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: "Can the setup fee be waived?",
-    a: "Yes — the setup fee is waived when you commit to an annual plan. This is the best value option and saves you SGD 1,500-5,000 upfront.",
+    a: "Yes — the setup fee is waived when you commit to an annual plan. This is the best value option and saves you SGD 1,000-3,500 upfront.",
   },
   {
     q: "What's the 90-day guarantee?",
@@ -104,23 +104,23 @@ const jsonLd = {
       price: "1800",
       priceCurrency: "SGD",
       description:
-        "Core automation for solo operators — 1-2 custom AI agents, single channel integration, basic admin automation. One-time setup: SGD 1,500",
+        "Core automation for solo operators — 1-2 custom AI agents, single channel integration, basic admin automation. One-time setup: SGD 1,000",
     },
     {
       "@type": "Offer",
       name: "Growth",
-      price: "3000",
+      price: "3200",
       priceCurrency: "SGD",
       description:
-        "Full operations coverage for growing businesses — 3-5 custom AI agents, multi-channel integration, 90-day guarantee. One-time setup: SGD 3,000",
+        "Full operations coverage for growing businesses — 3-5 custom AI agents, multi-channel integration, 90-day guarantee. One-time setup: SGD 2,000",
     },
     {
       "@type": "Offer",
       name: "Scale",
-      price: "4500",
+      price: "5000",
       priceCurrency: "SGD",
       description:
-        "Comprehensive automation for established businesses — 5+ agents, unlimited scope, dedicated account manager. One-time setup: SGD 5,000",
+        "Comprehensive automation for established businesses — 5+ agents, unlimited scope, dedicated account manager. One-time setup: SGD 3,500",
     },
   ],
 };
@@ -133,11 +133,21 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-6 py-5 text-left group"
       >
-        <span className="text-white font-heading font-bold text-sm sm:text-base pr-4">{question}</span>
-        <span className={`text-teal-400 font-mono text-lg shrink-0 transition-transform duration-300 ${open ? "rotate-45" : ""}`}>+</span>
+        <span className="text-white font-heading font-bold text-sm sm:text-base pr-4">
+          {question}
+        </span>
+        <span
+          className={`text-teal-400 font-mono text-lg shrink-0 transition-transform duration-300 ${open ? "rotate-45" : ""}`}
+        >
+          +
+        </span>
       </button>
-      <div className={`transition-all duration-300 ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}>
-        <p className="px-6 pb-5 text-slate-400 font-mono text-sm leading-relaxed">{answer}</p>
+      <div
+        className={`transition-all duration-300 ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}
+      >
+        <p className="px-6 pb-5 text-slate-400 font-mono text-sm leading-relaxed">
+          {answer}
+        </p>
       </div>
     </div>
   );

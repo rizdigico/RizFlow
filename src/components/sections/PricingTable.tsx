@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const engagements = [
   {
     name: "Starter",
-    setup: "1,500",
+    setup: "1,000",
     price: "1,800",
     tagline: "1-2 agents, single channel",
     description:
@@ -22,8 +22,8 @@ const engagements = [
   },
   {
     name: "Growth",
-    setup: "3,000",
-    price: "3,000",
+    setup: "2,000",
+    price: "3,200",
     tagline: "3-5 agents, multi-channel",
     description:
       "Full operations coverage for growing businesses — admin, billing, scheduling, and communications running on autopilot.",
@@ -39,8 +39,8 @@ const engagements = [
   },
   {
     name: "Scale",
-    setup: "5,000",
-    price: "4,500",
+    setup: "3,500",
+    price: "5,000",
     tagline: "5+ agents, full stack",
     description:
       "Comprehensive automation for established businesses — unlimited agents, custom integrations, and a dedicated point of contact.",
