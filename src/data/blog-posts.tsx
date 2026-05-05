@@ -1,4 +1,11 @@
 import { Link } from "react-router-dom";
+import { KeyTakeaways } from "@/components/blog/KeyTakeaways";
+import { CalloutBox } from "@/components/blog/CalloutBox";
+import { StatCard } from "@/components/blog/StatCard";
+import { ProcessSteps } from "@/components/blog/ProcessSteps";
+import { InlineCTA } from "@/components/blog/InlineCTA";
+import { SectionHeading } from "@/components/blog/SectionHeading";
+import { VideoEmbed } from "@/components/VideoEmbed";
 
 export interface BlogPost {
   slug: string;
@@ -22,13 +29,29 @@ export const blogPosts: BlogPost[] = [
     readingTime: "8 min read",
     tags: ["AI Operations", "Agencies", "Automation"],
     excerpt:
-      "A comprehensive guide to implementing custom agentic-AI systems in your business. Learn how AI agents can automate manual work and save business owners 10-20 hours per week.",
+      "A comprehensive guide to implementing custom agentic-AI systems in your business. Learn how AI agents can automate manual work and save business owners 15-25 hours per week.",
     description:
-      "A comprehensive guide to implementing custom agentic-AI systems in your business. Learn how AI agents can automate manual work and save business owners 10-20 hours per week.",
+      "A comprehensive guide to implementing custom agentic-AI systems in your business. Learn how AI agents can automate manual work and save business owners 15-25 hours per week.",
     keywords:
       "AI operations business guide, custom agentic AI systems, business automation, SME AI operations, AI workflow automation for businesses",
     content: (
       <>
+        <KeyTakeaways
+          items={[
+            "Business owners spend 15-25 hours/week on manual operations that don't generate revenue",
+            "Agentic AI systems reason, adapt, and act autonomously — unlike rigid rule-based automation",
+            "The five pillars: communications, project workflows, finances, leads, and reporting",
+            "Start with your highest-time workflow, not everything at once",
+            "Most businesses reach full operational automation within 3-6 months",
+          ]}
+        />
+
+        <InlineCTA
+          variant="soft"
+          text="See exactly where AI can save you time"
+          subtext="> Free 30-minute operational audit — no commitment, just clarity"
+        />
+
         <p>
           Running a business in 2026 means juggling client communication,
           project management, invoicing, reporting, and a dozen other
@@ -43,6 +66,12 @@ export const blogPosts: BlogPost[] = [
           can reason about context, make decisions, and adapt to changing
           conditions — just like a skilled operations manager.
         </p>
+
+        <CalloutBox type="insight">
+          Traditional automation says: "If X happens, do Y." Agentic AI says:
+          "Here's the goal — figure out how to achieve it." That's the
+          fundamental shift.
+        </CalloutBox>
 
         <h2>What Makes AI Operations Different from Traditional Automation</h2>
         <p>
@@ -62,45 +91,36 @@ export const blogPosts: BlogPost[] = [
 
         <h2>The Five Pillars of Business AI Operations</h2>
 
-        <h3>1. Client Communication Management</h3>
-        <p>
-          AI agents can triage incoming emails, draft responses, schedule
-          follow-ups, and escalate urgent requests. They learn your
-          communication style and client preferences over time, ensuring
-          consistency without requiring your constant attention.
-        </p>
+        <ProcessSteps
+          steps={[
+            {
+              title: "Client Communication Management",
+              desc: "AI agents triage incoming emails, draft responses, schedule follow-ups, and escalate urgent requests — learning your style and client preferences over time.",
+            },
+            {
+              title: "Project Workflow Automation",
+              desc: "From onboarding to handoffs, agents create tasks, assign resources, send status updates, and flag bottlenecks before they become problems.",
+            },
+            {
+              title: "Financial Operations",
+              desc: "Invoice generation, expense categorization, revenue forecasting, and payment follow-ups — all handled without manual data entry.",
+            },
+            {
+              title: "Lead Qualification & Pipeline",
+              desc: "New leads get researched, scored against your ideal client profile, and a personalized response drafted — all within minutes of inquiry.",
+            },
+            {
+              title: "Reporting & Analytics",
+              desc: "Continuous KPI monitoring, automated dashboards, and surfaced insights — no more hours compiling weekly reports.",
+            },
+          ]}
+        />
 
-        <h3>2. Project Workflow Automation</h3>
-        <p>
-          From client onboarding to project handoffs, AI agents can manage the
-          operational backbone of project delivery. They create tasks, assign
-          resources, send status updates, and flag bottlenecks before they
-          become problems.
-        </p>
-
-        <h3>3. Financial Operations</h3>
-        <p>
-          Invoice generation, expense categorization, revenue forecasting, and
-          payment follow-ups can all be handled by AI agents. They reconcile
-          accounts, flag anomalies, and generate financial reports without
-          manual data entry.
-        </p>
-
-        <h3>4. Lead Qualification and Pipeline Management</h3>
-        <p>
-          When a new lead comes in, AI agents can research the company, score
-          the lead against your ideal client profile, draft a personalized
-          response, and add them to your pipeline — all within minutes of the
-          initial inquiry.
-        </p>
-
-        <h3>5. Reporting and Analytics</h3>
-        <p>
-          Instead of spending hours compiling weekly reports, AI agents
-          continuously monitor your KPIs, generate dashboards, and surface
-          insights that help you make better decisions about where to focus your
-          time.
-        </p>
+        <VideoEmbed
+          src="/videos/explainer.mp4"
+          title="RizFlow AI Ops Overview"
+          label="AI_OPS_OVERVIEW"
+        />
 
         <h2>Getting Started: A Practical Roadmap</h2>
         <p>
@@ -130,21 +150,27 @@ export const blogPosts: BlogPost[] = [
         </p>
 
         <h2>Common Pitfalls to Avoid</h2>
-        <p>
+        <CalloutBox type="warning">
           <strong>Over-automating too fast.</strong> Start small, validate that
           the AI handles edge cases correctly, and expand gradually. A badly
           automated workflow is worse than a manual one.
-        </p>
-        <p>
-          <strong>Ignoring the human layer.</strong> AI operations should
-          augment your team, not replace judgment entirely. Keep humans in the
-          loop for high-stakes decisions like pricing and client relationships.
-        </p>
+        </CalloutBox>
+        <CalloutBox type="tip">
+          <strong>Keep humans in the loop</strong> for high-stakes decisions
+          like pricing and client relationships. AI should augment your team,
+          not replace judgment entirely.
+        </CalloutBox>
         <p>
           <strong>Not measuring results.</strong> Track hours saved, error
           rates, and client satisfaction before and after automation. Without
           data, you can't optimize.
         </p>
+
+        <InlineCTA
+          variant="direct"
+          text="Ready to automate your operations?"
+          subtext="> Map out your highest-impact opportunities in a free 30-minute audit"
+        />
 
         <h2>The Bottom Line</h2>
         <p>
@@ -182,6 +208,16 @@ export const blogPosts: BlogPost[] = [
       "agentic AI explained, custom AI agents for business, what is agentic AI, AI automation explained, AI agent teams for SMEs",
     content: (
       <>
+        <KeyTakeaways
+          items={[
+            "Agentic AI independently pursues goals — you set the objective, it figures out the steps",
+            "It combines reasoning, tool use, memory, and adaptation — not just reactive responses",
+            "Agent teams coordinate like a well-organized office, handling interconnected workflows",
+            "Business owners report 60-80% reduction in email time, 90% faster lead responses",
+            "If you spend 10+ hours/week on repeatable operational tasks, you're ready",
+          ]}
+        />
+
         <p>
           You've probably heard the term "agentic AI" thrown around in tech
           circles. But what does it actually mean — and more importantly, what
@@ -205,6 +241,11 @@ export const blogPosts: BlogPost[] = [
         </p>
 
         <h2>How AI Agents Actually Work</h2>
+        <CalloutBox type="insight">
+          Think of it this way: a calculator requires you to press every button.
+          An employee figures out what needs to be done and does it. Agentic AI
+          is the employee.
+        </CalloutBox>
         <p>Under the hood, an AI agent combines several capabilities:</p>
         <p>
           <strong>Reasoning:</strong> The agent can break a complex goal into
@@ -251,6 +292,12 @@ export const blogPosts: BlogPost[] = [
           intervention.
         </p>
 
+        <VideoEmbed
+          src="/videos/explainer.mp4"
+          title="Agentic AI Explained"
+          label="AGENTIC_AI_EXPLAINED"
+        />
+
         <h2>What This Means for Business Owners</h2>
         <p>
           The practical impact is straightforward: you get your time back. The
@@ -262,14 +309,14 @@ export const blogPosts: BlogPost[] = [
           This isn't theoretical. Businesses using agentic AI operations today
           are reporting:
         </p>
-        <ul>
-          <li>60-80% reduction in time spent on email management</li>
-          <li>90% faster lead response times (minutes instead of hours)</li>
-          <li>Near-zero missed follow-ups and dropped tasks</li>
-          <li>
-            Consistent client communication quality regardless of team capacity
-          </li>
-        </ul>
+        <StatCard
+          stats={[
+            { value: "60-80%", label: "Less time on email" },
+            { value: "90%", label: "Faster lead response" },
+            { value: "~0", label: "Missed follow-ups" },
+            { value: "15-25hr", label: "Reclaimed per week" },
+          ]}
+        />
 
         <h2>The Difference from Chatbots and Copilots</h2>
         <p>
@@ -317,11 +364,27 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Learn how to calculate the ROI of automating your business operations with custom agentic AI. Real numbers and frameworks for making the business case.",
     description:
-      "Learn how to calculate the ROI of automating your business operations with custom agentic AI. Real numbers, real results from Singapore businesses saving 10-20 hrs/week.",
+      "Learn how to calculate the ROI of automating your business operations with custom agentic AI. Real numbers, real results from Singapore businesses saving 15-25 hrs/week.",
     keywords:
       "business automation ROI, AI operations return on investment, automate business manual work with AI, AI automation cost benefit, business efficiency AI",
     content: (
       <>
+        <KeyTakeaways
+          items={[
+            "Founders spend $117K-$195K/year on operations that don't generate revenue",
+            "Manual process errors cost service businesses 5-15% of revenue annually",
+            "Realistic automation coverage: 40-95% depending on the task category",
+            "A 5-person business in Singapore saved $148K/year with AI operations — 6.2x ROI",
+            "Most businesses see measurable time savings within 2 weeks of deployment",
+          ]}
+        />
+
+        <InlineCTA
+          variant="soft"
+          text="Calculate your exact ROI with a free audit"
+          subtext="> We'll walk through the numbers specific to your business"
+        />
+
         <p>
           Every business owner considering AI operations asks the same question:
           "What's the return on investment?" It's the right question. Automation
@@ -433,6 +496,14 @@ export const blogPosts: BlogPost[] = [
           $24,000 platform cost = <strong>$148,000 net annual savings</strong>.
           That's a 6.2x return on investment in the first year.
         </p>
+        <StatCard
+          stats={[
+            { value: "$148K", label: "Net annual savings" },
+            { value: "6.2x", label: "Return on investment" },
+            { value: "15hr/wk", label: "Founder time reclaimed" },
+            { value: "2-3mo", label: "Payback period" },
+          ]}
+        />
 
         <h2>Beyond the Numbers</h2>
         <p>
@@ -506,6 +577,16 @@ export const blogPosts: BlogPost[] = [
       "Singapore business tech trends, AI operations Singapore, custom agentic AI for businesses Singapore, SEA business automation, Singapore AI adoption",
     content: (
       <>
+        <KeyTakeaways
+          items={[
+            "Agentic AI is the defining shift for Singapore businesses in 2026",
+            "WhatsApp-first AI agents deliver 3x faster response times than email",
+            "AI subscriptions ($2K/mo) replace junior operations staff ($6-8K/mo)",
+            "PDPA compliance is table stakes — not optional for AI deployments",
+            "Mobile-first operations let you run your business from your phone",
+          ]}
+        />
+
         <p>
           Singapore has always been a fast adopter of business technology. From
           the government's Smart Nation push to the city-state's ranking as
@@ -569,6 +650,14 @@ export const blogPosts: BlogPost[] = [
           $6,000-$8,000/month in junior operations staff costs, with higher
           reliability and zero sick days.
         </p>
+        <StatCard
+          stats={[
+            { value: "$2K/mo", label: "AI platform cost" },
+            { value: "$6-8K/mo", label: "Junior ops staff" },
+            { value: "3-4x", label: "Cost savings" },
+            { value: "24/7", label: "Availability" },
+          ]}
+        />
 
         <h3>5. Mobile-First Operations Management</h3>
         <p>
@@ -616,6 +705,22 @@ export const blogPosts: BlogPost[] = [
       "customer onboarding automation, AI customer onboarding, automated business onboarding, AI workflow for customer setup, business automation Singapore",
     content: (
       <>
+        <KeyTakeaways
+          items={[
+            "Manual onboarding takes 5-10 days — AI-powered onboarding takes 5-10 hours",
+            "Slow onboarding leads to 30-40% higher churn in the first 90 days",
+            "AI agents handle contracts, CRM setup, scheduling, and internal handoffs",
+            "Businesses report 80-90% reduction in onboarding staff time",
+            "100% of clients receive a welcome sequence within 1 hour",
+          ]}
+        />
+
+        <InlineCTA
+          variant="soft"
+          text="See how onboarding automation works for your business"
+          subtext="> Free audit — map your current process and see the automated version"
+        />
+
         <p>
           Customer onboarding is your first real impression after the sale. A
           smooth onboarding experience builds trust and sets the tone for the
@@ -647,53 +752,41 @@ export const blogPosts: BlogPost[] = [
           looks like in practice:
         </p>
 
-        <h3>Step 1: Contract and Documentation</h3>
-        <p>
-          When a deal closes, the AI agent automatically generates the contract
-          from your template, populates it with the client's details, sends it
-          for e-signature, and tracks the signing status. No more chasing
-          clients for signed documents — the agent follows up automatically at
-          configured intervals.
-        </p>
-
-        <h3>Step 2: CRM and Project Setup</h3>
-        <p>
-          Once the contract is signed, the agent creates the client record in
-          your CRM, sets up the project in your project management tool,
-          configures the right folders and access permissions, and generates the
-          project timeline. All without a human touching any of these systems.
-        </p>
-
-        <h3>Step 3: Kickoff Coordination</h3>
-        <p>
-          The agent sends the client a structured intake questionnaire to gather
-          all the information your team needs. It reviews the responses, flags
-          any missing information, and schedules the kick-off call — finding a
-          time that works for both your team and the client by checking
-          calendars automatically.
-        </p>
-
-        <h3>Step 4: Internal Handoff</h3>
-        <p>
-          The agent briefs your delivery team with a comprehensive onboarding
-          summary: client background, project scope, key contacts, timeline, and
-          any special requirements flagged during intake. Your team starts work
-          fully informed, with zero time wasted on back-and-forth.
-        </p>
+        <ProcessSteps
+          steps={[
+            {
+              title: "Contract & Documentation",
+              desc: "AI agent generates the contract from your template, populates client details, sends for e-signature, and tracks signing status — following up automatically.",
+            },
+            {
+              title: "CRM & Project Setup",
+              desc: "Creates client record in CRM, sets up project in PM tool, configures folders and access permissions, generates timeline — all without human input.",
+            },
+            {
+              title: "Kickoff Coordination",
+              desc: "Sends structured intake questionnaire, reviews responses, flags missing info, and schedules the kick-off call by checking calendars automatically.",
+            },
+            {
+              title: "Internal Handoff",
+              desc: "Briefs your delivery team with comprehensive summary: client background, project scope, key contacts, timeline, and special requirements.",
+            },
+          ]}
+        />
 
         <h2>The Results Speak for Themselves</h2>
-        <p>
-          Businesses that automate onboarding with agentic AI consistently
-          report:
-        </p>
-        <ul>
-          <li>Onboarding time reduced from 5-10 days to 1-2 days</li>
-          <li>Zero manual data entry errors in client records</li>
-          <li>
-            100% of clients receive a welcome sequence within 1 hour of signing
-          </li>
-          <li>Staff time on onboarding tasks reduced by 80-90%</li>
-        </ul>
+        <CalloutBox type="insight">
+          Slow onboarding directly correlates with churn — businesses with
+          clunky onboarding see 30-40% higher churn in the first 90 days.
+          Automation isn't just faster; it's a retention strategy.
+        </CalloutBox>
+        <StatCard
+          stats={[
+            { value: "5-10d → 1-2d", label: "Onboarding time" },
+            { value: "0", label: "Data entry errors" },
+            { value: "<1hr", label: "Welcome sequence" },
+            { value: "80-90%", label: "Less staff time" },
+          ]}
+        />
 
         <h2>Getting Started</h2>
         <p>
@@ -732,6 +825,16 @@ export const blogPosts: BlogPost[] = [
       "AI email management, email triage AI, automated email for business, AI inbox automation, hands-free email operations",
     content: (
       <>
+        <KeyTakeaways
+          items={[
+            "Business owners spend 15-25 hours/week on email — a full part-time job",
+            "Reactive checking costs 8 hours/week just in refocusing time",
+            "AI agents triage, draft, escalate, and follow up — handling 70-80% autonomously",
+            "First response times drop from hours to under 15 minutes, even at 2 AM",
+            "Within 1-2 weeks of refinement, most owners trust AI to handle most of their inbox",
+          ]}
+        />
+
         <p>
           If you're a business owner, your inbox is probably where your
           productivity goes to die. You open it with good intentions, and 45
@@ -741,24 +844,18 @@ export const blogPosts: BlogPost[] = [
         </p>
         <p>
           The average business owner spends 2-4 hours per day on email. That's
-          10-20 hours per week — a full part-time job's worth of time spent
+          15-25 hours per week — a full part-time job's worth of time spent
           reading, sorting, and responding. And the volume is only increasing.
           Here's how agentic AI turns your inbox from a time sink into a system
           that works for you.
         </p>
 
         <h2>The Problem with Traditional Email Management</h2>
-        <p>
-          Most business owners try to manage email through one of two
-          approaches: check it constantly (reactive) or batch it twice a day
-          (scheduled). Both have fatal flaws.
-        </p>
-        <p>
-          <strong>Reactive checking</strong> means constant context switching.
-          Every notification pulls you out of deep work. Studies show it takes
-          23 minutes to regain focus after an interruption. If you check email
-          20 times per day, you're losing nearly 8 hours just to refocusing.
-        </p>
+        <CalloutBox type="warning">
+          Studies show it takes 23 minutes to regain focus after an
+          interruption. If you check email 20 times per day, you're losing
+          nearly 8 hours every week just to refocusing.
+        </CalloutBox>
         <p>
           <strong>Scheduled batching</strong> sounds disciplined, but it creates
           a different problem: latency. A client who emails at 9 AM doesn't get
@@ -809,13 +906,14 @@ export const blogPosts: BlogPost[] = [
         </p>
 
         <h2>Real Results</h2>
-        <p>Business owners using agentic AI email management report:</p>
-        <ul>
-          <li>60-80% reduction in time spent on email</li>
-          <li>Average first response time under 15 minutes (even at 2 AM)</li>
-          <li>Near-zero missed follow-ups</li>
-          <li>Reclaiming 10-15 hours per week for strategic work</li>
-        </ul>
+        <StatCard
+          stats={[
+            { value: "60-80%", label: "Less time on email" },
+            { value: "<15min", label: "First response" },
+            { value: "~0", label: "Missed follow-ups" },
+            { value: "10-15hr", label: "Reclaimed/week" },
+          ]}
+        />
 
         <h2>Making It Work for You</h2>
         <p>

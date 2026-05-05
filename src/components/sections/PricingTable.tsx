@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 const engagements = [
   {
     name: "Starter",
+    setup: "1,500",
     price: "1,800",
     tagline: "1-2 agents, single channel",
     description:
@@ -21,6 +22,7 @@ const engagements = [
   },
   {
     name: "Growth",
+    setup: "3,000",
     price: "3,000",
     tagline: "3-5 agents, multi-channel",
     description:
@@ -37,6 +39,7 @@ const engagements = [
   },
   {
     name: "Scale",
+    setup: "5,000",
     price: "4,500",
     tagline: "5+ agents, full stack",
     description:
@@ -135,6 +138,12 @@ export function PricingTable() {
                 <p className="text-xs font-mono text-slate-400 tracking-widest uppercase mb-6 h-8">
                   {plan.tagline}
                 </p>
+                <div className="mb-2">
+                  <p className="text-xs font-mono text-slate-500 mb-1">
+                    One-time setup:{" "}
+                    <span className="text-slate-300">${plan.setup}</span>
+                  </p>
+                </div>
                 <div className="flex items-baseline gap-1 mb-4">
                   <span className="text-4xl sm:text-5xl font-black font-heading text-white tracking-tighter">
                     ${plan.price}
@@ -177,10 +186,15 @@ export function PricingTable() {
           ))}
         </div>
 
-        <p className="text-center text-xs text-slate-500 font-mono mt-8 tracking-wide">
-          All prices are in SGD. Custom scope quoted after your free audit. No
-          lock-in contracts.
-        </p>
+        <div className="text-center mt-6 space-y-2">
+          <p className="text-xs text-slate-500 font-mono tracking-wide">
+            All prices are in SGD. Custom scope quoted after your free audit. No
+            lock-in contracts.
+          </p>
+          <p className="text-xs text-teal-400/70 font-mono tracking-wide">
+            Setup fee waived with annual commitment →
+          </p>
+        </div>
       </div>
     </section>
   );

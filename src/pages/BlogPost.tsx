@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { SITE_URL, SEO_DEFAULTS } from "@/lib/constants";
 import { getBlogPost, blogPosts } from "@/data/blog-posts";
@@ -12,6 +12,18 @@ export function BlogPost() {
   const parallaxProps = useParallaxScroll(0.5);
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getBlogPost(slug) : undefined;
+  const [showSticky, setShowSticky] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      const scrolled =
+        window.scrollY /
+        (document.documentElement.scrollHeight - window.innerHeight);
+      setShowSticky(scrolled > 0.35);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   if (!post) {
     return (
@@ -224,7 +236,7 @@ export function BlogPost() {
                 <p className="text-white font-heading font-bold">Aariz Arfan</p>
                 <p className="text-slate-400 font-mono text-sm mt-1">
                   Founder & AI Architect at RizFlow. Building custom agentic-AI
-                  systems that save business owners 10-20 hours per week.
+                  systems that save business owners 15-25 hours per week.
                 </p>
                 <Link
                   to="/about"
@@ -272,6 +284,18 @@ export function BlogPost() {
             })()}
         </div>
       </div>
+
+      {/* Mobile Sticky CTA */}
+      {post && showSticky && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#050A14]/95 backdrop-blur-md border-t border-teal-500/30 px-4 py-3">
+          <Link
+            to="/audit"
+            className="block w-full text-center bg-teal-400 text-[#050A14] font-mono uppercase tracking-widest text-xs py-3 rounded font-bold hover:bg-teal-300 transition-colors"
+          >
+            Get Free Discovery Audit →
+          </Link>
+        </div>
+      )}
     </>
   );
 }

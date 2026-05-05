@@ -34,7 +34,7 @@ const jsonLd = {
       foundingDate: "2026",
       founder: { "@type": "Person", name: "Aariz Arfan" },
       description:
-        "RizFlow builds custom agentic-AI systems for businesses and SMEs, saving owners 10-20 hours per week on manual operations — run your business from your phone.",
+        "RizFlow builds custom agentic-AI systems for businesses and SMEs, saving owners 15-25 hours per week on manual operations — run your business from your phone.",
       address: {
         "@type": "PostalAddress",
         addressCountry: "SG",
