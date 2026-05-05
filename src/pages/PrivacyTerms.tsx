@@ -273,6 +273,27 @@ export function PrivacyTerms() {
           content="RizFlow's Privacy Policy and Terms of Service. Learn how we protect your data and the terms of our agentic-AI implementation service."
         />
         <meta property="og:url" content={`${SITE_URL}/privacy-terms`} />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content="Privacy Policy & Terms of Service | RizFlow"
+        />
+        <meta
+          property="og:description"
+          content="RizFlow's Privacy Policy and Terms of Service. Learn how we protect your data and the terms of our agentic-AI implementation service."
+        />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta property="og:site_name" content="RizFlow" />
+        <link rel="canonical" href={`${SITE_URL}/privacy-terms`} />
+        <meta name="twitter:card" content="summary" />
+        <meta
+          name="twitter:title"
+          content="Privacy Policy & Terms of Service | RizFlow"
+        />
+        <meta
+          name="twitter:description"
+          content="RizFlow's Privacy Policy and Terms of Service."
+        />
       </Helmet>
 
       {/* Header */}
@@ -342,9 +363,9 @@ export function PrivacyTerms() {
             <div className="p-6 md:p-10 space-y-8 h-[600px] overflow-y-auto custom-scrollbar">
               {activeContent.sections.map((section) => (
                 <div key={section.id} className="space-y-3 font-mono">
-                  <h3 className="text-lg text-teal-400 drop-shadow-[0_0_5px_rgba(45,212,191,0.3)]">
+                  <h2 className="text-lg text-teal-400 drop-shadow-[0_0_5px_rgba(45,212,191,0.3)]">
                     # {section.title}
-                  </h3>
+                  </h2>
                   <div className="pl-4 border-l border-white/10">
                     {typeof section.content === "string" ? (
                       <p className="text-slate-300 text-sm leading-relaxed">

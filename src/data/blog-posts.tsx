@@ -17,7 +17,7 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "ai-operations-for-agencies-guide",
     title: "AI Operations for Businesses: The Complete Guide",
-    date: "2026-03-25",
+    date: "2026-04-20",
     author: "Aariz Arfan",
     readingTime: "8 min read",
     tags: ["AI Operations", "Agencies", "Automation"],
@@ -170,7 +170,7 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "agentic-ai-explained",
     title: "Agentic AI Explained: How Custom AI Agents Work for Your Business",
-    date: "2026-03-25",
+    date: "2026-03-15",
     author: "Aariz Arfan",
     readingTime: "6 min read",
     tags: ["Agentic AI", "Technology", "Explainer"],
@@ -310,7 +310,7 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "business-automation-roi",
     title: "Business Automation ROI: Calculate Your AI Operations Return",
-    date: "2026-03-25",
+    date: "2026-04-20",
     author: "Aariz Arfan",
     readingTime: "7 min read",
     tags: ["ROI", "Business Case", "Automation"],
@@ -494,7 +494,7 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "singapore-business-tech-trends",
     title: "Singapore Business Tech Trends 2026: AI Operations Takes Over",
-    date: "2026-03-25",
+    date: "2026-03-22",
     author: "Aariz Arfan",
     readingTime: "5 min read",
     tags: ["Singapore", "Trends", "AI Operations"],
@@ -604,7 +604,7 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "client-onboarding-automation",
     title: "Customer Onboarding Automation with AI: A Guide for Businesses",
-    date: "2026-03-25",
+    date: "2026-04-05",
     author: "Aariz Arfan",
     readingTime: "6 min read",
     tags: ["Onboarding", "Automation", "Workflow"],
@@ -720,7 +720,7 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "email-management-ai",
     title: "AI Email Management for Business Owners: Triage & Automate",
-    date: "2026-03-25",
+    date: "2026-04-12",
     author: "Aariz Arfan",
     readingTime: "5 min read",
     tags: ["Email", "Productivity", "AI Tools"],

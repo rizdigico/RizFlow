@@ -15,6 +15,17 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: "RizFlow",
+      url: SITE_URL,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_URL}/blog?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
       "@type": "Organization",
       "@id": `${SITE_URL}/#organization`,
       name: "RizFlow",

@@ -157,7 +157,8 @@ export function Services() {
               </span>
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white mb-6 leading-tight drop-shadow-[0_0_20px_rgba(0,229,255,0.3)]">
-              Starting from <span className="text-teal-400">$1,800/mo</span>
+              Custom AI Agents for Your Business —{" "}
+              <span className="text-teal-400">From $1,800/mo</span>
             </h1>
             <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-mono text-sm tracking-wide leading-relaxed">
               &gt; Transparent provisioning. No hidden runtime fees. Custom

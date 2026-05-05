@@ -145,7 +145,7 @@ export function Hero() {
 
           {/* Right — Agent Network (Glassmorphism) */}
           <motion.div
-            className="hidden lg:flex items-center justify-center relative"
+            className="hidden md:flex items-center justify-center relative"
             variants={ANIMATION_VARIANTS.floatingPulse}
           >
             {/* Soft glow behind SVG */}

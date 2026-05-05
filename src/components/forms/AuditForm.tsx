@@ -63,12 +63,17 @@ export function AuditForm({ className }: { className?: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      // Always redirect to booking page — even on server errors,
-      // the Cal.com embed ensures users can still book a call
+      if (!res.ok) {
+        setServerError(
+          "Something went wrong. Please try again or contact us directly at main@rizflow.co",
+        );
+        return;
+      }
       navigate("/thank-you");
     } catch {
-      // Network error — still redirect so they can book via Cal.com
-      navigate("/thank-you");
+      setServerError(
+        "Network error. Please check your connection and try again, or contact us at main@rizflow.co",
+      );
     }
   };
 

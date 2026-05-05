@@ -1,0 +1,38 @@
+# RizFlow
+
+> RizFlow builds custom agentic-AI systems for businesses and SMEs. We automate workflows, communications, invoicing, and operations — so business owners can run their business from their phone. Based in Singapore, serving clients globally with a 90-day results guarantee and no lock-in contracts.
+
+## Services
+
+- [Custom AI Agent Services & Pricing](https://rizflow.co/services): Full-stack agentic-AI systems starting from $1,800/mo with 90-day guarantee. Three tiers: Starter, Growth, Scale.
+- [Free Discovery Audit](https://rizflow.co/audit): Book a free audit to find out how much time and money AI automation can save your business. Takes 30 seconds.
+- [Live AI Demo](https://rizflow.co/demo): See RizFlow agents in action for your industry — interactive demo showing real workflows.
+
+## Case Studies
+
+- [RainFreshSG Case Study](https://rizflow.co/case-study/rainfresh-sg): How a Singapore fresh produce business automated 80% of operations with custom AI agents. Includes before/after metrics and live demo.
+
+## About
+
+- [About RizFlow](https://rizflow.co/about): Founded by Aariz Arfan, building AI systems for business owners since 2024. Nanyang Polytechnic Business Management student. Building in public with full transparency.
+
+## Knowledge Base
+
+- [Agentic AI Explained](https://rizflow.co/blog/agentic-ai-explained): What agentic-AI is, how it differs from traditional automation and chatbots, and why it matters for SMEs and business owners.
+- [Business Automation ROI](https://rizflow.co/blog/business-automation-roi): Data-driven analysis of return on investment from business automation with real cost savings and time recovery figures.
+- [AI Operations for Agencies Guide](https://rizflow.co/blog/ai-operations-for-agencies-guide): How agencies can leverage AI operations to scale service delivery without proportional headcount growth.
+- [Singapore Business Tech Trends](https://rizflow.co/blog/singapore-business-tech-trends): Technology adoption trends, digital transformation statistics, and AI readiness data for Singapore SMEs.
+- [Client Onboarding Automation](https://rizflow.co/blog/client-onboarding-automation): Automating the client onboarding workflow with AI agents — from inquiry to activation in minutes instead of days.
+- [Email Management AI](https://rizflow.co/blog/email-management-ai): How AI agents manage business email and communications, triaging priorities and drafting responses.
+
+## FAQ
+
+- [Frequently Asked Questions](https://rizflow.co/faq): Common questions about RizFlow's AI services, pricing, onboarding process, 90-day guarantee, and how agentic-AI differs from chatbots.
+
+## Legal
+
+- [Privacy Policy & Terms of Service](https://rizflow.co/privacy-terms): RizFlow's data handling practices, PDPA compliance, and terms of service.
+
+## Optional
+
+- [Thank You](https://rizflow.co/thank-you): Booking confirmation page after scheduling a discovery audit.

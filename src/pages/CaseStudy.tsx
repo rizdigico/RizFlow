@@ -6,6 +6,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallaxScroll } from "@/hooks/useFlowingAnimation";
 import { FlowingMesh } from "@/components/animations/FlowingMesh";
 import { cn } from "@/lib/utils";
+import { SITE_URL } from "@/lib/constants";
 
 // ── Animated Counter ────────────────────────────────────────────────
 function AnimatedCounter({
@@ -284,6 +285,83 @@ export function CaseStudy() {
           name="description"
           content="See how RainFreshSG went from 2-3 hours/day on manual operations to automated TikTok Shop order processing, inventory alerts, and social scheduling with RizFlow."
         />
+        <link rel="canonical" href={`${SITE_URL}/case-study/rainfresh-sg`} />
+        <meta
+          property="og:title"
+          content="RainFreshSG Case Study — 99% Faster Order Processing with RizFlow"
+        />
+        <meta
+          property="og:description"
+          content="How a Singapore home fragrance brand cut order processing time by 99%, eliminated stockouts, and went from zero to 7 social posts/week with custom AI agents."
+        />
+        <meta
+          property="og:url"
+          content={`${SITE_URL}/case-study/rainfresh-sg`}
+        />
+        <meta property="og:type" content="article" />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta property="og:site_name" content="RizFlow" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="RainFreshSG Case Study — 99% Faster Order Processing with RizFlow"
+        />
+        <meta
+          name="twitter:description"
+          content="How a Singapore brand cut order processing time by 99% with custom AI agents."
+        />
+        <meta name="twitter:image" content={`${SITE_URL}/og-banner.png`} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: SITE_URL,
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Case Studies",
+                item: `${SITE_URL}/case-study`,
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: "RainFreshSG",
+                item: `${SITE_URL}/case-study/rainfresh-sg`,
+              },
+            ],
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline:
+              "RainFreshSG Case Study — AI Automation for Singapore Home Fragrance",
+            description:
+              "How RainFreshSG went from 2-3 hours/day on manual operations to automated TikTok Shop order processing, inventory alerts, and social scheduling with RizFlow.",
+            url: `${SITE_URL}/case-study/rainfresh-sg`,
+            datePublished: "2026-04-01",
+            dateModified: "2026-05-05",
+            author: {
+              "@type": "Person",
+              name: "Aariz Arfan",
+              url: `${SITE_URL}/about`,
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "RizFlow",
+              url: SITE_URL,
+              logo: `${SITE_URL}/agency-logo-square.png`,
+            },
+            image: `${SITE_URL}/og-banner.png`,
+          })}
+        </script>
       </Helmet>
 
       <section className="relative bg-navy-dark w-full overflow-hidden">

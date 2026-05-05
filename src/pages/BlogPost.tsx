@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { SITE_URL, SEO_DEFAULTS } from "@/lib/constants";
-import { getBlogPost } from "@/data/blog-posts";
+import { getBlogPost, blogPosts } from "@/data/blog-posts";
 import { FlowingMesh } from "@/components/animations/FlowingMesh";
 import { useParallaxScroll } from "@/hooks/useFlowingAnimation";
 
@@ -50,7 +50,7 @@ export function BlogPost() {
       "@type": "Organization",
       name: "RizFlow",
       url: SITE_URL,
-      logo: `${SITE_URL}/business-logo-square.png`,
+      logo: `${SITE_URL}/agency-logo-square.png`,
     },
     image: SEO_DEFAULTS.ogImage,
   };
@@ -78,7 +78,7 @@ export function BlogPost() {
   return (
     <>
       <Helmet>
-        <title>{post.title} | RizFlow</title>
+        <title>{`${post.title} | RizFlow`}</title>
         <meta name="description" content={post.description} />
         <meta name="keywords" content={post.keywords} />
         <link rel="canonical" href={`${SITE_URL}/blog/${slug}`} />
@@ -213,6 +213,63 @@ export function BlogPost() {
               </div>
             </div>
           )}
+
+          {/* Author Bio */}
+          <div className="mt-12 pt-8 border-t border-teal-500/20">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-[#050A14] font-bold font-mono text-sm shrink-0">
+                AA
+              </div>
+              <div>
+                <p className="text-white font-heading font-bold">Aariz Arfan</p>
+                <p className="text-slate-400 font-mono text-sm mt-1">
+                  Founder & AI Architect at RizFlow. Building custom agentic-AI
+                  systems that save business owners 10-20 hours per week.
+                </p>
+                <Link
+                  to="/about"
+                  className="text-teal-400 font-mono text-xs uppercase tracking-wider hover:text-teal-300 transition-colors mt-2 inline-block"
+                >
+                  Learn more →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Related Posts */}
+          {post.content &&
+            (() => {
+              const related = blogPosts
+                .filter((p) => p.slug !== post.slug)
+                .slice(0, 3);
+              if (related.length === 0) return null;
+              return (
+                <div className="mt-12 pt-8 border-t border-teal-500/20">
+                  <h2 className="text-xl font-heading font-bold text-white mb-6">
+                    More from RizFlow
+                  </h2>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {related.map((rp) => (
+                      <Link
+                        key={rp.slug}
+                        to={`/blog/${rp.slug}`}
+                        className="group bg-[#0A0F1A]/60 border border-white/[0.06] rounded-xl p-5 hover:border-teal-500/30 transition-all"
+                      >
+                        <span className="text-[10px] font-mono text-teal-500 uppercase tracking-widest">
+                          {rp.readingTime}
+                        </span>
+                        <h3 className="text-white font-heading font-bold text-sm mt-2 group-hover:text-teal-400 transition-colors line-clamp-2">
+                          {rp.title}
+                        </h3>
+                        <p className="text-slate-500 font-mono text-xs mt-2 line-clamp-2">
+                          {rp.excerpt}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
         </div>
       </div>
     </>

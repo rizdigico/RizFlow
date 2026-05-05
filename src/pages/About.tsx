@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FounderProfile } from "@/components/sections/FounderProfile";
 import { Container } from "@/components/layout/Container";
@@ -328,6 +329,24 @@ export function About() {
                 </div>
               </div>
             </div>
+          </Container>
+        </section>
+
+        {/* CTA after Our Promise */}
+        <section className="py-8 relative">
+          <Container className="relative z-10 text-center">
+            <Link
+              to="/audit"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-lg text-white font-bold transition-all overflow-hidden shadow-[0_0_25px_rgba(45,212,191,0.3)] hover:shadow-[0_0_40px_rgba(45,212,191,0.6)]"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-teal via-teal-light to-teal bg-[length:200%_auto] animate-gradient-x" />
+              <span className="relative flex items-center gap-2">
+                Book Your Free Discovery Audit →
+              </span>
+            </Link>
+            <p className="text-xs font-mono text-slate-500 mt-3 uppercase tracking-widest">
+              No commitment. Results in 24 hours.
+            </p>
           </Container>
         </section>
 

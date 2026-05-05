@@ -566,9 +566,7 @@ export function Demo() {
       />
       <WalkthroughTrigger onClick={() => setReopenWalkthrough(true)} />
       <Helmet>
-        <title>
-          Live AI Demo — See RizFlow Agents in Action | {SEO_DEFAULTS.title}
-        </title>
+        <title>Live AI Demo — See RizFlow Agents in Action | RizFlow</title>
         <meta
           name="description"
           content="Interact with live AI agents built for your industry. See how RizFlow automates reservations, orders, leads, and more — in real-time."
@@ -580,6 +578,19 @@ export function Demo() {
         />
         <meta property="og:url" content={`${SITE_URL}/demo`} />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta property="og:site_name" content="RizFlow" />
+        <link rel="canonical" href={`${SITE_URL}/demo`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Live AI Demo — See RizFlow Agents in Action"
+        />
+        <meta
+          name="twitter:description"
+          content="Choose your industry and chat with a real AI agent. No simulation — real responses, real automation."
+        />
+        <meta name="twitter:image" content={`${SITE_URL}/og-banner.png`} />
       </Helmet>
 
       <div className="relative min-h-screen bg-[#050A14] text-white overflow-hidden">

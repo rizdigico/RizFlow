@@ -2,4 +2,33 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /api/
+
+# AI Search Crawlers — explicitly allowed for visibility
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
 Sitemap: https://rizflow.co/sitemap.xml
