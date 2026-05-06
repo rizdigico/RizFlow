@@ -43,7 +43,7 @@
   ],
   "functions": {
     "api/demo/chat.js": {
-      "maxDuration": 30
+      "maxDuration": 60
     }
   }
 }

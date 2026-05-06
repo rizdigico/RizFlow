@@ -1,25 +1,28 @@
-// Demo chat API — races VPS proxy + direct OpenRouter in parallel
-// Uses free models only. VPS proxy ensures reliability from Vercel.
+// Demo chat API — races direct OpenRouter free models in parallel
+// Uses free models only. All :free suffixed — no paid models.
 
-// Tested reliable free models (May 2026):
-// - gpt-oss-120b: consistently available
-// - gpt-oss-20b: fast, good availability
-// - nemotron-3-super: large, reliable
-// - gemma-3-27b: good when not rate-limited
-// - llama-3.3-70b: fallback
-// Removed: llama-4-maverick (no endpoints), minimax-m2.5 (rate-limited)
+// Tested reliable free models (May 6, 2026):
+// - gpt-oss-120b: consistently available, best quality
+// - lfm-2.5: fast, reliable, good responses
+// - nemotron-3-nano: small but consistently available
+// - nemotron-3-super: large, sometimes slow
+// - laguna-xs.2: available (may return reasoning field)
+// - glm-4.5-air: available (reasoning model)
+// Removed: gemma-3-27b (404), llama-3.3-70b (rate-limited),
+//          gpt-oss-20b (unreliable), qwen3-coder (provider error),
+//          dolphin-mistral (provider error), llama-3.2-3b (provider error)
 const MODEL_CHAIN = [
   "openai/gpt-oss-120b:free",
-  "openai/gpt-oss-20b:free",
+  "liquid/lfm-2.5-1.2b-instruct:free",
+  "nvidia/nemotron-3-nano-30b-a3b:free",
   "nvidia/nemotron-3-super-120b-a12b:free",
-  "google/gemma-3-27b-it:free",
-  "meta-llama/llama-3.3-70b-instruct:free",
+  "poolside/laguna-xs.2:free",
+  "z-ai/glm-4.5-air:free",
 ];
 
-const VPS_PROXY =
-  "https://variations-phillips-ringtones-laundry.trycloudflare.com/api/demo/chat";
-const REQUEST_TIMEOUT_MS = 12000;
-const PROXY_TIMEOUT_MS = 20000;
+const VPS_PROXY = process.env.VPS_PROXY_URL || "";
+const REQUEST_TIMEOUT_MS = 20000;
+const PROXY_TIMEOUT_MS = 25000;
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
@@ -90,8 +93,10 @@ export default async function handler(req, res) {
 async function raceAllSources(messages) {
   const sources = [];
 
-  // Always try VPS proxy (known-good key, works from VPS)
-  sources.push(tryVpsProxy(messages));
+  // Try VPS proxy only if URL is configured (tunnel may be down)
+  if (VPS_PROXY) {
+    sources.push(tryVpsProxy(messages));
+  }
 
   // Also try direct OpenRouter (works if Vercel env key is valid)
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
@@ -177,7 +182,7 @@ async function callModel(model, messages, apiKey) {
         body: JSON.stringify({
           model,
           messages,
-          max_tokens: 500,
+          max_tokens: 600,
           temperature: 0.7,
         }),
         signal: controller.signal,
@@ -197,10 +202,10 @@ async function callModel(model, messages, apiKey) {
 
     const data = await response.json();
     let reply = data.choices?.[0]?.message?.content || "";
-    // Some reasoning models return content:null with reasoning in a separate field
-    if (!reply) {
+    // Some reasoning models (glm-4.5, nemotron) return content:null with reasoning in a separate field
+    if (!reply || reply.length < 5) {
       const reasoning = data.choices?.[0]?.message?.reasoning || "";
-      if (reasoning) reply = reasoning;
+      if (reasoning && reasoning.length > reply.length) reply = reasoning;
     }
     reply = cleanModelResponse(reply);
 
