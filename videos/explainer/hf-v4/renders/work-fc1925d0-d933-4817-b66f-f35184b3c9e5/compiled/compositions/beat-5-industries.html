@@ -1,0 +1,438 @@
+<template id="beat5-industries-template">
+  <div
+    data-composition-id="beat5-industries"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="17"
+  >
+    <style>
+      [data-composition-id="beat5-industries"] {
+        font-family: "Inter", "Montserrat", sans-serif;
+        background: #0a0f1a;
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+      }
+      [data-composition-id="beat5-industries"] .flow-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.5;
+      }
+      [data-composition-id="beat5-industries"] .flow-bg path {
+        fill: none;
+        stroke: #4fa0b4;
+        stroke-width: 1.8;
+      }
+      [data-composition-id="beat5-industries"] .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 1;
+      }
+      [data-composition-id="beat5-industries"] .radial-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1400px;
+        height: 1400px;
+        background: radial-gradient(
+          circle,
+          rgba(6, 182, 212, 0.14) 0%,
+          transparent 55%
+        );
+        z-index: 1;
+      }
+      [data-composition-id="beat5-industries"] .particle-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        z-index: 2;
+      }
+
+      /* Section header */
+      [data-composition-id="beat5-industries"] .section-header {
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 42px;
+        color: #ffffff;
+        text-align: center;
+        opacity: 0;
+        letter-spacing: 0.04em;
+      }
+      [data-composition-id="beat5-industries"] .section-header .accent {
+        color: #22d3ee;
+      }
+      [data-composition-id="beat5-industries"] .section-sub {
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        color: #94a3b8;
+        margin-top: 8px;
+        letter-spacing: 0;
+      }
+
+      /* Industry cards */
+      [data-composition-id="beat5-industries"] .industries-grid {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        width: 1200px;
+        z-index: 5;
+        margin-top: 20px;
+      }
+      [data-composition-id="beat5-industries"] .industry-card {
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 24px 20px;
+        text-align: center;
+        opacity: 0;
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.05);
+      }
+      [data-composition-id="beat5-industries"] .industry-icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+      }
+      [data-composition-id="beat5-industries"] .industry-name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        color: #ffffff;
+        margin-bottom: 8px;
+        letter-spacing: 0.03em;
+      }
+      [data-composition-id="beat5-industries"] .industry-desc {
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.4;
+      }
+
+      /* Feature pills at bottom */
+      [data-composition-id="beat5-industries"] .feature-pills {
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 16px;
+        z-index: 5;
+      }
+      [data-composition-id="beat5-industries"] .feature-pill {
+        background: rgba(6, 182, 212, 0.1);
+        border: 1px solid rgba(6, 182, 212, 0.25);
+        border-radius: 24px;
+        padding: 8px 20px;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        color: #22d3ee;
+        opacity: 0;
+        white-space: nowrap;
+      }
+
+      /* Subtitle */
+      [data-composition-id="beat5-industries"] .subtitle {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 24px;
+        color: #ffffff;
+        text-align: center;
+        opacity: 0;
+        background: rgba(10, 15, 26, 0.75);
+        padding: 6px 18px;
+        border-radius: 6px;
+        max-width: 1600px;
+      }
+    </style>
+
+    <svg
+      class="flow-bg"
+      viewBox="0 0 1920 1080"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 200 Q 240 120, 480 200 T 960 200 T 1440 200 T 1920 200"
+        opacity="0.35"
+      />
+      <path d="M0 400 Q 300 330, 600 400 T 1200 400 T 1920 400" opacity="0.4" />
+      <path
+        d="M0 600 Q 200 540, 400 600 T 800 600 T 1200 600 T 1920 600"
+        opacity="0.3"
+      />
+      <path
+        d="M0 800 Q 360 730, 720 800 T 1440 800 T 1920 800"
+        opacity="0.35"
+      />
+    </svg>
+    <div class="grid-overlay"></div>
+    <div class="radial-glow"></div>
+    <canvas
+      class="particle-canvas"
+      id="beat5-canvas"
+      width="1920"
+      height="1080"
+    ></canvas>
+
+    <div class="section-header" id="header">
+      <span>Not Just </span><span class="accent">Admin</span
+      ><span> — Full Operations</span>
+      <div class="section-sub">
+        RizFlow agents handle stock, supply chains, and beyond
+      </div>
+    </div>
+
+    <div class="industries-grid">
+      <div class="industry-card" id="ind1">
+        <div class="industry-icon">&#x1F4B0;</div>
+        <div class="industry-name">TRADING</div>
+        <div class="industry-desc">
+          Inventory tracking, reorder alerts, supplier management
+        </div>
+      </div>
+      <div class="industry-card" id="ind2">
+        <div class="industry-icon">&#x1F6D2;</div>
+        <div class="industry-name">RETAIL</div>
+        <div class="industry-desc">
+          Stock levels, POS sync, automated procurement
+        </div>
+      </div>
+      <div class="industry-card" id="ind3">
+        <div class="industry-icon">&#x1F37D;&#xFE0F;</div>
+        <div class="industry-name">F&B</div>
+        <div class="industry-desc">
+          Ingredient tracking, waste reduction, order automation
+        </div>
+      </div>
+      <div class="industry-card" id="ind4">
+        <div class="industry-icon">&#x1F69A;</div>
+        <div class="industry-name">LOGISTICS</div>
+        <div class="industry-desc">
+          Shipment tracking, route optimization, dispatch automation
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-pills">
+      <div class="feature-pill" id="pill1">&#x26A1; Real-time stock alerts</div>
+      <div class="feature-pill" id="pill2">
+        &#x1F4DD; Purchase order automation
+      </div>
+      <div class="feature-pill" id="pill3">&#x1F91D; Supplier coordination</div>
+      <div class="feature-pill" id="pill4">
+        &#x2705; Every unit accounted for
+      </div>
+    </div>
+
+    <div class="subtitle" id="subtitle"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var beat = 17;
+
+      // Canvas — strong network
+      var canvas = document.getElementById("beat5-canvas");
+      var ctx = canvas.getContext("2d");
+      var proxy = { t: 0 };
+      function hash(x, y) {
+        var n = x * 374761393 + y * 668265263;
+        n = (n ^ (n >> 13)) * 1274126177;
+        return ((n ^ (n >> 16)) & 0x7fffffff) / 0x7fffffff;
+      }
+      function drawNetwork(time) {
+        ctx.clearRect(0, 0, 1920, 1080);
+        var nodes = 80,
+          positions = [];
+        for (var i = 0; i < nodes; i++) {
+          var bx = hash(i, 0) * 1920,
+            by = hash(i, 1) * 1080;
+          var dx = Math.sin(time * 0.22 + i * 1.3) * 20,
+            dy = Math.cos(time * 0.17 + i * 0.9) * 14;
+          var x = bx + dx,
+            y = by + dy;
+          positions.push({ x: x, y: y });
+          var alpha = 0.3 + hash(i, 2) * 0.4,
+            r = 2 + hash(i, 3) * 2;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(6, 182, 212, " + alpha + ")";
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(x, y, r * 2, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(6, 182, 212, " + alpha * 0.15 + ")";
+          ctx.fill();
+        }
+        for (var i = 0; i < nodes; i++) {
+          for (var j = i + 1; j < nodes; j++) {
+            var dist = Math.sqrt(
+              Math.pow(positions[i].x - positions[j].x, 2) +
+                Math.pow(positions[i].y - positions[j].y, 2),
+            );
+            if (dist < 180) {
+              var lineAlpha = (1 - dist / 180) * 0.12;
+              ctx.beginPath();
+              ctx.moveTo(positions[i].x, positions[i].y);
+              ctx.lineTo(positions[j].x, positions[j].y);
+              ctx.strokeStyle = "rgba(6, 182, 212, " + lineAlpha + ")";
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      tl.to(
+        proxy,
+        {
+          t: beat,
+          duration: beat,
+          ease: "none",
+          onUpdate: function () {
+            drawNetwork(proxy.t);
+          },
+        },
+        0,
+      );
+
+      // Flow
+      var flowPaths = document.querySelectorAll(
+        "[data-composition-id='beat5-industries'] .flow-bg path",
+      );
+      flowPaths.forEach(function (path, i) {
+        tl.fromTo(
+          path,
+          { strokeDasharray: 3000, strokeDashoffset: 3000 },
+          { strokeDashoffset: 0, duration: 7, ease: "none" },
+          i * 0.2,
+        );
+      });
+
+      // Header
+      tl.fromTo(
+        "#header",
+        { opacity: 0, y: -30 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+        0.3,
+      );
+
+      // Industry cards cascade
+      var cards = ["#ind1", "#ind2", "#ind3", "#ind4"];
+      cards.forEach(function (card, i) {
+        tl.fromTo(
+          card,
+          { opacity: 0, y: 40, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "expo.out" },
+          0.8 + i * 0.35,
+        );
+      });
+
+      // Feature pills
+      var pills = ["#pill1", "#pill2", "#pill3", "#pill4"];
+      pills.forEach(function (pill, i) {
+        tl.fromTo(
+          pill,
+          { opacity: 0, scale: 0.8, y: 15 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(2)" },
+          3.5 + i * 0.3,
+        );
+      });
+
+      // Card glow pulses
+      cards.forEach(function (card, i) {
+        tl.to(
+          card,
+          {
+            boxShadow: "0 0 30px rgba(6,182,212,0.15)",
+            duration: 1.5,
+            yoyo: true,
+            repeat: 3,
+            ease: "sine.inOut",
+          },
+          2.0 + i * 0.3,
+        );
+      });
+
+      // Subtitles
+      var subs = [
+        { start: 0, end: 3.5, text: "But we don't just handle admin" },
+        {
+          start: 3.5,
+          end: 7.5,
+          text: "RizFlow agents track inventory, manage supply chains",
+        },
+        {
+          start: 7.5,
+          end: 12,
+          text: "and automate stocktaking for trading businesses, retail, F&B, and logistics",
+        },
+        {
+          start: 12,
+          end: 15.5,
+          text: "Real-time stock alerts, purchase order automation, supplier coordination",
+        },
+        {
+          start: 15.5,
+          end: 17,
+          text: "Every unit accounted for, every reorder timed perfectly",
+        },
+      ];
+      subs.forEach(function (sub) {
+        tl.call(
+          function () {
+            (document.getElementById("subtitle") || {}).textContent = sub.text;
+          },
+          [],
+          sub.start,
+        );
+        tl.fromTo(
+          "#subtitle",
+          { opacity: 0 },
+          { opacity: 0.9, duration: 0.2 },
+          sub.start,
+        );
+        tl.to("#subtitle", { opacity: 0, duration: 0.2 }, sub.end - 0.2);
+      });
+      tl.call(
+        function () {
+          (document.getElementById("subtitle") || {}).textContent = "";
+        },
+        [],
+        beat - 0.5,
+      );
+
+      window.__timelines["beat5-industries"] = tl;
+    </script>
+  </div>
+</template>

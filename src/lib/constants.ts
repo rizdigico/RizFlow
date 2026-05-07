@@ -1,4 +1,4 @@
-export const SITE_URL = "https://rizflow.co";
+export const SITE_URL = "https://www.rizflow.co";
 export const SITE_NAME = "RizFlow";
 export const CALENDLY_LINK =
   import.meta.env.VITE_CALENDLY_LINK || "https://cal.com/aariz-a/30min";

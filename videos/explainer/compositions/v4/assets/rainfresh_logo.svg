@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="#0a0f1a" stroke="url(#rg)" stroke-width="3"/>
+  <!-- Water drop -->
+  <path d="M100 35 C100 35 60 90 60 115 C60 138 78 155 100 155 C122 155 140 138 140 115 C140 90 100 35 100 35Z" fill="url(#rg)" opacity="0.9"/>
+  <!-- Inner highlight -->
+  <ellipse cx="88" cy="105" rx="12" ry="18" fill="rgba(255,255,255,0.3)" transform="rotate(-15 88 105)"/>
+</svg>

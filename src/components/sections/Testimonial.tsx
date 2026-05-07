@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import { ANIMATION_VARIANTS } from "@/lib/animation-config";
 import { StarIcon } from "@heroicons/react/24/solid";
 
@@ -54,7 +54,89 @@ function AnimatedCounter({
   );
 }
 
+interface TestimonialData {
+  id: string;
+  name: string;
+  description: string;
+  logoSrc: string;
+  quote: string;
+  socialLink: string;
+  socialLabel: string;
+  stats: { target: number; suffix: string; label: string }[];
+  caseStudyLink: string;
+}
+
+const testimonials: TestimonialData[] = [
+  {
+    id: "rainfresh",
+    name: "RainFreshSG",
+    description: "Singapore Home Fragrance Brand",
+    logoSrc: "/rainfresh-logo-sm.png",
+    quote:
+      "Before RizFlow, I was spending 3-4 hours a day just on TikTok Shop orders and inventory. Now my agents handle all of it automatically — orders, restocking, social posts, customer messages. I just check my phone in the morning and everything’s done.",
+    socialLink: "https://www.instagram.com/rainfreshsg/",
+    socialLabel: "RainFreshSG Instagram",
+    stats: [
+      { target: 4, suffix: " hrs/day", label: "Time Saved" },
+      { target: 90, suffix: "%", label: "Automation" },
+      { target: 2, suffix: " weeks", label: "To Deploy" },
+      { target: 3, suffix: "+", label: "Channels Automated" },
+    ],
+    caseStudyLink: "/case-study/rainfresh-sg",
+  },
+  {
+    id: "brewedidentity",
+    name: "Brewed Identity",
+    description: "SG Print-on-Demand Etsy Shop",
+    logoSrc: "/brewedidentity-logo-sm.png",
+    quote:
+      "Before RizFlow, I was spending 45 minutes on each Etsy listing and constantly missing customer messages. Now my agents handle listings, messages, and social posts automatically — I just review and approve, and focus on designing new products.",
+    socialLink: "https://www.etsy.com/shop/BrewedIdentity",
+    socialLabel: "Brewed Identity Etsy",
+    stats: [
+      { target: 10, suffix: "+ hrs", label: "Time Saved/Week" },
+      { target: 93, suffix: "%", label: "Faster Listings" },
+      { target: 5, suffix: "/week", label: "Social Posts" },
+      { target: 100, suffix: "%", label: "Messages Answered" },
+    ],
+    caseStudyLink: "/case-study/brewed-identity",
+  },
+];
+
+function SocialIcon({ id }: { id: string }) {
+  if (id === "rainfresh") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        className="w-3.5 h-3.5 text-slate-400"
+        fill="currentColor"
+      >
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+      </svg>
+    );
+  }
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="w-3.5 h-3.5 text-slate-400"
+      fill="currentColor"
+    >
+      <path d="M9.523 3.038C7.878 2.862 6.039 3.2 4.65 4.199c-1.97 1.418-2.422 3.88-1.55 5.804.815 1.793 2.623 3.217 4.516 4.064-.632 1.67-1.222 3.349-1.058 5.184.127 1.419.957 2.834 2.428 3.268.826.24 1.76.153 2.514-.28.753-.431 1.277-1.168 1.55-1.966.423-1.232.434-2.558.27-3.836a13.293 13.293 0 00-.847-3.22c1.475-.395 2.932-.893 4.2-1.732 1.055-.699 2.009-1.69 2.295-2.94.277-1.21-.178-2.489-1.012-3.397-1.688-1.82-4.322-2.444-6.854-2.717l-.056.006.054-.004.042.003.008-.001v.004zM7.012 5.735c.98-.672 2.272-.874 3.436-.736 1.94.232 3.812.857 5.098 2.177.638.655.985 1.578.808 2.39-.177.813-.842 1.455-1.616 1.938-1.11.69-2.41 1.084-3.72 1.347a15.263 15.263 0 01-1.877-3.56c-.378-1.285-.382-2.652.143-3.76l-.272.204z" />
+    </svg>
+  );
+}
+
+// Need to import useEffect for AnimatedCounter
+import { useEffect } from "react";
+
 export function Testimonial() {
+  const [current, setCurrent] = useState(0);
+  const data = testimonials[current];
+
+  const next = () => setCurrent((i) => (i + 1) % testimonials.length);
+  const prev = () =>
+    setCurrent((i) => (i - 1 + testimonials.length) % testimonials.length);
+
   return (
     <section className="relative py-20 lg:py-28 overflow-hidden">
       {/* Ambient glow */}
@@ -63,104 +145,153 @@ export function Testimonial() {
       </div>
 
       <div className="container-width relative z-10">
-        <motion.div
-          className="max-w-4xl mx-auto text-center"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={ANIMATION_VARIANTS.staggerContainer}
-        >
-          {/* Stars */}
+        <AnimatePresence mode="wait">
           <motion.div
-            className="flex items-center justify-center gap-1 mb-6"
-            variants={ANIMATION_VARIANTS.fadeIn}
+            key={data.id}
+            className="max-w-4xl mx-auto text-center"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.4 }}
           >
-            {[...Array(5)].map((_, i) => (
-              <StarIcon key={i} className="w-5 h-5 text-gold" />
-            ))}
-          </motion.div>
-
-          {/* Quote */}
-          <motion.blockquote
-            className="text-xl sm:text-2xl lg:text-3xl font-heading text-white leading-relaxed mb-8"
-            variants={ANIMATION_VARIANTS.fadeIn}
-          >
-            &ldquo;Before RizFlow, I was spending 3-4 hours a day just on TikTok
-            Shop orders and inventory. Now my agents handle all of it
-            automatically — orders, restocking, social posts, customer messages.
-            I just check my phone in the morning and everything&rsquo;s
-            done.&rdquo;
-          </motion.blockquote>
-
-          {/* Attribution */}
-          <motion.div
-            className="flex items-center justify-center gap-4"
-            variants={ANIMATION_VARIANTS.fadeIn}
-          >
-            <img
-              src="/rainfresh-logo-sm.png"
-              alt="RainFreshSG"
-              className="w-12 h-12 rounded-full object-cover shadow-[0_0_15px_rgba(45,212,191,0.4)] border border-teal-500/30"
-            />
-            <div className="text-left">
-              <div className="flex items-center gap-2">
-                <p className="text-white font-semibold font-heading">
-                  RainFreshSG
-                </p>
-                <a
-                  href="https://www.instagram.com/rainfreshsg/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-6 h-6 rounded bg-white/5 hover:bg-gradient-to-br hover:from-purple-500/20 hover:via-pink-500/20 hover:to-orange-500/20 hover:border-pink-400/30 border border-white/10 transition-all duration-300"
-                  aria-label="RainFreshSG Instagram"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="w-3.5 h-3.5 text-slate-400"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-                  </svg>
-                </a>
-              </div>
-              <p className="text-slate-400 text-sm font-mono">
-                Singapore Home Fragrance Brand
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Results strip — animated counters, stretched wider */}
-          <motion.div
-            className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 mt-10 pt-8 border-t border-white/10"
-            variants={ANIMATION_VARIANTS.fadeIn}
-          >
-            {[
-              { target: 4, suffix: " hrs/day", label: "Time Saved" },
-              { target: 90, suffix: "%", label: "Automation" },
-              { target: 2, suffix: " weeks", label: "To Deploy" },
-              { target: 3, suffix: "+", label: "Channels Automated" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center min-w-[110px]">
-                <p className="text-2xl sm:text-3xl font-bold text-teal-400 font-heading drop-shadow-[0_0_10px_rgba(45,212,191,0.4)]">
-                  <AnimatedCounter target={stat.target} suffix={stat.suffix} />
-                </p>
-                <p className="text-xs text-slate-400 font-mono uppercase tracking-widest mt-1">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Case study link */}
-          <motion.div className="mt-8" variants={ANIMATION_VARIANTS.fadeIn}>
-            <a
-              href="/case-study/rainfresh-sg"
-              className="text-teal-400 hover:text-teal-300 font-mono text-sm underline underline-offset-4 transition-colors"
+            {/* Stars */}
+            <motion.div
+              className="flex items-center justify-center gap-1 mb-6"
+              variants={ANIMATION_VARIANTS.fadeIn}
             >
-              Read the full case study →
-            </a>
+              {[...Array(5)].map((_, i) => (
+                <StarIcon key={i} className="w-5 h-5 text-gold" />
+              ))}
+            </motion.div>
+
+            {/* Quote */}
+            <motion.blockquote
+              className="text-xl sm:text-2xl lg:text-3xl font-heading text-white leading-relaxed mb-8"
+              variants={ANIMATION_VARIANTS.fadeIn}
+            >
+              &ldquo;{data.quote}&rdquo;
+            </motion.blockquote>
+
+            {/* Attribution */}
+            <motion.div
+              className="flex items-center justify-center gap-4"
+              variants={ANIMATION_VARIANTS.fadeIn}
+            >
+              <img
+                src={data.logoSrc}
+                alt={data.name}
+                className="w-12 h-12 rounded-full object-cover shadow-[0_0_15px_rgba(45,212,191,0.4)] border border-teal-500/30"
+              />
+              <div className="text-left">
+                <div className="flex items-center gap-2">
+                  <p className="text-white font-semibold font-heading">
+                    {data.name}
+                  </p>
+                  <a
+                    href={data.socialLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center w-6 h-6 rounded bg-white/5 hover:bg-gradient-to-br hover:from-purple-500/20 hover:via-pink-500/20 hover:to-orange-500/20 hover:border-pink-400/30 border border-white/10 transition-all duration-300"
+                    aria-label={data.socialLabel}
+                  >
+                    <SocialIcon id={data.id} />
+                  </a>
+                </div>
+                <p className="text-slate-400 text-sm font-mono">
+                  {data.description}
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Results strip — animated counters */}
+            <motion.div
+              className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 mt-10 pt-8 border-t border-white/10"
+              variants={ANIMATION_VARIANTS.fadeIn}
+            >
+              {data.stats.map((stat) => (
+                <div key={stat.label} className="text-center min-w-[110px]">
+                  <p className="text-2xl sm:text-3xl font-bold text-teal-400 font-heading drop-shadow-[0_0_10px_rgba(45,212,191,0.4)]">
+                    <AnimatedCounter
+                      target={stat.target}
+                      suffix={stat.suffix}
+                    />
+                  </p>
+                  <p className="text-xs text-slate-400 font-mono uppercase tracking-widest mt-1">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Case study link */}
+            <motion.div className="mt-8" variants={ANIMATION_VARIANTS.fadeIn}>
+              <a
+                href="/case-studies"
+                className="text-teal-400 hover:text-teal-300 font-mono text-sm underline underline-offset-4 transition-colors"
+              >
+                Read the full case study →
+              </a>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation arrows */}
+        <div className="flex items-center justify-center gap-6 mt-10">
+          <button
+            onClick={prev}
+            className="w-10 h-10 rounded-full border border-slate-700 bg-[#0A0F1A] hover:border-teal-500/40 hover:bg-teal-500/10 text-slate-400 hover:text-teal-300 flex items-center justify-center transition-all duration-300"
+            aria-label="Previous testimonial"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+
+          <div className="flex items-center gap-2">
+            {testimonials.map((t, idx) => (
+              <button
+                key={t.id}
+                onClick={() => setCurrent(idx)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  idx === current
+                    ? "bg-teal-400 shadow-[0_0_8px_rgba(45,212,191,0.6)]"
+                    : "bg-slate-600 hover:bg-slate-500"
+                }`}
+                aria-label={`View ${t.name} testimonial`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={next}
+            className="w-10 h-10 rounded-full border border-slate-700 bg-[#0A0F1A] hover:border-teal-500/40 hover:bg-teal-500/10 text-slate-400 hover:text-teal-300 flex items-center justify-center transition-all duration-300"
+            aria-label="Next testimonial"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </section>
   );

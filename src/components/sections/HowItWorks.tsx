@@ -77,7 +77,7 @@ const steps = [
     description:
       "Your AI agents run admin, comms, and reporting 24/7 — saving 10–20+ hrs/week and cutting costs up to 60%. Check outputs from your phone in under 30 min/week. Reclaim your time. Scale your business.",
     cta: "View Case Studies",
-    ctaHref: "/case-study/rainfresh-sg",
+    ctaHref: "/case-studies",
     visual: "grow" as const,
   },
 ];

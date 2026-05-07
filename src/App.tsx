@@ -15,6 +15,9 @@ import { NotFound } from "@/pages/NotFound";
 import { Blog } from "@/pages/Blog";
 import { BlogPost } from "@/pages/BlogPost";
 import { CaseStudy } from "@/pages/CaseStudy";
+import { CaseStudies } from "@/pages/CaseStudies";
+import { BrewedIdentityCaseStudy } from "@/pages/BrewedIdentityCaseStudy";
+import { BrewedIdentityDemo } from "@/pages/BrewedIdentityDemo";
 import { Demo } from "@/pages/Demo";
 import { RainFreshDemo } from "@/pages/RainFreshDemo";
 
@@ -43,8 +46,17 @@ function AppRoutes() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/case-study/rainfresh-sg" element={<CaseStudy />} />
+          <Route
+            path="/case-study/brewed-identity"
+            element={<BrewedIdentityCaseStudy />}
+          />
+          <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/demo" element={<Demo />} />
           <Route path="/demo/rainfresh" element={<RainFreshDemo />} />
+          <Route
+            path="/demo/brewed-identity"
+            element={<BrewedIdentityDemo />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

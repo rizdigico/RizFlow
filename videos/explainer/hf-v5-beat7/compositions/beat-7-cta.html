@@ -1,0 +1,544 @@
+<template id="beat7-cta-template">
+  <div
+    data-composition-id="beat7-cta"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="8"
+  >
+    <style>
+      [data-composition-id="beat7-cta"] {
+        font-family: "Inter", "Montserrat", sans-serif;
+        background: #0a0f1a;
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+      }
+      [data-composition-id="beat7-cta"] .flow-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.5;
+      }
+      [data-composition-id="beat7-cta"] .flow-bg path {
+        fill: none;
+        stroke: #4fa0b4;
+        stroke-width: 2;
+      }
+      [data-composition-id="beat7-cta"] .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 1;
+      }
+      [data-composition-id="beat7-cta"] .radial-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1600px;
+        height: 1600px;
+        background: radial-gradient(
+          circle,
+          rgba(16, 185, 129, 0.15) 0%,
+          rgba(6, 182, 212, 0.08) 30%,
+          transparent 55%
+        );
+        z-index: 1;
+      }
+      [data-composition-id="beat7-cta"] .particle-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        z-index: 2;
+      }
+
+      /* FIXED: Logo in circular frame — no overlap */
+      [data-composition-id="beat7-cta"] .logo-section {
+        position: absolute;
+        top: 240px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+      }
+      [data-composition-id="beat7-cta"] .logo-circle-frame {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 3px solid rgba(16, 185, 129, 0.6);
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 40px rgba(16, 185, 129, 0.25),
+          0 0 80px rgba(6, 182, 212, 0.1);
+      }
+      [data-composition-id="beat7-cta"] .logo-circle-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      [data-composition-id="beat7-cta"] .logo-ring {
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        width: 176px;
+        height: 176px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        border-top-color: #10b981;
+        border-right-color: #06b6d4;
+        opacity: 0;
+      }
+
+      /* FIXED: Brand name properly spaced below logo */
+      [data-composition-id="beat7-cta"] .brand-name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 64px;
+        color: #ffffff;
+        text-align: center;
+        letter-spacing: 0.08em;
+        margin-top: 28px;
+        opacity: 0;
+      }
+      [data-composition-id="beat7-cta"] .brand-name .accent {
+        color: #10b981;
+      }
+
+      /* FIXED: Tagline properly spaced */
+      [data-composition-id="beat7-cta"] .tagline {
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 22px;
+        color: #94a3b8;
+        text-align: center;
+        margin-top: 16px;
+        opacity: 0;
+        letter-spacing: 0.02em;
+      }
+
+      /* FIXED: CTA button properly spaced */
+      [data-composition-id="beat7-cta"] .cta-button {
+        margin-top: 36px;
+        opacity: 0;
+      }
+      [data-composition-id="beat7-cta"] .cta-btn-inner {
+        background: linear-gradient(135deg, #10b981, #06b6d4);
+        border: none;
+        border-radius: 50px;
+        padding: 16px 48px;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 20px;
+        color: #ffffff;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        box-shadow: 0 0 40px rgba(16, 185, 129, 0.3);
+      }
+
+      /* FIXED: URL properly spaced */
+      [data-composition-id="beat7-cta"] .url-text {
+        margin-top: 28px;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        color: #22d3ee;
+        opacity: 0;
+        letter-spacing: 0.04em;
+      }
+
+      /* Subtitle */
+      [data-composition-id="beat7-cta"] .subtitle {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 24px;
+        color: #ffffff;
+        text-align: center;
+        opacity: 0;
+        background: rgba(10, 15, 26, 0.75);
+        padding: 6px 18px;
+        border-radius: 6px;
+        max-width: 1600px;
+      }
+
+      /* Decorative corner brackets */
+      [data-composition-id="beat7-cta"] .corner-br {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        z-index: 4;
+        opacity: 0;
+      }
+      [data-composition-id="beat7-cta"] .corner-br svg {
+        width: 100%;
+        height: 100%;
+      }
+      [data-composition-id="beat7-cta"] .cb-tl {
+        top: 40px;
+        left: 40px;
+      }
+      [data-composition-id="beat7-cta"] .cb-tr {
+        top: 40px;
+        right: 40px;
+      }
+      [data-composition-id="beat7-cta"] .cb-bl {
+        bottom: 40px;
+        left: 40px;
+      }
+      [data-composition-id="beat7-cta"] .cb-br {
+        bottom: 40px;
+        right: 40px;
+      }
+
+      /* Scan line effect */
+      [data-composition-id="beat7-cta"] .scan-line {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(16, 185, 129, 0.4),
+          transparent
+        );
+        z-index: 3;
+        opacity: 0;
+        top: 0;
+      }
+    </style>
+
+    <svg
+      class="flow-bg"
+      viewBox="0 0 1920 1080"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 200 Q 240 120, 480 200 T 960 200 T 1440 200 T 1920 200"
+        opacity="0.35"
+      />
+      <path d="M0 400 Q 300 330, 600 400 T 1200 400 T 1920 400" opacity="0.4" />
+      <path
+        d="M0 600 Q 200 540, 400 600 T 800 600 T 1200 600 T 1920 600"
+        opacity="0.35"
+      />
+      <path d="M0 800 Q 360 730, 720 800 T 1440 800 T 1920 800" opacity="0.4" />
+    </svg>
+    <div class="grid-overlay"></div>
+    <div class="radial-glow"></div>
+    <canvas
+      class="particle-canvas"
+      id="beat7-canvas"
+      width="1920"
+      height="1080"
+    ></canvas>
+    <div class="scan-line" id="scan-line"></div>
+
+    <!-- FIXED: Logo in circular frame — clean vertical stack, no overlaps -->
+    <div class="logo-section" id="logo-section">
+      <div class="logo-circle-frame" id="logo-frame">
+        <img src="assets/logo.png" alt="RizFlow" />
+        <div class="logo-ring" id="logo-ring"></div>
+      </div>
+      <div class="brand-name" id="brand-name">
+        Riz<span class="accent">Flow</span>
+      </div>
+      <div class="tagline" id="tagline">AI agents that run your business</div>
+      <div class="cta-button" id="cta-btn">
+        <div class="cta-btn-inner">GET YOUR FREE AUDIT</div>
+      </div>
+      <div class="url-text" id="url-text">rizflow.co</div>
+    </div>
+
+    <!-- Corner brackets -->
+    <div class="corner-br cb-tl" id="cb1">
+      <svg viewBox="0 0 60 60">
+        <path
+          d="M0 30 L0 5 Q0 0 5 0 L30 0"
+          fill="none"
+          stroke="rgba(16,185,129,0.3)"
+          stroke-width="2"
+        />
+      </svg>
+    </div>
+    <div class="corner-br cb-tr" id="cb2">
+      <svg viewBox="0 0 60 60">
+        <path
+          d="M30 0 L55 0 Q60 0 60 5 L60 30"
+          fill="none"
+          stroke="rgba(16,185,129,0.3)"
+          stroke-width="2"
+        />
+      </svg>
+    </div>
+    <div class="corner-br cb-bl" id="cb3">
+      <svg viewBox="0 0 60 60">
+        <path
+          d="M0 30 L0 55 Q0 60 5 60 L30 60"
+          fill="none"
+          stroke="rgba(6,182,212,0.3)"
+          stroke-width="2"
+        />
+      </svg>
+    </div>
+    <div class="corner-br cb-br" id="cb4">
+      <svg viewBox="0 0 60 60">
+        <path
+          d="M30 60 L55 60 Q60 60 60 55 L60 30"
+          fill="none"
+          stroke="rgba(6,182,212,0.3)"
+          stroke-width="2"
+        />
+      </svg>
+    </div>
+
+    <div class="subtitle" id="subtitle"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var beat = 8;
+
+      // Canvas — converging network
+      var canvas = document.getElementById("beat7-canvas");
+      var ctx = canvas.getContext("2d");
+      var proxy = { t: 0 };
+      function hash(x, y) {
+        var n = x * 374761393 + y * 668265263;
+        n = (n ^ (n >> 13)) * 1274126177;
+        return ((n ^ (n >> 16)) & 0x7fffffff) / 0x7fffffff;
+      }
+      function drawNetwork(time) {
+        ctx.clearRect(0, 0, 1920, 1080);
+        var nodes = 60,
+          positions = [];
+        for (var i = 0; i < nodes; i++) {
+          var bx = hash(i, 0) * 1920,
+            by = hash(i, 1) * 1080;
+          var convergence = Math.min(time / (beat * 0.7), 1);
+          var cx = bx + (960 - bx) * convergence * 0.3;
+          var cy = by + (540 - by) * convergence * 0.3;
+          var dx = Math.sin(time * 0.18 + i * 1.3) * 15;
+          var dy = Math.cos(time * 0.14 + i * 0.9) * 11;
+          var x = cx + dx,
+            y = cy + dy;
+          positions.push({ x: x, y: y });
+          var alpha = 0.3 + hash(i, 2) * 0.4;
+          var r = 2.5 + hash(i, 3) * 2;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(16, 185, 129, " + alpha + ")";
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(16, 185, 129, " + alpha * 0.12 + ")";
+          ctx.fill();
+        }
+        for (var i = 0; i < nodes; i++) {
+          for (var j = i + 1; j < nodes; j++) {
+            var dist = Math.sqrt(
+              Math.pow(positions[i].x - positions[j].x, 2) +
+                Math.pow(positions[i].y - positions[j].y, 2),
+            );
+            if (dist < 160) {
+              var lineAlpha = (1 - dist / 160) * 0.12;
+              ctx.beginPath();
+              ctx.moveTo(positions[i].x, positions[i].y);
+              ctx.lineTo(positions[j].x, positions[j].y);
+              ctx.strokeStyle = "rgba(16, 185, 129, " + lineAlpha + ")";
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      tl.to(
+        proxy,
+        {
+          t: beat,
+          duration: beat,
+          ease: "none",
+          onUpdate: function () {
+            drawNetwork(proxy.t);
+          },
+        },
+        0,
+      );
+
+      // Scan line sweep
+      tl.fromTo(
+        "#scan-line",
+        { top: 0, opacity: 0.6 },
+        { top: 1080, opacity: 0, duration: 2, ease: "power1.inOut" },
+        0.2,
+      );
+
+      // Flow paths
+      var flowPaths = document.querySelectorAll(
+        "[data-composition-id='beat7-cta'] .flow-bg path",
+      );
+      flowPaths.forEach(function (path, i) {
+        tl.fromTo(
+          path,
+          { strokeDasharray: 3000, strokeDashoffset: 3000 },
+          { strokeDashoffset: 0, duration: 6, ease: "none" },
+          i * 0.2,
+        );
+      });
+
+      // Corner brackets draw in
+      ["#cb1", "#cb2", "#cb3", "#cb4"].forEach(function (cb, i) {
+        tl.fromTo(
+          cb,
+          { opacity: 0, scale: 0.5 },
+          { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" },
+          0.3 + i * 0.15,
+        );
+      });
+
+      // Logo section enters — clean vertical stack
+      tl.fromTo(
+        "#logo-section",
+        { opacity: 0, y: 40, filter: "blur(20px)" },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.8,
+          ease: "expo.out",
+        },
+        0.5,
+      );
+
+      // Logo ring spin
+      tl.fromTo(
+        "#logo-ring",
+        { opacity: 0, rotation: 0 },
+        { opacity: 1, rotation: 360, duration: 1.5, ease: "power2.out" },
+        0.8,
+      );
+      tl.to(
+        "#logo-ring",
+        { rotation: "+=360", duration: 4, ease: "none", repeat: 1 },
+        2.3,
+      );
+
+      // Logo pulse
+      tl.to(
+        "#logo-frame",
+        { scale: 1.05, duration: 1, yoyo: true, repeat: 2, ease: "sine.inOut" },
+        2.0,
+      );
+
+      // Brand name
+      tl.fromTo(
+        "#brand-name",
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" },
+        1.2,
+      );
+
+      // Tagline
+      tl.fromTo(
+        "#tagline",
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+        1.8,
+      );
+
+      // CTA button
+      tl.fromTo(
+        "#cta-btn",
+        { opacity: 0, y: 20, scale: 0.9 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(2)" },
+        2.5,
+      );
+      // CTA pulse
+      tl.to(
+        "#cta-btn .cta-btn-inner",
+        {
+          boxShadow: "0 0 60px rgba(16,185,129,0.5)",
+          duration: 1,
+          yoyo: true,
+          repeat: 2,
+          ease: "sine.inOut",
+        },
+        3.2,
+      );
+
+      // URL
+      tl.fromTo(
+        "#url-text",
+        { opacity: 0 },
+        { opacity: 1, duration: 0.5, ease: "power2.out" },
+        3.5,
+      );
+      // URL glow pulse
+      tl.to(
+        "#url-text",
+        {
+          textShadow: "0 0 20px rgba(34,211,238,0.6)",
+          duration: 1,
+          yoyo: true,
+          repeat: 2,
+          ease: "sine.inOut",
+        },
+        4.0,
+      );
+
+      // Subtitles
+      var subs = [
+        { start: 0, end: 2.5, text: "Scale your business, not your workload" },
+        { start: 2.5, end: 5, text: "Get your free discovery audit" },
+        { start: 5, end: 8, text: "at RizFlow.co" },
+      ];
+      subs.forEach(function (sub) {
+        tl.call(
+          function () {
+            (document.getElementById("subtitle") || {}).textContent = sub.text;
+          },
+          [],
+          sub.start,
+        );
+        tl.fromTo(
+          "#subtitle",
+          { opacity: 0 },
+          { opacity: 0.9, duration: 0.2 },
+          sub.start,
+        );
+        tl.to("#subtitle", { opacity: 0, duration: 0.2 }, sub.end - 0.2);
+      });
+      tl.call(
+        function () {
+          (document.getElementById("subtitle") || {}).textContent = "";
+        },
+        [],
+        beat - 0.5,
+      );
+
+      window.__timelines["beat7-cta"] = tl;
+    </script>
+  </div>
+</template>

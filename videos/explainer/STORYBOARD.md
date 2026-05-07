@@ -113,7 +113,7 @@
 
 ## BEAT 3 — BUILD & DEPLOY (0:22–0:38)
 
-**VO:** "Your agents plug into Slack, HubSpot, Telegram, Notion, and fifty more tools you already use. No rip-and-replace. Live in two to four weeks."
+**VO:** "Your agents plug into Slack, HubSpot, Telegram, Notion, and fifty more tools you already use. No rip-and-replace. Go live in two to four weeks."
 
 **Transition IN:** Velocity-matched downward — `y:150→0, blur:30px→0, 1.0s power2.out`
 

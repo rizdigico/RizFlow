@@ -1,606 +1,606 @@
 {
+  "text": "You didn't start your business to do admin. But every week hours disappear into invoicing, scheduling, client follow-ups, and paperwork. Sound familiar? RizFlow maps your workflows, finds exactly where time and money leak, and builds custom AI agents that handle all of it automatically. Your agents plug into Slack, HubSpot, Telegram, Notion, and fifty more tools you already use. No rip-and-replace. Live in two to four weeks. Then it just runs. Admin, comms, billing, scheduling, twenty-four seven. You cut operating costs by up to sixty percent. You reclaim twenty plus hours every week. And you check everything from your phone in under thirty minutes. Scale your business. Not your workload. Get your free discovery audit at rizflow dot co.",
+  "duration": 45.1,
   "words": [
     {
       "word": "You",
       "start": 0.0,
-      "end": 0.1
+      "end": 0.12
     },
     {
       "word": "didn't",
-      "start": 0.1,
-      "end": 0.34
+      "start": 0.12,
+      "end": 0.42
     },
     {
       "word": "start",
-      "start": 0.34,
-      "end": 0.52
+      "start": 0.42,
+      "end": 0.64
     },
     {
       "word": "your",
-      "start": 0.52,
-      "end": 0.68
+      "start": 0.64,
+      "end": 0.83
     },
     {
       "word": "business",
-      "start": 0.68,
-      "end": 0.96
+      "start": 0.83,
+      "end": 1.18
     },
     {
       "word": "to",
-      "start": 0.96,
-      "end": 1.16
+      "start": 1.18,
+      "end": 1.42
     },
     {
       "word": "do",
-      "start": 1.16,
-      "end": 1.32
+      "start": 1.42,
+      "end": 1.62
     },
     {
       "word": "admin,",
-      "start": 1.32,
-      "end": 1.6
+      "start": 1.62,
+      "end": 1.96
     },
     {
       "word": "but",
-      "start": 1.96,
-      "end": 2.1
+      "start": 2.41,
+      "end": 2.58
     },
     {
       "word": "every",
-      "start": 2.1,
-      "end": 2.38
+      "start": 2.58,
+      "end": 2.92
     },
     {
       "word": "week",
-      "start": 2.38,
-      "end": 2.6
+      "start": 2.92,
+      "end": 3.19
     },
     {
       "word": "hours",
-      "start": 2.6,
-      "end": 2.9
+      "start": 3.19,
+      "end": 3.56
     },
     {
       "word": "disappear",
-      "start": 2.9,
-      "end": 3.42
+      "start": 3.56,
+      "end": 4.2
     },
     {
       "word": "into",
-      "start": 3.42,
-      "end": 3.66
+      "start": 4.2,
+      "end": 4.49
     },
     {
       "word": "invoicing,",
-      "start": 3.66,
-      "end": 4.1
+      "start": 4.49,
+      "end": 5.03
     },
     {
       "word": "scheduling,",
-      "start": 4.32,
-      "end": 4.62
+      "start": 5.3,
+      "end": 5.67
     },
     {
       "word": "client",
-      "start": 4.9,
-      "end": 5.14
+      "start": 6.01,
+      "end": 6.31
     },
     {
       "word": "follow",
-      "start": 5.14,
-      "end": 5.4
+      "start": 6.31,
+      "end": 6.63
     },
     {
       "word": "-ups,",
-      "start": 5.4,
-      "end": 5.62
+      "start": 6.63,
+      "end": 6.9
     },
     {
       "word": "and",
-      "start": 5.8,
-      "end": 5.84
+      "start": 7.12,
+      "end": 7.17
     },
     {
       "word": "paperwork.",
-      "start": 5.84,
-      "end": 6.24
+      "start": 7.17,
+      "end": 7.66
     },
     {
       "word": "Sound",
-      "start": 6.98,
-      "end": 7.08
+      "start": 8.57,
+      "end": 8.69
     },
     {
       "word": "familiar?",
-      "start": 7.08,
-      "end": 7.34
+      "start": 8.69,
+      "end": 9.01
     },
     {
       "word": "RizFlow",
-      "start": 7.66,
-      "end": 7.92
+      "start": 9.4,
+      "end": 9.72
     },
     {
       "word": "maps",
-      "start": 7.92,
-      "end": 8.18
+      "start": 9.72,
+      "end": 10.04
     },
     {
       "word": "your",
-      "start": 8.18,
-      "end": 8.38
+      "start": 10.04,
+      "end": 10.29
     },
     {
       "word": "workflows,",
-      "start": 8.38,
-      "end": 8.78
+      "start": 10.29,
+      "end": 10.78
     },
     {
       "word": "finds",
-      "start": 8.88,
-      "end": 9.08
+      "start": 10.9,
+      "end": 11.15
     },
     {
       "word": "exactly",
-      "start": 9.08,
-      "end": 9.52
+      "start": 11.15,
+      "end": 11.69
     },
     {
       "word": "where",
-      "start": 9.52,
-      "end": 9.74
+      "start": 11.69,
+      "end": 11.96
     },
     {
       "word": "time",
-      "start": 9.74,
-      "end": 9.96
+      "start": 11.96,
+      "end": 12.23
     },
     {
       "word": "and",
-      "start": 9.96,
-      "end": 10.1
+      "start": 12.23,
+      "end": 12.4
     },
     {
       "word": "money",
-      "start": 10.1,
-      "end": 10.3
+      "start": 12.4,
+      "end": 12.64
     },
     {
       "word": "leak,",
-      "start": 10.3,
-      "end": 10.48
+      "start": 12.64,
+      "end": 12.86
     },
     {
       "word": "and",
-      "start": 10.6,
-      "end": 10.66
+      "start": 13.01,
+      "end": 13.09
     },
     {
       "word": "builds",
-      "start": 10.66,
-      "end": 10.9
+      "start": 13.09,
+      "end": 13.38
     },
     {
       "word": "custom",
-      "start": 10.9,
-      "end": 11.3
+      "start": 13.38,
+      "end": 13.87
     },
     {
       "word": "AI",
-      "start": 11.3,
-      "end": 11.64
+      "start": 13.87,
+      "end": 14.29
     },
     {
       "word": "agents",
-      "start": 11.64,
-      "end": 12.02
+      "start": 14.29,
+      "end": 14.75
     },
     {
       "word": "that",
-      "start": 12.02,
-      "end": 12.2
+      "start": 14.75,
+      "end": 14.98
     },
     {
       "word": "handle",
-      "start": 12.2,
-      "end": 12.42
+      "start": 14.98,
+      "end": 15.25
     },
     {
       "word": "all",
-      "start": 12.42,
-      "end": 12.66
+      "start": 15.25,
+      "end": 15.54
     },
     {
       "word": "of",
-      "start": 12.66,
-      "end": 12.76
+      "start": 15.54,
+      "end": 15.66
     },
     {
       "word": "it",
-      "start": 12.76,
-      "end": 12.84
+      "start": 15.66,
+      "end": 15.76
     },
     {
       "word": "automatically.",
-      "start": 12.84,
-      "end": 13.28
+      "start": 15.76,
+      "end": 16.3
     },
     {
       "word": "Your",
-      "start": 13.84,
-      "end": 13.92
+      "start": 16.99,
+      "end": 17.09
     },
     {
       "word": "agents",
-      "start": 13.92,
-      "end": 14.2
+      "start": 17.09,
+      "end": 17.43
     },
     {
       "word": "plug",
-      "start": 14.2,
-      "end": 14.46
+      "start": 17.43,
+      "end": 17.75
     },
     {
       "word": "into",
-      "start": 14.46,
-      "end": 14.68
+      "start": 17.75,
+      "end": 18.02
     },
     {
       "word": "Slack,",
-      "start": 14.68,
-      "end": 14.94
+      "start": 18.02,
+      "end": 18.34
     },
     {
       "word": "HubSpot,",
-      "start": 15.16,
-      "end": 15.48
-    },
-    {
-      "word": "Telegram,",
-      "start": 15.74,
-      "end": 16.1
-    },
-    {
-      "word": "Notion,",
-      "start": 16.28,
-      "end": 16.56
-    },
-    {
-      "word": "and",
-      "start": 16.6,
-      "end": 16.72
-    },
-    {
-      "word": "50",
-      "start": 16.72,
-      "end": 17.0
-    },
-    {
-      "word": "more",
-      "start": 17.0,
-      "end": 17.22
-    },
-    {
-      "word": "tools",
-      "start": 17.22,
-      "end": 17.5
-    },
-    {
-      "word": "you",
-      "start": 17.5,
-      "end": 17.7
-    },
-    {
-      "word": "already",
-      "start": 17.7,
-      "end": 17.96
-    },
-    {
-      "word": "use.",
-      "start": 17.96,
-      "end": 18.3
-    },
-    {
-      "word": "No",
-      "start": 18.64,
-      "end": 18.8
-    },
-    {
-      "word": "rip",
-      "start": 18.8,
+      "start": 18.61,
       "end": 19.0
     },
     {
-      "word": "and",
-      "start": 19.0,
-      "end": 19.16
+      "word": "Telegram,",
+      "start": 19.32,
+      "end": 19.76
     },
     {
-      "word": "replace.",
-      "start": 19.16,
-      "end": 19.48
-    },
-    {
-      "word": "Live",
-      "start": 19.9,
-      "end": 19.98
-    },
-    {
-      "word": "in",
+      "word": "Notion,",
       "start": 19.98,
-      "end": 20.14
-    },
-    {
-      "word": "two",
-      "start": 20.14,
-      "end": 20.3
-    },
-    {
-      "word": "to",
-      "start": 20.3,
-      "end": 20.4
-    },
-    {
-      "word": "four",
-      "start": 20.4,
-      "end": 20.62
-    },
-    {
-      "word": "weeks,",
-      "start": 20.62,
-      "end": 20.88
-    },
-    {
-      "word": "then",
-      "start": 20.96,
-      "end": 21.12
-    },
-    {
-      "word": "it",
-      "start": 21.12,
-      "end": 21.24
-    },
-    {
-      "word": "just",
-      "start": 21.24,
-      "end": 21.38
-    },
-    {
-      "word": "runs.",
-      "start": 21.38,
-      "end": 21.68
-    },
-    {
-      "word": "Admin,",
-      "start": 22.14,
-      "end": 22.38
-    },
-    {
-      "word": "comms,",
-      "start": 22.72,
-      "end": 22.98
-    },
-    {
-      "word": "billing,",
-      "start": 23.06,
-      "end": 23.18
-    },
-    {
-      "word": "scheduling",
-      "start": 23.42,
-      "end": 23.8
-    },
-    {
-      "word": "24",
-      "start": 23.8,
-      "end": 24.4
-    },
-    {
-      "word": "-7.",
-      "start": 24.4,
-      "end": 24.76
-    },
-    {
-      "word": "You",
-      "start": 25.0,
-      "end": 25.12
-    },
-    {
-      "word": "cut",
-      "start": 25.12,
-      "end": 25.32
-    },
-    {
-      "word": "operating",
-      "start": 25.32,
-      "end": 25.76
-    },
-    {
-      "word": "costs",
-      "start": 25.76,
-      "end": 26.14
-    },
-    {
-      "word": "by",
-      "start": 26.14,
-      "end": 26.42
-    },
-    {
-      "word": "up",
-      "start": 26.42,
-      "end": 26.52
-    },
-    {
-      "word": "to",
-      "start": 26.52,
-      "end": 26.66
-    },
-    {
-      "word": "60%.",
-      "start": 26.66,
-      "end": 27.36
-    },
-    {
-      "word": "You",
-      "start": 27.36,
-      "end": 27.66
-    },
-    {
-      "word": "reclaim",
-      "start": 27.66,
-      "end": 27.92
-    },
-    {
-      "word": "20",
-      "start": 27.92,
-      "end": 28.32
-    },
-    {
-      "word": "plus",
-      "start": 28.32,
-      "end": 28.5
-    },
-    {
-      "word": "hours",
-      "start": 28.5,
-      "end": 28.86
-    },
-    {
-      "word": "every",
-      "start": 28.86,
-      "end": 29.22
-    },
-    {
-      "word": "week,",
-      "start": 29.22,
-      "end": 29.48
+      "end": 20.33
     },
     {
       "word": "and",
-      "start": 29.48,
-      "end": 29.88
+      "start": 20.38,
+      "end": 20.52
+    },
+    {
+      "word": "50",
+      "start": 20.52,
+      "end": 20.87
+    },
+    {
+      "word": "more",
+      "start": 20.87,
+      "end": 21.14
+    },
+    {
+      "word": "tools",
+      "start": 21.14,
+      "end": 21.48
     },
     {
       "word": "you",
-      "start": 29.88,
-      "end": 30.0
+      "start": 21.48,
+      "end": 21.73
     },
     {
-      "word": "check",
-      "start": 30.0,
-      "end": 30.22
+      "word": "already",
+      "start": 21.73,
+      "end": 22.05
     },
     {
-      "word": "everything",
-      "start": 30.22,
-      "end": 30.6
+      "word": "use.",
+      "start": 22.05,
+      "end": 22.46
     },
     {
-      "word": "from",
-      "start": 30.6,
-      "end": 30.88
+      "word": "No",
+      "start": 22.88,
+      "end": 23.08
     },
     {
-      "word": "your",
-      "start": 30.88,
-      "end": 31.02
+      "word": "rip",
+      "start": 23.08,
+      "end": 23.32
     },
     {
-      "word": "phone",
-      "start": 31.02,
-      "end": 31.26
+      "word": "and",
+      "start": 23.32,
+      "end": 23.52
+    },
+    {
+      "word": "replace.",
+      "start": 23.52,
+      "end": 23.91
+    },
+    {
+      "word": "Live",
+      "start": 24.43,
+      "end": 24.53
     },
     {
       "word": "in",
-      "start": 31.26,
-      "end": 31.4
+      "start": 24.53,
+      "end": 24.72
+    },
+    {
+      "word": "two",
+      "start": 24.72,
+      "end": 24.92
+    },
+    {
+      "word": "to",
+      "start": 24.92,
+      "end": 25.04
+    },
+    {
+      "word": "four",
+      "start": 25.04,
+      "end": 25.31
+    },
+    {
+      "word": "weeks,",
+      "start": 25.31,
+      "end": 25.63
+    },
+    {
+      "word": "then",
+      "start": 25.73,
+      "end": 25.92
+    },
+    {
+      "word": "it",
+      "start": 25.92,
+      "end": 26.07
+    },
+    {
+      "word": "just",
+      "start": 26.07,
+      "end": 26.24
+    },
+    {
+      "word": "runs.",
+      "start": 26.24,
+      "end": 26.61
+    },
+    {
+      "word": "Admin,",
+      "start": 27.18,
+      "end": 27.47
+    },
+    {
+      "word": "comms,",
+      "start": 27.89,
+      "end": 28.21
+    },
+    {
+      "word": "billing,",
+      "start": 28.31,
+      "end": 28.45
+    },
+    {
+      "word": "scheduling",
+      "start": 28.75,
+      "end": 29.21
+    },
+    {
+      "word": "24",
+      "start": 29.21,
+      "end": 29.95
+    },
+    {
+      "word": "-7.",
+      "start": 29.95,
+      "end": 30.39
+    },
+    {
+      "word": "You",
+      "start": 30.69,
+      "end": 30.84
+    },
+    {
+      "word": "cut",
+      "start": 30.84,
+      "end": 31.08
+    },
+    {
+      "word": "operating",
+      "start": 31.08,
+      "end": 31.62
+    },
+    {
+      "word": "costs",
+      "start": 31.62,
+      "end": 32.09
+    },
+    {
+      "word": "by",
+      "start": 32.09,
+      "end": 32.43
+    },
+    {
+      "word": "up",
+      "start": 32.43,
+      "end": 32.55
+    },
+    {
+      "word": "to",
+      "start": 32.55,
+      "end": 32.73
+    },
+    {
+      "word": "60%.",
+      "start": 32.73,
+      "end": 33.58
+    },
+    {
+      "word": "You",
+      "start": 33.58,
+      "end": 33.95
+    },
+    {
+      "word": "reclaim",
+      "start": 33.95,
+      "end": 34.27
+    },
+    {
+      "word": "20",
+      "start": 34.27,
+      "end": 34.76
+    },
+    {
+      "word": "plus",
+      "start": 34.76,
+      "end": 34.98
+    },
+    {
+      "word": "hours",
+      "start": 34.98,
+      "end": 35.43
+    },
+    {
+      "word": "every",
+      "start": 35.43,
+      "end": 35.87
+    },
+    {
+      "word": "week,",
+      "start": 35.87,
+      "end": 36.19
+    },
+    {
+      "word": "and",
+      "start": 36.19,
+      "end": 36.68
+    },
+    {
+      "word": "you",
+      "start": 36.68,
+      "end": 36.83
+    },
+    {
+      "word": "check",
+      "start": 36.83,
+      "end": 37.1
+    },
+    {
+      "word": "everything",
+      "start": 37.1,
+      "end": 37.56
+    },
+    {
+      "word": "from",
+      "start": 37.56,
+      "end": 37.91
+    },
+    {
+      "word": "your",
+      "start": 37.91,
+      "end": 38.08
+    },
+    {
+      "word": "phone",
+      "start": 38.08,
+      "end": 38.37
+    },
+    {
+      "word": "in",
+      "start": 38.37,
+      "end": 38.54
     },
     {
       "word": "under",
-      "start": 31.4,
-      "end": 31.56
+      "start": 38.54,
+      "end": 38.74
     },
     {
       "word": "30",
-      "start": 31.56,
-      "end": 31.86
+      "start": 38.74,
+      "end": 39.11
     },
     {
       "word": "minutes.",
-      "start": 31.86,
-      "end": 32.24
+      "start": 39.11,
+      "end": 39.57
     },
     {
       "word": "Scale",
-      "start": 32.68,
-      "end": 32.68
+      "start": 40.11,
+      "end": 40.11
     },
     {
       "word": "your",
-      "start": 32.68,
-      "end": 32.86
+      "start": 40.11,
+      "end": 40.34
     },
     {
       "word": "business,",
-      "start": 32.86,
-      "end": 33.18
+      "start": 40.34,
+      "end": 40.73
     },
     {
       "word": "not",
-      "start": 33.42,
-      "end": 33.5
+      "start": 41.02,
+      "end": 41.12
     },
     {
       "word": "your",
-      "start": 33.5,
-      "end": 33.66
+      "start": 41.12,
+      "end": 41.32
     },
     {
       "word": "workload.",
-      "start": 33.66,
-      "end": 34.06
+      "start": 41.32,
+      "end": 41.81
     },
     {
       "word": "Get",
-      "start": 34.42,
-      "end": 34.46
+      "start": 42.25,
+      "end": 42.3
     },
     {
       "word": "your",
-      "start": 34.46,
-      "end": 34.6
+      "start": 42.3,
+      "end": 42.47
     },
     {
       "word": "free",
-      "start": 34.6,
-      "end": 34.78
+      "start": 42.47,
+      "end": 42.69
     },
     {
       "word": "discovery",
-      "start": 34.78,
-      "end": 35.14
+      "start": 42.69,
+      "end": 43.13
     },
     {
       "word": "audit",
-      "start": 35.14,
-      "end": 35.56
+      "start": 43.13,
+      "end": 43.65
     },
     {
       "word": "at",
-      "start": 35.56,
-      "end": 35.8
+      "start": 43.65,
+      "end": 43.94
     },
     {
       "word": "rizflow",
-      "start": 35.8,
-      "end": 36.12
+      "start": 43.94,
+      "end": 44.34
     },
     {
       "word": ".co.",
-      "start": 36.12,
-      "end": 36.74
+      "start": 44.34,
+      "end": 45.1
     }
-  ],
-  "text": " You didn't start your business to do admin, but every week hours disappear into invoicing, scheduling, client follow-ups, and paperwork. Sound familiar? RizFlow maps your workflows, finds exactly where time and money leak, and builds custom AI agents that handle all of it automatically. Your agents plug into Slack, HubSpot, Telegram, Notion, and 50 more tools you already use. No rip and replace. Live in two to four weeks, then it just runs. Admin, comms, billing, scheduling 24-7. You cut operating costs by up to 60%. You reclaim 20 plus hours every week, and you check everything from your phone in under 30 minutes. Scale your business, not your workload. Get your free discovery audit at rizflow.co.",
-  "duration": 36.74
+  ]
 }

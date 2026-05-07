@@ -1,0 +1,521 @@
+<template id="beat2-discover-template">
+  <div
+    data-composition-id="beat2-discover"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="7"
+  >
+    <style>
+      [data-composition-id="beat2-discover"] {
+        font-family: "Inter", "Montserrat", sans-serif;
+        background: #0a0f1a;
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* ENHANCED: Stronger flow */
+      [data-composition-id="beat2-discover"] .flow-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.45;
+      }
+      [data-composition-id="beat2-discover"] .flow-bg path {
+        fill: none;
+        stroke: #4fa0b4;
+        stroke-width: 1.5;
+      }
+
+      [data-composition-id="beat2-discover"] .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 1;
+      }
+
+      [data-composition-id="beat2-discover"] .radial-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1200px;
+        height: 1200px;
+        background: radial-gradient(
+          circle,
+          rgba(6, 182, 212, 0.15) 0%,
+          transparent 55%
+        );
+        z-index: 1;
+      }
+
+      [data-composition-id="beat2-discover"] .particle-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        z-index: 2;
+      }
+
+      /* Audit card */
+      [data-composition-id="beat2-discover"] .audit-card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 860px;
+        background: rgba(17, 24, 39, 0.8);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 40px;
+        z-index: 5;
+        opacity: 0;
+        box-shadow:
+          0 0 60px rgba(6, 182, 212, 0.1),
+          0 0 120px rgba(6, 182, 212, 0.04);
+      }
+
+      [data-composition-id="beat2-discover"] .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+
+      [data-composition-id="beat2-discover"] .card-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #06b6d4, #22d3ee);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+
+      [data-composition-id="beat2-discover"] .card-title {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 22px;
+        color: #ffffff;
+        letter-spacing: 0.05em;
+      }
+
+      [data-composition-id="beat2-discover"] .card-badge {
+        margin-left: auto;
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #34d399;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat2-discover"] .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #10b981;
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        opacity: 0;
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-name {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        color: #e2e8f0;
+        min-width: 200px;
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-bar-track {
+        flex: 1;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        transform-origin: left center;
+        transform: scaleX(0);
+      }
+
+      [data-composition-id="beat2-discover"] .workflow-pct {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        color: #22d3ee;
+        min-width: 50px;
+        text-align: right;
+      }
+
+      [data-composition-id="beat2-discover"] .bar-cyan {
+        background: linear-gradient(90deg, #06b6d4, #22d3ee);
+      }
+      [data-composition-id="beat2-discover"] .bar-emerald {
+        background: linear-gradient(90deg, #10b981, #34d399);
+      }
+      [data-composition-id="beat2-discover"] .bar-amber {
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      }
+      [data-composition-id="beat2-discover"] .bar-violet {
+        background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+      }
+      [data-composition-id="beat2-discover"] .bar-rose {
+        background: linear-gradient(90deg, #f43f5e, #fb7185);
+      }
+
+      /* Result badge */
+      [data-composition-id="beat2-discover"] .result-badge {
+        margin-top: 20px;
+        text-align: center;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat2-discover"] .result-text {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 28px;
+        color: #10b981;
+        text-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+      }
+
+      /* Subtitle */
+      [data-composition-id="beat2-discover"] .subtitle {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 24px;
+        color: #ffffff;
+        text-align: center;
+        opacity: 0;
+        background: rgba(10, 15, 26, 0.75);
+        padding: 6px 18px;
+        border-radius: 6px;
+        max-width: 1600px;
+      }
+    </style>
+
+    <!-- Background layers -->
+    <svg
+      class="flow-bg"
+      viewBox="0 0 1920 1080"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 200 Q 240 120, 480 200 T 960 200 T 1440 200 T 1920 200"
+        opacity="0.3"
+      />
+      <path
+        d="M0 380 Q 300 310, 600 380 T 1200 380 T 1920 380"
+        opacity="0.35"
+      />
+      <path
+        d="M0 540 Q 200 470, 400 540 T 800 540 T 1200 540 T 1920 540"
+        opacity="0.25"
+      />
+      <path
+        d="M0 700 Q 360 630, 720 700 T 1440 700 T 1920 700"
+        opacity="0.35"
+      />
+      <path d="M0 880 Q 280 820, 560 880 T 1120 880 T 1920 880" opacity="0.2" />
+    </svg>
+    <div class="grid-overlay"></div>
+    <div class="radial-glow"></div>
+    <canvas
+      class="particle-canvas"
+      id="beat2-canvas"
+      width="1920"
+      height="1080"
+    ></canvas>
+
+    <!-- Audit card -->
+    <div class="audit-card" id="audit-card">
+      <div class="card-header">
+        <div class="card-icon">&#x1F50D;</div>
+        <div class="card-title">WORKFLOW AUDIT</div>
+        <div class="card-badge" id="live-badge">
+          <div class="badge-dot"></div>
+          LIVE
+        </div>
+      </div>
+
+      <div class="workflow-row" id="row1">
+        <span class="workflow-name">Customer Intake</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill bar-cyan" id="wfbar1"></div>
+        </div>
+        <span class="workflow-pct" id="wfpct1">0%</span>
+      </div>
+      <div class="workflow-row" id="row2">
+        <span class="workflow-name">Workflow Tracking</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill bar-emerald" id="wfbar2"></div>
+        </div>
+        <span class="workflow-pct" id="wfpct2">0%</span>
+      </div>
+      <div class="workflow-row" id="row3">
+        <span class="workflow-name">Invoicing</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill bar-amber" id="wfbar3"></div>
+        </div>
+        <span class="workflow-pct" id="wfpct3">0%</span>
+      </div>
+      <div class="workflow-row" id="row4">
+        <span class="workflow-name">Communications</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill bar-violet" id="wfbar4"></div>
+        </div>
+        <span class="workflow-pct" id="wfpct4">0%</span>
+      </div>
+      <div class="workflow-row" id="row5">
+        <span class="workflow-name">Social Media</span>
+        <div class="workflow-bar-track">
+          <div class="workflow-bar-fill bar-rose" id="wfbar5"></div>
+        </div>
+        <span class="workflow-pct" id="wfpct5">0%</span>
+      </div>
+
+      <div class="result-badge" id="result-badge">
+        <div class="result-text">14 hrs/wk saved &#x2713;</div>
+      </div>
+    </div>
+
+    <!-- Subtitle -->
+    <div class="subtitle" id="subtitle"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var beat = 7;
+
+      // Canvas 2D — medium network
+      var canvas = document.getElementById("beat2-canvas");
+      var ctx = canvas.getContext("2d");
+      var proxy = { t: 0 };
+
+      function hash(x, y) {
+        var n = x * 374761393 + y * 668265263;
+        n = (n ^ (n >> 13)) * 1274126177;
+        return ((n ^ (n >> 16)) & 0x7fffffff) / 0x7fffffff;
+      }
+
+      function drawNetwork(time) {
+        ctx.clearRect(0, 0, 1920, 1080);
+        var nodes = 60;
+        var positions = [];
+        for (var i = 0; i < nodes; i++) {
+          var bx = hash(i, 0) * 1920;
+          var by = hash(i, 1) * 1080;
+          var dx = Math.sin(time * 0.18 + i * 1.3) * 16;
+          var dy = Math.cos(time * 0.14 + i * 0.9) * 12;
+          var x = bx + dx;
+          var y = by + dy;
+          positions.push({ x: x, y: y });
+          var alpha = 0.2 + hash(i, 2) * 0.35;
+          var r = 2 + hash(i, 3) * 2;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(6, 182, 212, " + alpha + ")";
+          ctx.fill();
+        }
+        for (var i = 0; i < nodes; i++) {
+          for (var j = i + 1; j < nodes; j++) {
+            var dist = Math.sqrt(
+              Math.pow(positions[i].x - positions[j].x, 2) +
+                Math.pow(positions[i].y - positions[j].y, 2),
+            );
+            if (dist < 160) {
+              var lineAlpha = (1 - dist / 160) * 0.1;
+              ctx.beginPath();
+              ctx.moveTo(positions[i].x, positions[i].y);
+              ctx.lineTo(positions[j].x, positions[j].y);
+              ctx.strokeStyle = "rgba(6, 182, 212, " + lineAlpha + ")";
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      tl.to(
+        proxy,
+        {
+          t: beat,
+          duration: beat,
+          ease: "none",
+          onUpdate: function () {
+            drawNetwork(proxy.t);
+          },
+        },
+        0,
+      );
+
+      // Flow background
+      var flowPaths = document.querySelectorAll(
+        "[data-composition-id='beat2-discover'] .flow-bg path",
+      );
+      flowPaths.forEach(function (path, i) {
+        tl.fromTo(
+          path,
+          { strokeDasharray: 2500, strokeDashoffset: 2500 },
+          { strokeDashoffset: 0, duration: 5, ease: "none" },
+          i * 0.2,
+        );
+      });
+
+      // Card slides up
+      tl.fromTo(
+        "#audit-card",
+        { opacity: 0, y: 80, filter: "blur(20px)" },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.7,
+          ease: "expo.out",
+        },
+        0.1,
+      );
+
+      // Workflow rows cascade
+      var rows = ["#row1", "#row2", "#row3", "#row4", "#row5"];
+      rows.forEach(function (row, i) {
+        tl.fromTo(
+          row,
+          { opacity: 0, x: -30 },
+          { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" },
+          0.4 + i * 0.25,
+        );
+      });
+
+      // Progress bars fill
+      var pcts = [60, 40, 75, 30, 55];
+      var barIds = ["#wfbar1", "#wfbar2", "#wfbar3", "#wfbar4", "#wfbar5"];
+      var pctIds = ["#wfpct1", "#wfpct2", "#wfpct3", "#wfpct4", "#wfpct5"];
+      barIds.forEach(function (bar, i) {
+        tl.to(
+          bar,
+          { scaleX: pcts[i] / 100, duration: 0.8, ease: "power2.out" },
+          0.5 + i * 0.25,
+        );
+        var pctObj = { val: 0 };
+        tl.to(
+          pctObj,
+          {
+            val: pcts[i],
+            duration: 0.8,
+            ease: "power2.out",
+            onUpdate: function () {
+              document.getElementById("wfpct" + (i + 1)).textContent =
+                Math.round(pctObj.val) + "%";
+            },
+          },
+          0.5 + i * 0.25,
+        );
+      });
+
+      // Live badge
+      tl.fromTo(
+        "#live-badge",
+        { opacity: 0, scale: 0.5 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" },
+        0.8,
+      );
+
+      // Result badge
+      tl.fromTo(
+        "#result-badge",
+        { opacity: 0, scale: 0.8, y: 20 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "expo.out" },
+        4.5,
+      );
+      tl.to(
+        "#result-badge .result-text",
+        {
+          textShadow: "0 0 40px rgba(16,185,129,0.5)",
+          duration: 1,
+          yoyo: true,
+          repeat: 1,
+          ease: "sine.inOut",
+        },
+        4.8,
+      );
+
+      // Subtitles
+      var subs = [
+        { start: 0, end: 2.5, text: "RizFlow maps your workflows" },
+        {
+          start: 2.5,
+          end: 5.5,
+          text: "finds exactly where time and money leak",
+        },
+        {
+          start: 5.5,
+          end: 7,
+          text: "and builds custom AI agents — automatically",
+        },
+      ];
+      subs.forEach(function (sub) {
+        tl.call(
+          function () {
+            (document.getElementById("subtitle") || {}).textContent = sub.text;
+          },
+          [],
+          sub.start,
+        );
+        tl.fromTo(
+          "#subtitle",
+          { opacity: 0 },
+          { opacity: 0.9, duration: 0.2 },
+          sub.start,
+        );
+        tl.to("#subtitle", { opacity: 0, duration: 0.2 }, sub.end - 0.2);
+      });
+      tl.call(
+        function () {
+          (document.getElementById("subtitle") || {}).textContent = "";
+        },
+        [],
+        beat - 0.5,
+      );
+
+      window.__timelines["beat2-discover"] = tl;
+    </script>
+  </div>
+</template>

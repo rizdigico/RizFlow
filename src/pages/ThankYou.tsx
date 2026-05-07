@@ -29,11 +29,16 @@ export function ThankYou() {
   return (
     <>
       <Helmet>
-        <title>{booked ? "System Standing By | RizFlow" : "Transmission Received | RizFlow"}</title>
+        <title>
+          {booked
+            ? "System Standing By | RizFlow"
+            : "Transmission Received | RizFlow"}
+        </title>
         <meta
           name="description"
           content="Your audit request was received. Book your free 30-minute Discovery Audit call with RizFlow."
         />
+        <link rel="canonical" href={`${SITE_URL}/thank-you`} />
         <meta property="og:url" content={`${SITE_URL}/thank-you`} />
         <meta name="robots" content="noindex" />
       </Helmet>

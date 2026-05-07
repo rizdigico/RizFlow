@@ -10,7 +10,7 @@ But every week, hours disappear into invoicing, scheduling, client follow-ups, a
 
 RizFlow maps your workflows, finds exactly where time and money leak, and builds custom AI agents that handle all of it — automatically.
 
-Your agents plug into Slack, HubSpot, Telegram, Notion, and fifty more tools you already use. No rip-and-replace. Live in two to four weeks.
+Your agents plug into Slack, HubSpot, Telegram, Notion, and fifty more tools you already use. No rip-and-replace. Go live in two to four weeks.
 
 Then it just runs. Admin, comms, billing, scheduling — twenty-four seven. You cut operating costs by up to sixty percent. You reclaim twenty plus hours every week. And you check everything from your phone in under thirty minutes.
 

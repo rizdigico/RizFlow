@@ -675,7 +675,12 @@ export const blogPosts: BlogPost[] = [
             { value: "5-10d → 1-2d", label: "Onboarding time" },
             { value: "0", label: "Data entry errors" },
             { value: "<1hr", label: "Welcome sequence" },
-            { value: "80-90%", label: "Less staff time", animateTo: 90, suffix: "%" },
+            {
+              value: "80-90%",
+              label: "Less staff time",
+              animateTo: 90,
+              suffix: "%",
+            },
           ]}
         />
 
@@ -738,8 +743,7 @@ export const blogPosts: BlogPost[] = [
         <h2>The Problem with Traditional Email Management</h2>
         <CalloutBox type="warning">
           It takes 23 minutes to regain focus after an interruption. Check email
-          20 times per day? That's nearly 8 hours every week just to
-          refocusing.
+          20 times per day? That's nearly 8 hours every week just to refocusing.
         </CalloutBox>
         <p>
           Scheduled batching creates latency. A client who emails at 9 AM waits
@@ -750,19 +754,46 @@ export const blogPosts: BlogPost[] = [
         <h2>How Agentic AI Handles Your Inbox</h2>
         <p>An email management AI agent doesn't just filter — it thinks:</p>
         <ul>
-          <li><strong>Intelligent triage:</strong> Classifies by urgency, category, and action. Client requests flagged high priority, newsletters archived, team updates batched. Happens in seconds, 24/7.</li>
-          <li><strong>Contextual drafting:</strong> Drafts routine responses in your voice and brand tone — referencing past conversations and client preferences. Review and approve with a tap.</li>
-          <li><strong>Smart escalation:</strong> Pricing negotiations, client complaints, unusual requests — the agent flags them with summary and context, so you're involved only when your judgment adds value.</li>
-          <li><strong>Follow-up management:</strong> Tracks every outgoing email needing a reply. Sends polite follow-ups automatically. No more dropped conversations.</li>
+          <li>
+            <strong>Intelligent triage:</strong> Classifies by urgency,
+            category, and action. Client requests flagged high priority,
+            newsletters archived, team updates batched. Happens in seconds,
+            24/7.
+          </li>
+          <li>
+            <strong>Contextual drafting:</strong> Drafts routine responses in
+            your voice and brand tone — referencing past conversations and
+            client preferences. Review and approve with a tap.
+          </li>
+          <li>
+            <strong>Smart escalation:</strong> Pricing negotiations, client
+            complaints, unusual requests — the agent flags them with summary and
+            context, so you're involved only when your judgment adds value.
+          </li>
+          <li>
+            <strong>Follow-up management:</strong> Tracks every outgoing email
+            needing a reply. Sends polite follow-ups automatically. No more
+            dropped conversations.
+          </li>
         </ul>
 
         <h2>Real Results</h2>
         <StatCard
           stats={[
-            { value: "60-80%", label: "Less time on email", animateTo: 80, suffix: "%" },
+            {
+              value: "60-80%",
+              label: "Less time on email",
+              animateTo: 80,
+              suffix: "%",
+            },
             { value: "<15min", label: "First response" },
             { value: "~0", label: "Missed follow-ups" },
-            { value: "10-15hr", label: "Reclaimed/week", animateTo: 15, suffix: "hr" },
+            {
+              value: "10-15hr",
+              label: "Reclaimed/week",
+              animateTo: 15,
+              suffix: "hr",
+            },
           ]}
         />
 

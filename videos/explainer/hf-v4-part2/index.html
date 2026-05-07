@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #000;
+      }
+      .scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+      }
+      #scene1 {
+        z-index: 5;
+      }
+      #scene2 {
+        z-index: 6;
+        opacity: 0;
+      }
+      #scene3 {
+        z-index: 7;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-width="1920"
+      data-height="1080"
+      data-start="0"
+      data-duration="41"
+    >
+      <!-- Beat 5: INDUSTRIES (0 - 17s) -->
+      <div
+        id="scene1"
+        class="scene"
+        data-composition-id="beat5-industries"
+        data-composition-src="compositions/beat-5-industries.html"
+        data-start="0"
+        data-duration="17"
+        data-track-index="1"
+      ></div>
+
+      <!-- Beat 6: CASE STUDY (17 - 32s) -->
+      <div
+        id="scene2"
+        class="scene"
+        data-composition-id="beat6-casestudy"
+        data-composition-src="compositions/beat-6-casestudy.html"
+        data-start="17"
+        data-duration="15"
+        data-track-index="1"
+      ></div>
+
+      <!-- Beat 7: CTA (32 - 40s) -->
+      <div
+        id="scene3"
+        class="scene"
+        data-composition-id="beat7-cta"
+        data-composition-src="compositions/beat-7-cta.html"
+        data-start="32"
+        data-duration="8"
+        data-track-index="1"
+      ></div>
+
+      <!-- Part 2 audio (35-76s of original = offset) -->
+      <audio
+        id="narration"
+        src="assets/mixed-audio-v4-part2.wav"
+        data-start="0"
+        data-duration="41"
+        data-track-index="0"
+        data-volume="1"
+      ></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      // Transition 5→6: Slide + scale at 16.7s (was 52.2 in original = 52.2-35.5=16.7)
+      var t1 = 16.7;
+      tl.to(
+        "#scene1",
+        {
+          x: -200,
+          scale: 0.9,
+          filter: "blur(16px)",
+          opacity: 0,
+          duration: 0.35,
+          ease: "power3.in",
+        },
+        t1,
+      );
+      tl.fromTo(
+        "#scene2",
+        { x: 200, scale: 1.05, filter: "blur(16px)", opacity: 0 },
+        {
+          x: 0,
+          scale: 1,
+          filter: "blur(0px)",
+          opacity: 1,
+          duration: 0.5,
+          ease: "expo.out",
+        },
+        t1 + 0.1,
+      );
+
+      // Transition 6→7: Crossfade glow at 31.7s (was 67.2 in original = 67.2-35.5=31.7)
+      var t2 = 31.7;
+      tl.to(
+        "#scene2",
+        { filter: "blur(20px)", opacity: 0, duration: 0.4, ease: "power3.in" },
+        t2,
+      );
+      tl.fromTo(
+        "#scene3",
+        { opacity: 0, filter: "blur(10px)", scale: 0.95 },
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          scale: 1,
+          duration: 0.6,
+          ease: "power2.inOut",
+        },
+        t2 + 0.1,
+      );
+
+      // Hard kills
+      tl.set("#scene1", { visibility: "hidden" }, 17.2);
+      tl.set("#scene2", { visibility: "hidden" }, 32.7);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

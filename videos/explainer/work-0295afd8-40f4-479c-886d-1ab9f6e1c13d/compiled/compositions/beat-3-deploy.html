@@ -1,0 +1,787 @@
+<template id="beat3-deploy-template">
+  <div
+    data-composition-id="beat3-deploy"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="8.5"
+  >
+    <style>
+      [data-composition-id="beat3-deploy"] {
+        font-family: "Inter", "Montserrat", sans-serif;
+        background: #0a0f1a;
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Flowing mesh background */
+      [data-composition-id="beat3-deploy"] .flow-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.35;
+      }
+      [data-composition-id="beat3-deploy"] .flow-bg path {
+        fill: none;
+        stroke: #4fa0b4;
+        stroke-width: 1.2;
+      }
+
+      [data-composition-id="beat3-deploy"] .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 1;
+      }
+
+      [data-composition-id="beat3-deploy"] .radial-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1000px;
+        height: 1000px;
+        background: radial-gradient(
+          circle,
+          rgba(6, 182, 212, 0.1) 0%,
+          transparent 60%
+        );
+        z-index: 1;
+      }
+
+      /* Central orchestrator hub */
+      [data-composition-id="beat3-deploy"] .orchestrator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0e2a3a, #0a1f2e);
+        border: 2px solid rgba(6, 182, 212, 0.4);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        opacity: 0;
+        box-shadow:
+          0 0 40px rgba(6, 182, 212, 0.15),
+          0 0 80px rgba(6, 182, 212, 0.08);
+      }
+
+      [data-composition-id="beat3-deploy"] .orch-icon {
+        font-size: 42px;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+
+      [data-composition-id="beat3-deploy"] .orch-label {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        color: #22d3ee;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+      }
+
+      [data-composition-id="beat3-deploy"] .orch-ring {
+        position: absolute;
+        top: -15px;
+        left: -15px;
+        width: 170px;
+        height: 170px;
+        border-radius: 50%;
+        border: 1px solid rgba(6, 182, 212, 0.2);
+        z-index: 4;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat3-deploy"] .orch-ring2 {
+        position: absolute;
+        top: -30px;
+        left: -30px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 1px dashed rgba(6, 182, 212, 0.12);
+        z-index: 4;
+        opacity: 0;
+      }
+
+      /* Pulse rings around orchestrator */
+      [data-composition-id="beat3-deploy"] .pulse-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 2px solid rgba(6, 182, 212, 0.4);
+        z-index: 4;
+        opacity: 0;
+      }
+
+      /* Agent nodes (left side) */
+      [data-composition-id="beat3-deploy"] .agent-node {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 4;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat3-deploy"] .agent-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #111827, #0e1f2e);
+        border: 2px solid rgba(6, 182, 212, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.12);
+        transition: box-shadow 0.3s;
+      }
+
+      [data-composition-id="beat3-deploy"] .agent-label {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 12px;
+        color: #94a3b8;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-top: 8px;
+        background: #0a0f1a;
+        border: 1px solid #334155;
+        border-radius: 4px;
+        padding: 2px 10px;
+      }
+
+      [data-composition-id="beat3-deploy"] .agent-1 {
+        top: 160px;
+        left: 100px;
+      }
+      [data-composition-id="beat3-deploy"] .agent-2 {
+        top: 360px;
+        left: 60px;
+      }
+      [data-composition-id="beat3-deploy"] .agent-3 {
+        top: 560px;
+        left: 100px;
+      }
+      [data-composition-id="beat3-deploy"] .agent-4 {
+        top: 760px;
+        left: 60px;
+      }
+
+      /* Tool nodes (right side) */
+      [data-composition-id="beat3-deploy"] .tool-node {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 4;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat3-deploy"] .tool-card {
+        width: 110px;
+        height: 88px;
+        background: rgba(17, 24, 39, 0.8);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.06);
+      }
+
+      [data-composition-id="beat3-deploy"] .tool-icon {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      [data-composition-id="beat3-deploy"] .tool-icon svg {
+        width: 26px;
+        height: 26px;
+      }
+      [data-composition-id="beat3-deploy"] .tool-name {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 13px;
+        color: #fff;
+      }
+
+      [data-composition-id="beat3-deploy"] .live-badge {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 6px;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat3-deploy"] .live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+      }
+
+      [data-composition-id="beat3-deploy"] .live-text {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        color: #10b981;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      [data-composition-id="beat3-deploy"] .tool-1 {
+        top: 140px;
+        right: 120px;
+      }
+      [data-composition-id="beat3-deploy"] .tool-2 {
+        top: 310px;
+        right: 80px;
+      }
+      [data-composition-id="beat3-deploy"] .tool-3 {
+        top: 480px;
+        right: 120px;
+      }
+      [data-composition-id="beat3-deploy"] .tool-4 {
+        top: 650px;
+        right: 80px;
+      }
+      [data-composition-id="beat3-deploy"] .tool-5 {
+        top: 810px;
+        right: 140px;
+      }
+
+      /* SVG paths */
+      [data-composition-id="beat3-deploy"] .connections-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      [data-composition-id="beat3-deploy"] .conn-path {
+        fill: none;
+        stroke: url(#connGrad);
+        stroke-width: 2;
+        stroke-dasharray: 800;
+        stroke-dashoffset: 800;
+      }
+
+      /* Traveling particles on paths */
+      [data-composition-id="beat3-deploy"] .travel-dot {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #22d3ee;
+        box-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
+        z-index: 6;
+        opacity: 0;
+      }
+
+      /* Bottom text */
+      [data-composition-id="beat3-deploy"] .bottom-text {
+        position: absolute;
+        bottom: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
+        display: flex;
+        gap: 0.45em;
+      }
+
+      [data-composition-id="beat3-deploy"] .bottom-word {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 36px;
+        color: #ffffff;
+        letter-spacing: 0.06em;
+        display: inline-block;
+        opacity: 0;
+      }
+
+      [data-composition-id="beat3-deploy"] .bottom-word.highlight {
+        color: #22d3ee;
+      }
+    </style>
+
+    <!-- Background -->
+    <svg
+      class="flow-bg"
+      viewBox="0 0 1920 1080"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 200 Q 240 120, 480 200 T 960 200 T 1440 200 T 1920 200"
+        opacity="0.15"
+      />
+      <path d="M0 380 Q 300 300, 600 380 T 1200 380 T 1920 380" opacity="0.2" />
+      <path
+        d="M0 540 Q 200 470, 400 540 T 800 540 T 1200 540 T 1920 540"
+        opacity="0.12"
+      />
+      <path
+        d="M0 700 Q 360 630, 720 700 T 1440 700 T 1920 700"
+        opacity="0.18"
+      />
+      <path d="M0 880 Q 280 810, 560 880 T 1120 880 T 1920 880" opacity="0.1" />
+    </svg>
+    <div class="grid-overlay"></div>
+    <div class="radial-glow"></div>
+
+    <!-- SVG connections -->
+    <svg
+      class="connections-svg"
+      viewBox="0 0 1920 1080"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id="connGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.8" />
+          <stop offset="50%" stop-color="#3B82F6" stop-opacity="0.5" />
+          <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.8" />
+        </linearGradient>
+        <filter id="glow3" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+      <!-- Agent→Orchestrator connections -->
+      <path class="conn-path" id="path-a1" d="M 140 200 Q 450 340 900 510" />
+      <path class="conn-path" id="path-a2" d="M 100 400 Q 400 460 900 530" />
+      <path class="conn-path" id="path-a3" d="M 140 600 Q 450 560 900 540" />
+      <path class="conn-path" id="path-a4" d="M 100 800 Q 400 680 900 550" />
+      <!-- Orchestrator→Tool connections -->
+      <path class="conn-path" id="path-t1" d="M 970 480 Q 1200 340 1700 185" />
+      <path class="conn-path" id="path-t2" d="M 970 500 Q 1200 400 1720 355" />
+      <path class="conn-path" id="path-t3" d="M 970 530 Q 1200 510 1700 525" />
+      <path class="conn-path" id="path-t4" d="M 970 560 Q 1200 610 1720 690" />
+      <path class="conn-path" id="path-t5" d="M 970 570 Q 1200 680 1660 845" />
+    </svg>
+
+    <!-- Traveling dots -->
+    <div class="travel-dot" id="td1"></div>
+    <div class="travel-dot" id="td2"></div>
+    <div class="travel-dot" id="td3"></div>
+    <div class="travel-dot" id="td4"></div>
+    <div class="travel-dot" id="td5"></div>
+    <div class="travel-dot" id="td6"></div>
+    <div class="travel-dot" id="td7"></div>
+    <div class="travel-dot" id="td8"></div>
+
+    <!-- Pulse rings -->
+    <div
+      class="pulse-ring"
+      id="pring1"
+      style="width: 180px; height: 180px"
+    ></div>
+    <div
+      class="pulse-ring"
+      id="pring2"
+      style="width: 240px; height: 240px"
+    ></div>
+    <div
+      class="pulse-ring"
+      id="pring3"
+      style="width: 320px; height: 320px"
+    ></div>
+
+    <!-- Central orchestrator hub -->
+    <div class="orchestrator" id="orchestrator">
+      <div class="orch-icon">🧠</div>
+      <div class="orch-label">RizFlow</div>
+    </div>
+    <div class="orch-ring" id="orch-ring"></div>
+    <div class="orch-ring2" id="orch-ring2"></div>
+
+    <!-- Agent nodes -->
+    <div class="agent-node agent-1">
+      <div class="agent-circle">📋</div>
+      <div class="agent-label">Admin</div>
+    </div>
+    <div class="agent-node agent-2">
+      <div class="agent-circle">📊</div>
+      <div class="agent-label">Projects</div>
+    </div>
+    <div class="agent-node agent-3">
+      <div class="agent-circle">💳</div>
+      <div class="agent-label">Finance</div>
+    </div>
+    <div class="agent-node agent-4">
+      <div class="agent-circle">📩</div>
+      <div class="agent-label">Comms</div>
+    </div>
+
+    <!-- Tool nodes -->
+    <div class="tool-node tool-1">
+      <div class="tool-card">
+        <div class="tool-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#22D3EE"
+            stroke-width="1.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 2c2.7 0 5.4.8 7.5 2.2l-1.5 2.6C16.2 5.8 14.1 5.2 12 5.2c-3.8 0-6.8 3-6.8 6.8s3 6.8 6.8 6.8c2.1 0 4.2-.8 5.7-2.2l1.8 2.4C17.7 21 14.9 22 12 22 6.5 22 2 17.5 2 12S6.5 2 12 2z"
+            />
+          </svg>
+        </div>
+        <div class="tool-name">Slack</div>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span class="live-text">Live</span>
+      </div>
+    </div>
+
+    <div class="tool-node tool-2">
+      <div class="tool-card">
+        <div class="tool-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#22D3EE"
+            stroke-width="1.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.5 21V7.5m0 0L9 12m4.5-4.5L18 12M3 3l18 18"
+            />
+          </svg>
+        </div>
+        <div class="tool-name">HubSpot</div>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span class="live-text">Live</span>
+      </div>
+    </div>
+
+    <div class="tool-node tool-3">
+      <div class="tool-card">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="#22D3EE">
+            <path
+              d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+            />
+          </svg>
+        </div>
+        <div class="tool-name">Telegram</div>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span class="live-text">Live</span>
+      </div>
+    </div>
+
+    <div class="tool-node tool-4">
+      <div class="tool-card">
+        <div class="tool-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#22D3EE"
+            stroke-width="1.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5c0-.621.504-1.125 1.125-1.125h1.5c.621 0 1.125.504 1.125 1.125v1.5m0 0h3.375M6.75 4.5h3.375M6.75 19.5h3.375m-3.375 0v-2.625c0-.621.504-1.125 1.125-1.125h7.5c.621 0 1.125.504 1.125 1.125v2.625"
+            />
+          </svg>
+        </div>
+        <div class="tool-name">Notion</div>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span class="live-text">Live</span>
+      </div>
+    </div>
+
+    <div class="tool-node tool-5">
+      <div class="tool-card">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="#22D3EE">
+            <path
+              d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+            />
+          </svg>
+        </div>
+        <div class="tool-name">Gmail</div>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span class="live-text">Live</span>
+      </div>
+    </div>
+
+    <!-- Bottom text -->
+    <div class="bottom-text">
+      <span class="bottom-word">No</span>
+      <span class="bottom-word">rip-and-replace.</span>
+      <span class="bottom-word highlight">Live</span>
+      <span class="bottom-word">in 2-4 weeks.</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var beat = 8.5;
+
+      // Flow background animation
+      var flowPaths = document.querySelectorAll(
+        "[data-composition-id='beat3-deploy'] .flow-bg path",
+      );
+      flowPaths.forEach(function (path, i) {
+        tl.fromTo(
+          path,
+          { strokeDasharray: 2000, strokeDashoffset: 2000 },
+          { strokeDashoffset: 0, duration: 5, ease: "none" },
+          i * 0.2,
+        );
+      });
+
+      // Orchestrator hub — scales in with glow
+      tl.fromTo(
+        "#orchestrator",
+        { opacity: 0, scale: 0.3 },
+        { opacity: 1, scale: 1, duration: 0.6, ease: "elastic.out(1, 0.5)" },
+        0.1,
+      );
+      tl.fromTo(
+        "#orch-ring",
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3, ease: "power2.out" },
+        0.3,
+      );
+      tl.fromTo(
+        "#orch-ring2",
+        { opacity: 0 },
+        { opacity: 0.5, duration: 0.4, ease: "power2.out" },
+        0.5,
+      );
+
+      // Pulse rings emanate from orchestrator
+      tl.fromTo(
+        "#pring1",
+        { opacity: 0.6, scale: 1 },
+        { opacity: 0, scale: 2.5, duration: 1.5, ease: "power2.out" },
+        0.5,
+      );
+      tl.fromTo(
+        "#pring2",
+        { opacity: 0.4, scale: 1 },
+        { opacity: 0, scale: 3, duration: 2, ease: "power2.out" },
+        1.0,
+      );
+      tl.fromTo(
+        "#pring3",
+        { opacity: 0.3, scale: 1 },
+        { opacity: 0, scale: 4, duration: 2.5, ease: "power2.out" },
+        1.5,
+      );
+
+      // Agent circles scale in (staggered)
+      var agents = [".agent-1", ".agent-2", ".agent-3", ".agent-4"];
+      agents.forEach(function (agent, i) {
+        tl.fromTo(
+          agent,
+          { opacity: 0, scale: 0.3 },
+          { opacity: 1, scale: 1, duration: 0.4, ease: "elastic.out(1, 0.6)" },
+          0.5 + i * 0.12,
+        );
+      });
+
+      // Tool nodes slide in from right (staggered)
+      var tools = [".tool-1", ".tool-2", ".tool-3", ".tool-4", ".tool-5"];
+      tools.forEach(function (tool, i) {
+        tl.fromTo(
+          tool,
+          { opacity: 0, x: 60 },
+          { opacity: 1, x: 0, duration: 0.35, ease: "power2.out" },
+          0.8 + i * 0.1,
+        );
+      });
+
+      // Connection paths draw themselves
+      var pathGroups = [
+        ["#path-a1", "#path-a2", "#path-a3", "#path-a4"],
+        ["#path-t1", "#path-t2", "#path-t3", "#path-t4", "#path-t5"],
+      ];
+      pathGroups.forEach(function (group) {
+        group.forEach(function (path, i) {
+          tl.to(
+            path,
+            { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" },
+            1.0 + i * 0.12,
+          );
+        });
+      });
+
+      // Traveling dots along paths
+      var travelDots = [
+        "#td1",
+        "#td2",
+        "#td3",
+        "#td4",
+        "#td5",
+        "#td6",
+        "#td7",
+        "#td8",
+      ];
+      var dotPaths = [
+        "#path-a1",
+        "#path-a2",
+        "#path-a3",
+        "#path-a4",
+        "#path-t1",
+        "#path-t2",
+        "#path-t3",
+        "#path-t4",
+      ];
+      travelDots.forEach(function (dot, i) {
+        tl.fromTo(
+          dot,
+          { opacity: 0.8 },
+          { opacity: 0, duration: 1.5, ease: "power2.in" },
+          2.0 + i * 0.3,
+        );
+        var pathEl = document.querySelector(dotPaths[i]);
+        if (pathEl && pathEl.getTotalLength) {
+          var len = pathEl.getTotalLength();
+          tl.fromTo(
+            dot,
+            { opacity: 0.9, x: 0, y: 0 },
+            {
+              motionPath: {
+                path: dotPaths[i],
+                align: dotPaths[i],
+                alignOrigin: [0.5, 0.5],
+              },
+              opacity: 0,
+              duration: 1.5,
+              ease: "power2.inOut",
+            },
+            2.0 + i * 0.3,
+          );
+        }
+      });
+
+      // Live badges pop in after tool logos
+      var liveBadges = [
+        ".tool-1 .live-badge",
+        ".tool-2 .live-badge",
+        ".tool-3 .live-badge",
+        ".tool-4 .live-badge",
+        ".tool-5 .live-badge",
+      ];
+      liveBadges.forEach(function (badge, i) {
+        tl.fromTo(
+          badge,
+          { opacity: 0, scale: 0.5 },
+          { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" },
+          1.2 + i * 0.12,
+        );
+      });
+
+      // Agent glow pulses
+      agents.forEach(function (agent, i) {
+        tl.to(
+          agent + " .agent-circle",
+          {
+            boxShadow: "0 0 30px rgba(6,182,212,0.35)",
+            duration: 1.2,
+            yoyo: true,
+            repeat: 3,
+            ease: "sine.inOut",
+          },
+          1.5 + i * 0.3,
+        );
+      });
+
+      // Orchestrator glow pulse
+      tl.to(
+        "#orchestrator",
+        {
+          boxShadow: "0 0 60px rgba(6,182,212,0.25)",
+          duration: 1.5,
+          yoyo: true,
+          repeat: 4,
+          ease: "sine.inOut",
+        },
+        1.0,
+      );
+
+      // Orchestrator ring rotation
+      tl.to(
+        "#orch-ring",
+        { rotation: 360, duration: 20, ease: "none", repeat: -1 },
+        0,
+      );
+
+      // Bottom text — per-word kinetic typography
+      var words = document.querySelectorAll(
+        "[data-composition-id='beat3-deploy'] .bottom-word",
+      );
+      words.forEach(function (word, i) {
+        tl.fromTo(
+          word,
+          { opacity: 0, y: 20, x: 15 },
+          { opacity: 1, y: 0, x: 0, duration: 0.35, ease: "power2.out" },
+          4.5 + i * 0.18,
+        );
+      });
+
+      // Agent subtle float
+      agents.forEach(function (agent, i) {
+        tl.to(
+          agent,
+          {
+            y: "+=4",
+            duration: 1.8 + i * 0.2,
+            yoyo: true,
+            repeat: 2,
+            ease: "sine.inOut",
+          },
+          2.0,
+        );
+      });
+
+      window.__timelines["beat3-deploy"] = tl;
+    </script>
+  </div>
+</template>

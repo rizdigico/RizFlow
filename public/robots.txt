@@ -31,4 +31,4 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
-Sitemap: https://rizflow.co/sitemap.xml
+Sitemap: https://www.rizflow.co/sitemap.xml

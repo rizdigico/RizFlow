@@ -47,69 +47,69 @@
       data-width="1920"
       data-height="1080"
       data-start="0"
-      data-duration="41"
+      data-duration="46"
     >
-      <!-- Beat 1: THE PROBLEM (0.00 - 7.36s) -->
+      <!-- Beat 1: THE PROBLEM (0.00 - 9.50s) -->
       <div
         id="scene1"
         class="scene"
         data-composition-id="beat1-problem"
         data-composition-src="compositions/beat-1-problem.html"
         data-start="0"
-        data-duration="7.36"
+        data-duration="9.5"
         data-track-index="1"
       ></div>
 
-      <!-- Beat 2: DISCOVER (7.36 - 13.54s) -->
+      <!-- Beat 2: DISCOVER (9.50 - 18.00s) -->
       <div
         id="scene2"
         class="scene"
         data-composition-id="beat2-discover"
         data-composition-src="compositions/beat-2-discover.html"
-        data-start="7.36"
-        data-duration="5.88"
+        data-start="9.5"
+        data-duration="8.5"
         data-track-index="1"
       ></div>
 
-      <!-- Beat 3: BUILD & DEPLOY (13.54 - 20.66s) -->
+      <!-- Beat 3: BUILD & DEPLOY (18.00 - 26.50s) -->
       <div
         id="scene3"
         class="scene"
         data-composition-id="beat3-deploy"
         data-composition-src="compositions/beat-3-deploy.html"
-        data-start="13.54"
-        data-duration="6.82"
+        data-start="18.0"
+        data-duration="8.5"
         data-track-index="1"
       ></div>
 
-      <!-- Beat 4: SCALE/IMPACT (20.66 - 32.38s) -->
+      <!-- Beat 4: SCALE/IMPACT (26.50 - 38.00s) -->
       <div
         id="scene4"
         class="scene"
         data-composition-id="beat4-scale"
         data-composition-src="compositions/beat-4-scale.html"
-        data-start="20.66"
-        data-duration="11.42"
+        data-start="26.5"
+        data-duration="11.5"
         data-track-index="1"
       ></div>
 
-      <!-- Beat 5: CTA (32.38 - 41s) -->
+      <!-- Beat 5: CTA (38.00 - 45.60s) -->
       <div
         id="scene5"
         class="scene"
         data-composition-id="beat5-cta"
         data-composition-src="compositions/beat-5-cta.html"
-        data-start="32.38"
-        data-duration="8.62"
+        data-start="38.0"
+        data-duration="7.6"
         data-track-index="1"
       ></div>
 
       <!-- Narration audio -->
       <audio
         id="narration"
-        src="narration.wav"
+        src="mixed-audio-v3.wav"
         data-start="0"
-        data-duration="37.2"
+        data-duration="46"
         data-track-index="0"
         data-volume="1"
       ></audio>
@@ -118,10 +118,10 @@
     <script>
       window.__timelines = window.__timelines || {};
       var tl = gsap.timeline({ paused: true });
-      var total = 41;
+      var total = 46;
 
-      // Transition 1→2: Blur crossfade at 7.06s (0.3s before beat2 start)
-      var t1 = 7.06;
+      // Transition 1→2: Blur crossfade at 9.2s
+      var t1 = 9.2;
       tl.to(
         "#scene1",
         { filter: "blur(20px)", opacity: 0, duration: 0.3, ease: "power3.in" },
@@ -140,8 +140,8 @@
         t1 + 0.1,
       );
 
-      // Transition 2→3: Velocity-matched upward slide at 13.24s
-      var t2 = 13.24;
+      // Transition 2→3: Velocity-matched upward slide at 17.7s
+      var t2 = 17.7;
       tl.to(
         "#scene2",
         {
@@ -166,8 +166,8 @@
         t2,
       );
 
-      // Transition 3→4: Whip pan left at 20.36s
-      var t3 = 20.36;
+      // Transition 3→4: Whip pan left at 26.2s
+      var t3 = 26.2;
       tl.to(
         "#scene3",
         {
@@ -192,8 +192,8 @@
         t3 + 0.15,
       );
 
-      // Transition 4→5: Zoom through at 32.08s
-      var t4 = 32.08;
+      // Transition 4→5: Zoom through at 37.7s
+      var t4 = 37.7;
       tl.to(
         "#scene4",
         {
@@ -219,11 +219,11 @@
       );
 
       // Hard kills for deterministic rendering
-      tl.set("#scene1", { visibility: "hidden" }, 7.5);
-      tl.set("#scene2", { visibility: "hidden" }, 13.7);
-      tl.set("#scene3", { visibility: "hidden" }, 20.7);
-      tl.set("#scene4", { visibility: "hidden" }, 32.5);
-      tl.set("#scene5", { visibility: "hidden" }, 41);
+      tl.set("#scene1", { visibility: "hidden" }, 9.7);
+      tl.set("#scene2", { visibility: "hidden" }, 18.2);
+      tl.set("#scene3", { visibility: "hidden" }, 26.7);
+      tl.set("#scene4", { visibility: "hidden" }, 38.2);
+      tl.set("#scene5", { visibility: "hidden" }, 46);
 
       window.__timelines["main"] = tl;
     </script>

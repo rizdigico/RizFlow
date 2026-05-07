@@ -1,0 +1,523 @@
+<template id="beat7-cta-template">
+  <div
+    data-composition-id="beat7-cta"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="8"
+  >
+    <style>
+      [data-composition-id="beat7-cta"] {
+        font-family: "Inter", "Montserrat", sans-serif;
+        background: #0a0f1a;
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+      }
+      [data-composition-id="beat7-cta"] .flow-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.5;
+      }
+      [data-composition-id="beat7-cta"] .flow-bg path {
+        fill: none;
+        stroke: #4fa0b4;
+        stroke-width: 2;
+      }
+      [data-composition-id="beat7-cta"] .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 1;
+      }
+      [data-composition-id="beat7-cta"] .radial-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1600px;
+        height: 1600px;
+        background: radial-gradient(
+          circle,
+          rgba(16, 185, 129, 0.15) 0%,
+          rgba(6, 182, 212, 0.08) 30%,
+          transparent 55%
+        );
+        z-index: 1;
+      }
+      [data-composition-id="beat7-cta"] .particle-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        z-index: 2;
+      }
+
+      /* Logo silhouette */
+      [data-composition-id="beat7-cta"] .logo-silhouette {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -55%);
+        z-index: 3;
+        opacity: 0;
+      }
+      [data-composition-id="beat7-cta"] .logo-mark {
+        width: 180px;
+        height: 180px;
+        margin: 0 auto 24px;
+        position: relative;
+      }
+      [data-composition-id="beat7-cta"] .logo-mark svg {
+        width: 100%;
+        height: 100%;
+      }
+      [data-composition-id="beat7-cta"] .logo-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(16, 185, 129, 0.3) 0%,
+          transparent 60%
+        );
+        z-index: 2;
+        opacity: 0;
+      }
+
+      /* Brand name */
+      [data-composition-id="beat7-cta"] .brand-name {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 72px;
+        color: #ffffff;
+        text-align: center;
+        letter-spacing: 0.08em;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -30%);
+        z-index: 5;
+        opacity: 0;
+      }
+      [data-composition-id="beat7-cta"] .brand-name .accent {
+        color: #10b981;
+      }
+
+      /* Tagline */
+      [data-composition-id="beat7-cta"] .tagline {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, 10px);
+        z-index: 5;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 22px;
+        color: #94a3b8;
+        text-align: center;
+        opacity: 0;
+        letter-spacing: 0.02em;
+      }
+
+      /* CTA button */
+      [data-composition-id="beat7-cta"] .cta-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, 70px);
+        z-index: 5;
+        opacity: 0;
+      }
+      [data-composition-id="beat7-cta"] .cta-btn-inner {
+        background: linear-gradient(135deg, #10b981, #06b6d4);
+        border: none;
+        border-radius: 50px;
+        padding: 16px 48px;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 20px;
+        color: #ffffff;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        box-shadow: 0 0 40px rgba(16, 185, 129, 0.3);
+      }
+
+      /* Social icons row */
+      [data-composition-id="beat7-cta"] .social-row {
+        position: absolute;
+        bottom: 140px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 32px;
+        z-index: 5;
+      }
+      [data-composition-id="beat7-cta"] .social-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        opacity: 0;
+      }
+
+      /* URL */
+      [data-composition-id="beat7-cta"] .url-text {
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        color: #22d3ee;
+        opacity: 0;
+        letter-spacing: 0.04em;
+      }
+
+      /* Subtitle */
+      [data-composition-id="beat7-cta"] .subtitle {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 24px;
+        color: #ffffff;
+        text-align: center;
+        opacity: 0;
+        background: rgba(10, 15, 26, 0.75);
+        padding: 6px 18px;
+        border-radius: 6px;
+        max-width: 1600px;
+      }
+    </style>
+
+    <svg
+      class="flow-bg"
+      viewBox="0 0 1920 1080"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 200 Q 240 120, 480 200 T 960 200 T 1440 200 T 1920 200"
+        opacity="0.35"
+      />
+      <path d="M0 400 Q 300 330, 600 400 T 1200 400 T 1920 400" opacity="0.4" />
+      <path
+        d="M0 600 Q 200 540, 400 600 T 800 600 T 1200 600 T 1920 600"
+        opacity="0.35"
+      />
+      <path d="M0 800 Q 360 730, 720 800 T 1440 800 T 1920 800" opacity="0.4" />
+    </svg>
+    <div class="grid-overlay"></div>
+    <div class="radial-glow"></div>
+    <canvas
+      class="particle-canvas"
+      id="beat7-canvas"
+      width="1920"
+      height="1080"
+    ></canvas>
+
+    <!-- Logo silhouette (RizFlow "R" mark) -->
+    <div class="logo-silhouette" id="logo-mark">
+      <div class="logo-glow" id="logo-glow"></div>
+      <div class="logo-mark">
+        <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- RizFlow "R" as clean geometric silhouette -->
+          <circle
+            cx="90"
+            cy="90"
+            r="85"
+            fill="none"
+            stroke="url(#ctaGrad)"
+            stroke-width="3"
+            opacity="0.4"
+          />
+          <defs>
+            <linearGradient id="ctaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10b981" />
+              <stop offset="100%" stop-color="#06b6d4" />
+            </linearGradient>
+          </defs>
+          <!-- Stylized R -->
+          <path
+            d="M60 45 L60 135 L75 135 L75 95 L95 95 L110 135 L128 135 L112 93 C120 89 128 79 128 70 C128 55 117 45 98 45 Z M75 58 L95 58 C105 58 110 63 110 70 C110 77 105 82 95 82 L75 82 Z"
+            fill="url(#ctaGrad)"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <div class="brand-name" id="brand-name">
+      Riz<span class="accent">Flow</span>
+    </div>
+    <div class="tagline" id="tagline">AI agents that run your business</div>
+    <div class="cta-button" id="cta-btn">
+      <div class="cta-btn-inner">GET STARTED</div>
+    </div>
+
+    <!-- Social icons -->
+    <div class="social-row">
+      <div class="social-icon" id="soc1">&#x1F4E8;</div>
+      <div class="social-icon" id="soc2">&#x1F4F1;</div>
+      <div class="social-icon" id="soc3">&#x1F310;</div>
+    </div>
+
+    <div class="url-text" id="url-text">rizflow.co</div>
+
+    <div class="subtitle" id="subtitle"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var beat = 8;
+
+      // Canvas — final converging network
+      var canvas = document.getElementById("beat7-canvas");
+      var ctx = canvas.getContext("2d");
+      var proxy = { t: 0 };
+      function hash(x, y) {
+        var n = x * 374761393 + y * 668265263;
+        n = (n ^ (n >> 13)) * 1274126177;
+        return ((n ^ (n >> 16)) & 0x7fffffff) / 0x7fffffff;
+      }
+      function drawNetwork(time) {
+        ctx.clearRect(0, 0, 1920, 1080);
+        var nodes = 60,
+          positions = [];
+        for (var i = 0; i < nodes; i++) {
+          // Converge toward center over time
+          var bx = hash(i, 0) * 1920;
+          var by = hash(i, 1) * 1080;
+          var convergence = Math.min(time / (beat * 0.7), 1);
+          var cx = bx + (960 - bx) * convergence * 0.3;
+          var cy = by + (540 - by) * convergence * 0.3;
+          var dx = Math.sin(time * 0.18 + i * 1.3) * 15;
+          var dy = Math.cos(time * 0.14 + i * 0.9) * 11;
+          var x = cx + dx,
+            y = cy + dy;
+          positions.push({ x: x, y: y });
+          var alpha = 0.3 + hash(i, 2) * 0.4;
+          var r = 2.5 + hash(i, 3) * 2;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(16, 185, 129, " + alpha + ")";
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(16, 185, 129, " + alpha * 0.12 + ")";
+          ctx.fill();
+        }
+        for (var i = 0; i < nodes; i++) {
+          for (var j = i + 1; j < nodes; j++) {
+            var dist = Math.sqrt(
+              Math.pow(positions[i].x - positions[j].x, 2) +
+                Math.pow(positions[i].y - positions[j].y, 2),
+            );
+            if (dist < 160) {
+              var lineAlpha = (1 - dist / 160) * 0.12;
+              ctx.beginPath();
+              ctx.moveTo(positions[i].x, positions[i].y);
+              ctx.lineTo(positions[j].x, positions[j].y);
+              ctx.strokeStyle = "rgba(16, 185, 129, " + lineAlpha + ")";
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      tl.to(
+        proxy,
+        {
+          t: beat,
+          duration: beat,
+          ease: "none",
+          onUpdate: function () {
+            drawNetwork(proxy.t);
+          },
+        },
+        0,
+      );
+
+      // Flow
+      var flowPaths = document.querySelectorAll(
+        "[data-composition-id='beat7-cta'] .flow-bg path",
+      );
+      flowPaths.forEach(function (path, i) {
+        tl.fromTo(
+          path,
+          { strokeDasharray: 3000, strokeDashoffset: 3000 },
+          { strokeDashoffset: 0, duration: 6, ease: "none" },
+          i * 0.2,
+        );
+      });
+
+      // Logo mark
+      tl.fromTo(
+        "#logo-mark",
+        { opacity: 0, scale: 0.3, filter: "blur(20px)" },
+        {
+          opacity: 1,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 1,
+          ease: "expo.out",
+        },
+        0.5,
+      );
+      tl.fromTo(
+        "#logo-glow",
+        { opacity: 0 },
+        { opacity: 1, duration: 1.5, ease: "power2.out" },
+        0.5,
+      );
+      // Logo pulse
+      tl.to(
+        "#logo-mark .logo-mark",
+        {
+          scale: 1.05,
+          duration: 1,
+          yoyo: true,
+          repeat: 2,
+          ease: "sine.inOut",
+        },
+        2.0,
+      );
+
+      // Brand name
+      tl.fromTo(
+        "#brand-name",
+        { opacity: 0, y: 30, filter: "blur(10px)" },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.7,
+          ease: "expo.out",
+        },
+        1.2,
+      );
+
+      // Tagline
+      tl.fromTo(
+        "#tagline",
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+        2.0,
+      );
+
+      // CTA button
+      tl.fromTo(
+        "#cta-btn",
+        { opacity: 0, y: 20, scale: 0.9 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(2)" },
+        2.8,
+      );
+      // CTA pulse
+      tl.to(
+        "#cta-btn .cta-btn-inner",
+        {
+          boxShadow: "0 0 60px rgba(16,185,129,0.5)",
+          duration: 1,
+          yoyo: true,
+          repeat: 2,
+          ease: "sine.inOut",
+        },
+        3.5,
+      );
+
+      // Social icons
+      var socials = ["#soc1", "#soc2", "#soc3"];
+      socials.forEach(function (soc, i) {
+        tl.fromTo(
+          soc,
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" },
+          3.5 + i * 0.2,
+        );
+      });
+
+      // URL
+      tl.fromTo(
+        "#url-text",
+        { opacity: 0 },
+        { opacity: 1, duration: 0.5, ease: "power2.out" },
+        4.0,
+      );
+
+      // Final glow burst
+      tl.to(
+        "#logo-glow",
+        {
+          opacity: 0.6,
+          scale: 1.3,
+          duration: 1.5,
+          ease: "power2.inOut",
+          yoyo: true,
+          repeat: 1,
+        },
+        5.0,
+      );
+
+      // Subtitles
+      var subs = [
+        { start: 0, end: 2.5, text: "Let AI run your operations" },
+        { start: 2.5, end: 5, text: "so you can focus on growing" },
+        {
+          start: 5,
+          end: 8,
+          text: "RizFlow — AI agents that run your business",
+        },
+      ];
+      subs.forEach(function (sub) {
+        tl.call(
+          function () {
+            (document.getElementById("subtitle") || {}).textContent = sub.text;
+          },
+          [],
+          sub.start,
+        );
+        tl.fromTo(
+          "#subtitle",
+          { opacity: 0 },
+          { opacity: 0.9, duration: 0.2 },
+          sub.start,
+        );
+        tl.to("#subtitle", { opacity: 0, duration: 0.2 }, sub.end - 0.2);
+      });
+      tl.call(
+        function () {
+          (document.getElementById("subtitle") || {}).textContent = "";
+        },
+        [],
+        beat - 0.5,
+      );
+
+      window.__timelines["beat7-cta"] = tl;
+    </script>
+  </div>
+</template>

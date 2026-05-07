@@ -1036,7 +1036,7 @@ Rules:
                             </strong>{" "}
                             on average.{" "}
                             <Link
-                              to="/case-study/rainfresh-sg"
+                              to="/case-studies"
                               className="text-teal-400 hover:text-teal-300 underline"
                             >
                               See verified results

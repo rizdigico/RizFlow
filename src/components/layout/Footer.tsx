@@ -14,7 +14,7 @@ const footerLinks = {
   Resources: [
     { label: "FAQ", href: "/faq" },
     { label: "Blog", href: "/blog" },
-    { label: "Case Studies", href: "/case-study/rainfresh-sg" },
+    { label: "Case Studies", href: "/case-studies" },
   ],
   Legal: [{ label: "Privacy & Terms", href: "/privacy-terms" }],
 };

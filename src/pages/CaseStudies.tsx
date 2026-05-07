@@ -1,8 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallaxScroll } from "@/hooks/useFlowingAnimation";
 import { FlowingMesh } from "@/components/animations/FlowingMesh";
 import { cn } from "@/lib/utils";
@@ -18,10 +17,10 @@ function AnimatedCounter({
 }) {
   const [value, setValue] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
-  const { ref: scrollRef, isVisible } = useScrollAnimation();
+  const isInView = useInView(ref, { once: true });
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isInView) return;
     const duration = 1800;
     const start = performance.now();
     let frame: number;
@@ -36,16 +35,9 @@ function AnimatedCounter({
 
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [isVisible, target]);
+  }, [isInView, target]);
 
-  return (
-    <span ref={scrollRef}>
-      <span ref={ref}>
-        {value}
-        {suffix}
-      </span>
-    </span>
-  );
+  return <span ref={ref}>{value}{suffix}</span>;
 }
 
 // ── Metric Card ─────────────────────────────────────────────────────
@@ -68,14 +60,17 @@ function MetricCard({
   suffix?: string;
   negative?: boolean;
 }) {
-  const { ref, isVisible } = useScrollAnimation();
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
   return (
     <motion.div
       ref={ref}
+      initial={{ opacity: 0, y: 16 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+      transition={{ duration: 0.5 }}
       className={cn(
-        "group relative bg-[#0A0F1A] rounded-xl p-5 text-center border shadow-[0_0_30px_rgba(0,229,255,0.08)] overflow-hidden transition-all duration-500",
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
+        "group relative bg-[#0A0F1A] rounded-xl p-5 text-center border shadow-[0_0_30px_rgba(0,229,255,0.08)] overflow-hidden",
         negative
           ? "border-red-500/20 hover:border-red-500/40"
           : "border-teal-500/20 hover:border-teal-500/40",
@@ -101,7 +96,7 @@ function MetricCard({
             negative ? "text-red-400" : "text-teal-400",
           )}
         >
-          {isVisible ? (
+          {isInView ? (
             <>
               {change.startsWith("-") ? "-" : ""}
               {change.startsWith("-") || change.startsWith("+") ? (
@@ -289,24 +284,23 @@ function ExternalIcon({ data }: { data: CaseStudyData }) {
   );
 }
 
+// ── Scroll animation variants (for whileInView) ──
+const fadeUp = {
+  initial: { opacity: 0, y: 32 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-50px" as const },
+  transition: { duration: 0.7 },
+};
+
 // ── Component ────────────────────────────────────────────────────────
 export function CaseStudies() {
   const [current, setCurrent] = useState(0);
   const data = caseStudies[current];
-  const { ref: heroRef, isVisible: heroVisible, reset: resetHero } = useScrollAnimation();
-  const { ref: challengeRef, isVisible: challengeVisible, reset: resetChallenge } = useScrollAnimation();
-  const { ref: stepsRef, isVisible: stepsVisible, reset: resetSteps } = useScrollAnimation();
-  const { ref: diffRef, isVisible: diffVisible, reset: resetDiff } = useScrollAnimation();
-  const { ref: ctaRef, isVisible: ctaVisible, reset: resetCta } = useScrollAnimation();
-  const resetAll = [resetHero, resetChallenge, resetSteps, resetDiff, resetCta];
-
-  const sectionRef = useRef<HTMLElement>(null);
 
   const switchTo = (idx: number) => {
     if (idx === current) return;
-    resetAll.forEach((r) => r());
     setCurrent(idx);
-    sectionRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const next = () => switchTo((current + 1) % caseStudies.length);
@@ -349,7 +343,7 @@ export function CaseStudies() {
         </script>
       </Helmet>
 
-      <section ref={sectionRef} className="relative bg-navy-dark w-full overflow-hidden">
+      <section className="relative bg-navy-dark w-full">
         <motion.div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
           <FlowingMesh opacity={0.6} parallax={false} />
         </motion.div>
@@ -386,11 +380,8 @@ export function CaseStudies() {
             >
               {/* ── Hero ─────────────────────────────────── */}
               <motion.div
-                ref={heroRef}
-                className={cn(
-                  "text-center mb-16 transition-all duration-700",
-                  heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
-                )}
+                {...fadeUp}
+                className="text-center mb-16"
               >
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal/5 border border-teal/20 backdrop-blur-md shadow-[0_0_15px_rgba(45,212,191,0.15)] mb-6">
                   <span className="w-1.5 h-1.5 bg-teal-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(45,212,191,0.8)]" />
@@ -419,11 +410,8 @@ export function CaseStudies() {
 
               {/* ── Challenge ───────────────────────────── */}
               <motion.div
-                ref={challengeRef}
-                className={cn(
-                  "bg-[#0A0F1A] border border-teal-500/20 rounded-2xl p-8 mb-8 shadow-[0_0_40px_rgba(0,229,255,0.08)] relative overflow-hidden transition-all duration-700",
-                  challengeVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
-                )}
+                {...fadeUp}
+                className="bg-[#0A0F1A] border border-teal-500/20 rounded-2xl p-8 mb-8 shadow-[0_0_40px_rgba(0,229,255,0.08)] relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:10px_10px]" />
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-teal-400/30 to-transparent" />
@@ -476,6 +464,7 @@ export function CaseStudies() {
 
               {/* ── Day in the Life ────────────────────────── */}
               <motion.div
+                {...fadeUp}
                 className="bg-[#0A0F1A] border border-teal-500/20 rounded-2xl p-8 mb-8 shadow-[0_0_40px_rgba(0,229,255,0.08)] relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:10px_10px]" />
@@ -544,11 +533,8 @@ export function CaseStudies() {
 
               {/* ── How It Works ────────────────────────── */}
               <motion.div
-                ref={stepsRef}
-                className={cn(
-                  "bg-[#0A0F1A] border border-teal-500/20 rounded-2xl p-8 mb-8 shadow-[0_0_40px_rgba(0,229,255,0.08)] relative overflow-hidden transition-all duration-700",
-                  stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
-                )}
+                {...fadeUp}
+                className="bg-[#0A0F1A] border border-teal-500/20 rounded-2xl p-8 mb-8 shadow-[0_0_40px_rgba(0,229,255,0.08)] relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:10px_10px]" />
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
@@ -579,11 +565,8 @@ export function CaseStudies() {
 
               {/* ── What Makes This Different ───────────── */}
               <motion.div
-                ref={diffRef}
-                className={cn(
-                  "bg-[#0A0F1A] border border-teal-500/20 rounded-2xl p-8 mb-8 shadow-[0_0_40px_rgba(0,229,255,0.08)] relative overflow-hidden transition-all duration-700",
-                  diffVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
-                )}
+                {...fadeUp}
+                className="bg-[#0A0F1A] border border-teal-500/20 rounded-2xl p-8 mb-8 shadow-[0_0_40px_rgba(0,229,255,0.08)] relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:10px_10px]" />
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-teal-400/30 to-transparent" />
@@ -607,11 +590,8 @@ export function CaseStudies() {
 
               {/* ── CTA ─────────────────────────────────── */}
               <motion.div
-                ref={ctaRef}
-                className={cn(
-                  "bg-[#0A0F1A] border border-teal-500/30 rounded-2xl p-8 text-center relative overflow-hidden transition-all duration-700",
-                  ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
-                )}
+                {...fadeUp}
+                className="bg-[#0A0F1A] border border-teal-500/30 rounded-2xl p-8 text-center relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_0%,transparent_70%)]" />
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:10px_10px]" />
