@@ -7,10 +7,10 @@ import { Container } from "@/components/layout/Container";
 import { FlowingMesh } from "@/components/animations/FlowingMesh";
 import { ActionTimeline } from "@/components/ActionTimeline";
 import {
-  rainfreshScenarios,
-  rainfreshTools,
-  rainfreshMetrics,
-} from "@/data/rainfresh-demo";
+  brewedIdentityScenarios,
+  brewedIdentityTools,
+  brewedIdentityMetrics,
+} from "@/data/brewedidentity-demo";
 import type { ActionStep } from "@/data/demo-industries";
 import {
   ArrowRightIcon,
@@ -64,11 +64,11 @@ function AnimatedCounter({
 }
 
 // ── Chat Component ──
-function RainFreshChat({
+function BrewedIdentityChat({
   scenario,
   onMessageCount,
 }: {
-  scenario: (typeof rainfreshScenarios)[number] | null;
+  scenario: (typeof brewedIdentityScenarios)[number] | null;
   onMessageCount: (n: number) => void;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -190,17 +190,17 @@ function RainFreshChat({
 
   return (
     <div className="flex flex-col h-full">
-      {/* Chat header */}
+      {/* Chat header — uses RizFlow logo instead of text initials */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-700/50 bg-[#0A0F1A]">
         <div className="flex items-center gap-2">
           <img
-            src="/rainfresh-logo-sm.png"
-            alt="RainFreshSG Agent"
+            src="/brewedidentity-logo-sm.png"
+            alt="Brewed Identity Agent"
             className="w-7 h-7 rounded-full shadow-[0_0_10px_rgba(45,212,191,0.4)] object-cover"
           />
           <div>
-            <p className="text-xs font-semibold text-white">rainfresh-agent</p>
-            <p className="text-[10px] text-slate-500">rainfresh-sg</p>
+            <p className="text-xs font-semibold text-white">brewedidentity-agent</p>
+            <p className="text-[10px] text-slate-500">brewed-identity</p>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
@@ -303,7 +303,7 @@ function RainFreshChat({
           </button>
         </div>
         <p className="text-[10px] text-slate-600 mt-1.5 text-center">
-          Live demo — RainFreshSG agent processes messages in real-time
+          Live demo — Brewed Identity agent processes messages in real-time
         </p>
       </div>
     </div>
@@ -311,7 +311,11 @@ function RainFreshChat({
 }
 
 // ── Metric Card with Scroll Animation ──
-function MetricCard({ metric }: { metric: (typeof rainfreshMetrics)[number] }) {
+function MetricCard({
+  metric,
+}: {
+  metric: (typeof brewedIdentityMetrics)[number];
+}) {
   const { ref, isVisible } = useScrollAnimation();
   const showNumber = metric.changeNum > 0;
 
@@ -344,24 +348,24 @@ function MetricCard({ metric }: { metric: (typeof rainfreshMetrics)[number] }) {
 }
 
 // ── Main Page ──
-export function RainFreshDemo() {
+export function BrewedIdentityDemo() {
   const [selectedScenario, setSelectedScenario] = useState<
-    (typeof rainfreshScenarios)[number] | null
+    (typeof brewedIdentityScenarios)[number] | null
   >(null);
   const [messageCount, setMessageCount] = useState(0);
 
   return (
     <>
       <Helmet>
-        <title>RainFreshSG Agent System — See RizFlow AI in Action</title>
+        <title>Brewed Identity Agent System — See RizFlow AI in Action</title>
         <meta
           name="description"
-          content="Watch how RizFlow's AI agents automate RainFreshSG's TikTok Shop orders, inventory alerts, social media, and customer inquiries — live agent system demo."
+          content="Watch how RizFlow's AI agents automate Brewed Identity's Etsy listings, customer responses, social campaigns, and Printify order fulfilment — live agent system demo."
         />
-        <link rel="canonical" href={`${SITE_URL}/case-study/rainfresh-sg`} />
+        <link rel="canonical" href={`${SITE_URL}/case-study/brewed-identity`} />
         <meta
           property="og:url"
-          content={`${SITE_URL}/case-study/rainfresh-sg`}
+          content={`${SITE_URL}/case-study/brewed-identity`}
         />
       </Helmet>
 
@@ -382,7 +386,7 @@ export function RainFreshDemo() {
             className="mb-8"
           >
             <Link
-              to="/case-study/rainfresh-sg"
+              to="/case-study/brewed-identity"
               className="inline-flex items-center gap-2 text-sm text-teal-400 hover:text-teal-300 transition-colors mb-4"
             >
               <svg
@@ -402,25 +406,25 @@ export function RainFreshDemo() {
             </Link>
 
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-3xl">🌿</span>
+              <span className="text-3xl">☕</span>
               <div>
                 <h1 className="text-2xl lg:text-3xl font-bold font-heading text-white">
-                  RainFreshSG{" "}
+                  Brewed Identity{" "}
                   <span className="text-teal-400">Agent System</span>
                 </h1>
                 <p className="text-sm text-slate-400">
-                  See how RizFlow agents automate orders, inventory, social &
-                  inquiries for this Singapore home fragrance brand
+                  See how RizFlow agents automate listings, messages, social &
+                  fulfilment for this US print-on-demand Etsy shop
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2 mb-6">
               <span className="px-2.5 py-1 rounded-full bg-teal/10 border border-teal/20 text-[10px] text-teal-400 font-mono uppercase tracking-wider">
-                Home & Lifestyle
+                Print-on-Demand
               </span>
               <span className="px-2.5 py-1 rounded-full bg-cyan/10 border border-cyan/20 text-[10px] text-cyan-400 font-mono uppercase tracking-wider">
-                TikTok Shop
+                Etsy
               </span>
               <span className="px-2.5 py-1 rounded-full bg-emerald/10 border border-emerald/20 text-[10px] text-emerald-400 font-mono uppercase tracking-wider">
                 Verified Results
@@ -444,7 +448,7 @@ export function RainFreshDemo() {
                   Choose a Workflow
                 </h3>
                 <div className="space-y-2">
-                  {rainfreshScenarios.map((s) => (
+                  {brewedIdentityScenarios.map((s) => (
                     <button
                       key={s.id}
                       onClick={() => setSelectedScenario(s)}
@@ -494,7 +498,7 @@ export function RainFreshDemo() {
                   Connected Tools
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
-                  {rainfreshTools.map((tool) => (
+                  {brewedIdentityTools.map((tool) => (
                     <div
                       key={tool.name}
                       className="p-2 rounded-lg bg-white/[0.03] border border-slate-700/30 text-center"
@@ -549,7 +553,7 @@ export function RainFreshDemo() {
                 transition={{ delay: 0.2, duration: 0.4 }}
                 className="flex-1 rounded-xl border border-slate-700/40 bg-[#0A0F1A]/80 shadow-[0_0_30px_rgba(0,229,255,0.06)] overflow-hidden min-h-[400px]"
               >
-                <RainFreshChat
+                <BrewedIdentityChat
                   scenario={selectedScenario}
                   onMessageCount={setMessageCount}
                 />
@@ -588,10 +592,10 @@ export function RainFreshDemo() {
 
             <div className="relative z-10 p-6">
               <h2 className="text-lg font-bold font-heading text-white mb-4 flex items-center gap-2">
-                <span>📊</span> RainFreshSG Results
+                <span>📊</span> Brewed Identity Results
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {rainfreshMetrics.map((m) => (
+                {brewedIdentityMetrics.map((m) => (
                   <MetricCard key={m.label} metric={m} />
                 ))}
               </div>
@@ -615,9 +619,9 @@ export function RainFreshDemo() {
                 Want this for your business?
               </h2>
               <p className="text-slate-400 mb-6 max-w-md mx-auto">
-                RainFreshSG went from 2-3 hours/day on manual ops to fully
-                automated TikTok Shop orders, Alibaba restocking, and social
-                scheduling. See what RizFlow can do for you.
+                Brewed Identity went from 45 minutes per listing and missed
+                customer messages to automated Etsy creation, instant responses,
+                and consistent social posting. See what RizFlow can do for you.
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <Link
