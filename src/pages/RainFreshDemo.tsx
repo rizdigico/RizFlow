@@ -358,10 +358,10 @@ export function RainFreshDemo() {
           name="description"
           content="Watch how RizFlow's AI agents automate RainFreshSG's TikTok Shop orders, inventory alerts, social media, and customer inquiries — live agent system demo."
         />
-        <link rel="canonical" href={`${SITE_URL}/case-study/rainfresh-sg`} />
+        <link rel="canonical" href={`${SITE_URL}/case-studies`} />
         <meta
           property="og:url"
-          content={`${SITE_URL}/case-study/rainfresh-sg`}
+          content={`${SITE_URL}/case-studies`}
         />
       </Helmet>
 
@@ -382,7 +382,7 @@ export function RainFreshDemo() {
             className="mb-8"
           >
             <Link
-              to="/case-study/rainfresh-sg"
+              to="/case-studies"
               className="inline-flex items-center gap-2 text-sm text-teal-400 hover:text-teal-300 transition-colors mb-4"
             >
               <svg
@@ -398,7 +398,7 @@ export function RainFreshDemo() {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              View Full Case Study
+              Back to Case Studies
             </Link>
 
             <div className="flex items-center gap-3 mb-3">

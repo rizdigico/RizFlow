@@ -362,10 +362,10 @@ export function BrewedIdentityDemo() {
           name="description"
           content="Watch how RizFlow's AI agents automate Brewed Identity's Etsy listings, customer responses, social campaigns, and Printify order fulfilment — live agent system demo."
         />
-        <link rel="canonical" href={`${SITE_URL}/case-study/brewed-identity`} />
+        <link rel="canonical" href={`${SITE_URL}/case-studies`} />
         <meta
           property="og:url"
-          content={`${SITE_URL}/case-study/brewed-identity`}
+          content={`${SITE_URL}/case-studies`}
         />
       </Helmet>
 
@@ -386,7 +386,7 @@ export function BrewedIdentityDemo() {
             className="mb-8"
           >
             <Link
-              to="/case-study/brewed-identity"
+              to="/case-studies"
               className="inline-flex items-center gap-2 text-sm text-teal-400 hover:text-teal-300 transition-colors mb-4"
             >
               <svg
@@ -402,7 +402,7 @@ export function BrewedIdentityDemo() {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              View Full Case Study
+              Back to Case Studies
             </Link>
 
             <div className="flex items-center gap-3 mb-3">
