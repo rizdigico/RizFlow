@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -30,13 +30,6 @@ function ScrollToTop() {
   return null;
 }
 
-function AuditRedirect() {
-  useEffect(() => {
-    window.location.href = "https://cal.com/aariz-a/ai-audit";
-  }, []);
-  return null;
-}
-
 function AppRoutes() {
   return (
     <>
@@ -47,7 +40,7 @@ function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/audit" element={<AuditRedirect />} />
+          <Route path="/audit" element={<Audit />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy-terms" element={<PrivacyTerms />} />
           <Route path="/thank-you" element={<ThankYou />} />
@@ -86,14 +79,12 @@ function AppRoutes() {
           >
             AI Score
           </Link>
-          <a
-            href="https://cal.com/aariz-a/ai-audit"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to="/audit"
             className="flex-1 text-center py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-teal-400 text-white text-sm font-bold shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:shadow-[0_0_25px_rgba(0,229,255,0.4)] transition-all"
           >
             Free Audit →
-          </a>
+          </Link>
         </div>
       </div>
     </>
