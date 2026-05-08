@@ -7,8 +7,6 @@ import { EnvelopeIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/Button";
 import { sanitizeInput, cn } from "@/lib/utils";
 
-const AUDIT_WEBHOOK = "https://riz-flow-mc-db.vercel.app/api/webhook/audit";
-
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().email("Enter a valid email address"),
@@ -38,43 +36,25 @@ export function AuditForm({ className }: { className?: string }) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = (data: FormData) => {
     setServerError("");
-    const payload = {
-      name: sanitizeInput(data.name),
-      email: sanitizeInput(data.email),
-      headache: sanitizeInput(data.headache),
-      consent: data.consent,
-      // Legacy fields — send empty so webhook doesn't break
-      agency: "",
-      website: "",
-      phone: "",
-      referral: "audit-short-form",
-    };
-
-    try {
-      const res = await fetch(AUDIT_WEBHOOK, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        setServerError(
-          "Something went wrong. Please try again or contact us directly at main@rizflow.co",
-        );
-        return;
-      }
-      navigate("/thank-you");
-    } catch {
-      setServerError(
-        "Network error. Please check your connection and try again, or contact us at main@rizflow.co",
-      );
-    }
+    sessionStorage.setItem(
+      "audit_form",
+      JSON.stringify({
+        name: sanitizeInput(data.name),
+        email: sanitizeInput(data.email),
+        headache: sanitizeInput(data.headache),
+        consent: data.consent,
+        referral: "audit-short-form",
+        submittedAt: new Date().toISOString(),
+      }),
+    );
+    navigate("/thank-you");
   };
 
   return (
@@ -162,7 +142,7 @@ export function AuditForm({ className }: { className?: string }) {
         variant="cta"
         size="lg"
         className="w-full font-mono uppercase tracking-widest mt-4"
-        isLoading={isSubmitting}
+        isLoading={false}
       >
         {isSubmitting ? "Processing..." : "Get My Free Audit"}
       </Button>

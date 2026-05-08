@@ -50,11 +50,15 @@ const QUESTIONS: Question[] = [
     id: "industry",
     type: "selectWithOther",
     label: "What type of business do you run?",
-    description: "This helps us give you industry-specific automation recommendations.",
+    description:
+      "This helps us give you industry-specific automation recommendations.",
     options: [
       { value: "retail", label: "Retail / E-commerce" },
       { value: "food", label: "F&B / Restaurant" },
-      { value: "services", label: "Professional Services (Law, Accounting, Consulting)" },
+      {
+        value: "services",
+        label: "Professional Services (Law, Accounting, Consulting)",
+      },
       { value: "health", label: "Healthcare / Clinic / Wellness" },
       { value: "construction", label: "Construction / Trades" },
       { value: "education", label: "Education / Training" },
@@ -80,14 +84,17 @@ const QUESTIONS: Question[] = [
     id: "biggestPain",
     type: "text",
     label: "What's your biggest daily headache?",
-    description: "The one thing that eats up your time or causes the most friction every day.",
-    placeholder: "e.g. Chasing invoice payments, manual order entry, customer follow-ups...",
+    description:
+      "The one thing that eats up your time or causes the most friction every day.",
+    placeholder:
+      "e.g. Chasing invoice payments, manual order entry, customer follow-ups...",
   },
   {
     id: "manualHours",
     type: "select",
     label: "How many hours/week does your team spend on repetitive tasks?",
-    description: "Data entry, invoicing, scheduling, email sorting, report generation, etc.",
+    description:
+      "Data entry, invoicing, scheduling, email sorting, report generation, etc.",
     options: [
       { value: "under5", label: "Less than 5 hours" },
       { value: "5to15", label: "5–15 hours" },
@@ -99,7 +106,8 @@ const QUESTIONS: Question[] = [
     id: "currentTools",
     type: "text",
     label: "What tools/software do you use to run your business?",
-    description: "List the main ones — CRM, spreadsheets, invoicing, project management, etc.",
+    description:
+      "List the main ones — CRM, spreadsheets, invoicing, project management, etc.",
     placeholder: "e.g. Google Sheets, Xero, WhatsApp Business, Trello...",
   },
   {
@@ -118,34 +126,51 @@ const QUESTIONS: Question[] = [
     id: "aiToolsUsed",
     type: "text",
     label: "Which AI or automation tools are you currently using?",
-    description: "Even if it's just ChatGPT for emails — tell us what you've set up so far.",
-    placeholder: "e.g. ChatGPT for emails, Zapier for lead alerts, Calendly for scheduling...",
+    description:
+      "Even if it's just ChatGPT for emails — tell us what you've set up so far.",
+    placeholder:
+      "e.g. ChatGPT for emails, Zapier for lead alerts, Calendly for scheduling...",
   },
   {
     id: "automateFirst",
     type: "text",
     label: "If you could automate one thing tomorrow, what would it be?",
     description: "The task you'd hand off to AI first if you could.",
-    placeholder: "e.g. Customer follow-ups, invoice generation, inventory tracking...",
+    placeholder:
+      "e.g. Customer follow-ups, invoice generation, inventory tracking...",
   },
   {
     id: "biggestGoal",
     type: "text",
     label: "What's your #1 goal for the next 6 months?",
     description: "What would move the needle most for your business?",
-    placeholder: "e.g. Double revenue, reduce costs by 30%, scale to 2x customers...",
+    placeholder:
+      "e.g. Double revenue, reduce costs by 30%, scale to 2x customers...",
   },
   {
     id: "automationBlocker",
     type: "select",
     label: "What's holding you back from automating more?",
-    description: "The main reason you haven't gone all-in on AI automation yet.",
+    description:
+      "The main reason you haven't gone all-in on AI automation yet.",
     options: [
-      { value: "dontKnowHow", label: "Don't know where to start or what's possible" },
-      { value: "noTime", label: "No time to set it up — too busy running the business" },
+      {
+        value: "dontKnowHow",
+        label: "Don't know where to start or what's possible",
+      },
+      {
+        value: "noTime",
+        label: "No time to set it up — too busy running the business",
+      },
       { value: "cost", label: "Worried it'll be too expensive" },
-      { value: "triedFailed", label: "Tried before and it didn't work / was too complicated" },
-      { value: "dontNeed", label: "Not sure AI is relevant for my type of business" },
+      {
+        value: "triedFailed",
+        label: "Tried before and it didn't work / was too complicated",
+      },
+      {
+        value: "dontNeed",
+        label: "Not sure AI is relevant for my type of business",
+      },
     ],
   },
 ];
@@ -166,30 +191,40 @@ export function ReadinessScore() {
   const [result, setResult] = useState<AIResult | null>(null);
 
   // Pre-fill text input when going back to a text question with a previous answer
-  const goToQuestion = useCallback((index: number) => {
-    setCurrentQ(index);
-    setShowOtherInput(false);
-    setOtherText("");
-    const q = QUESTIONS[index];
-    if (q.type === "text" && answers[q.id]) {
-      setTextInput(answers[q.id]);
-    } else if (q.type === "selectWithOther" && answers[q.id] && !q.options?.some(o => o.value === answers[q.id])) {
-      setShowOtherInput(true);
-      setOtherText(answers[q.id]);
-    } else {
-      setTextInput("");
-    }
-  }, [answers]);
+  const goToQuestion = useCallback(
+    (index: number) => {
+      setCurrentQ(index);
+      setShowOtherInput(false);
+      setOtherText("");
+      const q = QUESTIONS[index];
+      if (q.type === "text" && answers[q.id]) {
+        setTextInput(answers[q.id]);
+      } else if (
+        q.type === "selectWithOther" &&
+        answers[q.id] &&
+        !q.options?.some((o) => o.value === answers[q.id])
+      ) {
+        setShowOtherInput(true);
+        setOtherText(answers[q.id]);
+      } else {
+        setTextInput("");
+      }
+    },
+    [answers],
+  );
 
-  const handleSelectAnswer = useCallback((questionId: string, value: string) => {
-    const newAnswers = { ...answers, [questionId]: value };
-    setAnswers(newAnswers);
-    if (currentQ < QUESTIONS.length - 1) {
-      setTimeout(() => goToQuestion(currentQ + 1), 300);
-    } else {
-      submitForAnalysis(newAnswers);
-    }
-  }, [currentQ, answers, goToQuestion]);
+  const handleSelectAnswer = useCallback(
+    (questionId: string, value: string) => {
+      const newAnswers = { ...answers, [questionId]: value };
+      setAnswers(newAnswers);
+      if (currentQ < QUESTIONS.length - 1) {
+        setTimeout(() => goToQuestion(currentQ + 1), 300);
+      } else {
+        submitForAnalysis(newAnswers);
+      }
+    },
+    [currentQ, answers, goToQuestion],
+  );
 
   const handleOtherSelect = () => {
     setShowOtherInput(true);
@@ -257,15 +292,31 @@ export function ReadinessScore() {
   };
 
   const question = QUESTIONS[currentQ];
-  const progress = ((currentQ + (phase === "quiz" ? 0 : QUESTIONS.length)) / QUESTIONS.length) * 100;
+  const progress =
+    ((currentQ + (phase === "quiz" ? 0 : QUESTIONS.length)) /
+      QUESTIONS.length) *
+    100;
   const hasPreviousAnswer = currentQ > 0;
 
   const getLevelColor = (level: string) => {
-    if (level.includes("Ready")) return { text: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/30" };
-    if (level.includes("High")) return { text: "text-teal-400", bg: "bg-teal-500/10 border-teal-500/30" };
-    if (level.includes("Getting")) return { text: "text-cyan-400", bg: "bg-cyan-500/10 border-cyan-500/30" };
-    if (level.includes("Early")) return { text: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/30" };
-    return { text: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/30" };
+    if (level.includes("Ready"))
+      return {
+        text: "text-emerald-400",
+        bg: "bg-emerald-500/10 border-emerald-500/30",
+      };
+    if (level.includes("High"))
+      return { text: "text-teal-400", bg: "bg-teal-500/10 border-teal-500/30" };
+    if (level.includes("Getting"))
+      return { text: "text-cyan-400", bg: "bg-cyan-500/10 border-cyan-500/30" };
+    if (level.includes("Early"))
+      return {
+        text: "text-amber-400",
+        bg: "bg-amber-500/10 border-amber-500/30",
+      };
+    return {
+      text: "text-orange-400",
+      bg: "bg-orange-500/10 border-orange-500/30",
+    };
   };
 
   const getScoreColor = (score: number) => {
@@ -282,17 +333,35 @@ export function ReadinessScore() {
   return (
     <>
       <Helmet>
-        <title>AI Readiness Score — Find Out How Much AI Can Transform Your Business | RizFlow</title>
-        <meta name="description" content="Score your business AI readiness in 60 seconds. Get personalized automation recommendations and see how many hours AI can save you each week." />
+        <title>
+          AI Readiness Score — Find Out How Much AI Can Transform Your Business
+          | RizFlow
+        </title>
+        <meta
+          name="description"
+          content="Score your business AI readiness in 60 seconds. Get personalized automation recommendations and see how many hours AI can save you each week."
+        />
         <link rel="canonical" href={`${SITE_URL}/ai-score`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/ai-score`} />
-        <meta property="og:title" content="AI Readiness Score — How Ready Is Your Business for AI?" />
-        <meta property="og:description" content="Score your business AI readiness in 60 seconds. Free assessment with personalized automation recommendations." />
+        <meta
+          property="og:title"
+          content="AI Readiness Score — How Ready Is Your Business for AI?"
+        />
+        <meta
+          property="og:description"
+          content="Score your business AI readiness in 60 seconds. Free assessment with personalized automation recommendations."
+        />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="AI Readiness Score — How Ready Is Your Business for AI?" />
-        <meta name="twitter:description" content="Score your business AI readiness in 60 seconds. Free assessment with personalized automation recommendations." />
+        <meta
+          name="twitter:title"
+          content="AI Readiness Score — How Ready Is Your Business for AI?"
+        />
+        <meta
+          name="twitter:description"
+          content="Score your business AI readiness in 60 seconds. Free assessment with personalized automation recommendations."
+        />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
       </Helmet>
 
@@ -324,14 +393,17 @@ export function ReadinessScore() {
                     Score Your AI Readiness
                   </h1>
                   <p className="text-lg text-slate-400 max-w-lg mx-auto">
-                    {QUESTIONS.length} questions. 2 minutes. Get personalized recommendations for <em>your</em> business.
+                    {QUESTIONS.length} questions. 2 minutes. Get personalized
+                    recommendations for <em>your</em> business.
                   </p>
                 </div>
 
                 {/* Progress bar */}
                 <div className="mb-8">
                   <div className="flex justify-between text-xs font-mono text-slate-500 mb-2">
-                    <span>Question {currentQ + 1} of {QUESTIONS.length}</span>
+                    <span>
+                      Question {currentQ + 1} of {QUESTIONS.length}
+                    </span>
                     <span>{Math.round(progress)}%</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-white/5 w-full overflow-hidden border border-white/5">
@@ -363,38 +435,47 @@ export function ReadinessScore() {
                   <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 font-heading">
                     {question.label}
                   </h2>
-                  <p className="text-sm text-slate-400 mb-6">{question.description}</p>
+                  <p className="text-sm text-slate-400 mb-6">
+                    {question.description}
+                  </p>
 
                   {/* Select with "Other" option */}
-                  {(question.type === "select" || question.type === "selectWithOther") && question.options && !showOtherInput && (
-                    <div className="space-y-3">
-                      {question.options.map((option) => (
-                        <button
-                          key={option.value}
-                          onClick={() => handleSelectAnswer(question.id, option.value)}
-                          className={`w-full text-left px-5 py-4 rounded-xl border transition-all duration-200 group ${
-                            isOptionSelected(question.id, option.value)
-                              ? "border-teal-500/70 bg-teal-500/15 shadow-[0_0_15px_rgba(0,229,255,0.15)]"
-                              : "border-white/10 bg-white/5 hover:border-teal-500/50 hover:bg-teal-500/10 hover:shadow-[0_0_15px_rgba(0,229,255,0.1)]"
-                          }`}
-                        >
-                          <span className={`font-medium ${isOptionSelected(question.id, option.value) ? "text-teal-300" : "text-white group-hover:text-teal-300 transition-colors"}`}>
-                            {option.label}
-                          </span>
-                        </button>
-                      ))}
-                      {question.type === "selectWithOther" && (
-                        <button
-                          onClick={handleOtherSelect}
-                          className="w-full text-left px-5 py-4 rounded-xl border border-dashed border-white/20 bg-white/[0.02] hover:border-teal-500/50 hover:bg-teal-500/10 hover:shadow-[0_0_15px_rgba(0,229,255,0.1)] transition-all duration-200 group"
-                        >
-                          <span className="text-slate-400 group-hover:text-teal-300 transition-colors font-medium">
-                            Other — I'll type mine
-                          </span>
-                        </button>
-                      )}
-                    </div>
-                  )}
+                  {(question.type === "select" ||
+                    question.type === "selectWithOther") &&
+                    question.options &&
+                    !showOtherInput && (
+                      <div className="space-y-3">
+                        {question.options.map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() =>
+                              handleSelectAnswer(question.id, option.value)
+                            }
+                            className={`w-full text-left px-5 py-4 rounded-xl border transition-all duration-200 group ${
+                              isOptionSelected(question.id, option.value)
+                                ? "border-teal-500/70 bg-teal-500/15 shadow-[0_0_15px_rgba(0,229,255,0.15)]"
+                                : "border-white/10 bg-white/5 hover:border-teal-500/50 hover:bg-teal-500/10 hover:shadow-[0_0_15px_rgba(0,229,255,0.1)]"
+                            }`}
+                          >
+                            <span
+                              className={`font-medium ${isOptionSelected(question.id, option.value) ? "text-teal-300" : "text-white group-hover:text-teal-300 transition-colors"}`}
+                            >
+                              {option.label}
+                            </span>
+                          </button>
+                        ))}
+                        {question.type === "selectWithOther" && (
+                          <button
+                            onClick={handleOtherSelect}
+                            className="w-full text-left px-5 py-4 rounded-xl border border-dashed border-white/20 bg-white/[0.02] hover:border-teal-500/50 hover:bg-teal-500/10 hover:shadow-[0_0_15px_rgba(0,229,255,0.1)] transition-all duration-200 group"
+                          >
+                            <span className="text-slate-400 group-hover:text-teal-300 transition-colors font-medium">
+                              Other — I'll type mine
+                            </span>
+                          </button>
+                        )}
+                      </div>
+                    )}
 
                   {/* "Other" text input */}
                   {showOtherInput && (
@@ -415,7 +496,10 @@ export function ReadinessScore() {
                       />
                       <div className="flex gap-3">
                         <button
-                          onClick={() => { setShowOtherInput(false); setOtherText(""); }}
+                          onClick={() => {
+                            setShowOtherInput(false);
+                            setOtherText("");
+                          }}
                           className="px-5 py-4 rounded-xl border border-white/10 bg-white/5 text-slate-400 font-semibold hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2"
                         >
                           <ArrowLeftIcon className="w-4 h-4" />
@@ -457,7 +541,8 @@ export function ReadinessScore() {
                         <ArrowRightIcon className="w-4 h-4" />
                       </button>
                       <p className="text-xs text-slate-600 font-mono text-center">
-                        Press Enter to continue — detailed answers = better recommendations
+                        Press Enter to continue — detailed answers = better
+                        recommendations
                       </p>
                     </div>
                   )}
@@ -497,16 +582,33 @@ export function ReadinessScore() {
                     Analyzing Your Business...
                   </h2>
                   <p className="text-slate-400 font-mono text-sm">
-                    <span className="text-teal-400">&gt;</span> Mapping {answers.industry || "your industry"} automation opportunities<br />
-                    <span className="text-teal-400">&gt;</span> Scoring your current tool stack & workflows<br />
-                    <span className="text-teal-400">&gt;</span> Building personalized recommendations
+                    <span className="text-teal-400">&gt;</span> Mapping{" "}
+                    {answers.industry || "your industry"} automation
+                    opportunities
+                    <br />
+                    <span className="text-teal-400">&gt;</span> Scoring your
+                    current tool stack & workflows
+                    <br />
+                    <span className="text-teal-400">&gt;</span> Building
+                    personalized recommendations
                   </p>
                   <div className="mt-6 flex justify-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <div className="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <div className="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                    <div
+                      className="w-2 h-2 rounded-full bg-teal-400 animate-bounce"
+                      style={{ animationDelay: "0ms" }}
+                    />
+                    <div
+                      className="w-2 h-2 rounded-full bg-teal-400 animate-bounce"
+                      style={{ animationDelay: "150ms" }}
+                    />
+                    <div
+                      className="w-2 h-2 rounded-full bg-teal-400 animate-bounce"
+                      style={{ animationDelay: "300ms" }}
+                    />
                   </div>
-                  <p className="text-xs text-slate-600 mt-4 font-mono">This takes about 10 seconds</p>
+                  <p className="text-xs text-slate-600 mt-4 font-mono">
+                    This takes about 10 seconds
+                  </p>
                 </div>
               </motion.div>
             )}
@@ -525,7 +627,8 @@ export function ReadinessScore() {
                     AI Analysis Timeout
                   </h2>
                   <p className="text-slate-400 mb-6">
-                    The AI couldn't finish analyzing your answers in time. This is rare — let's try again.
+                    The AI couldn't finish analyzing your answers in time. This
+                    is rare — let's try again.
                   </p>
                   <button
                     onClick={handleRestart}
@@ -563,13 +666,23 @@ export function ReadinessScore() {
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 15,
+                        delay: 0.2,
+                      }}
                       className="mb-4"
                     >
-                      <span className="text-7xl font-bold font-mono drop-shadow-[0_0_20px_rgba(0,229,255,0.4)]" style={{ color: getScoreColor(result.score) }}>
+                      <span
+                        className="text-7xl font-bold font-mono drop-shadow-[0_0_20px_rgba(0,229,255,0.4)]"
+                        style={{ color: getScoreColor(result.score) }}
+                      >
                         {result.score}
                       </span>
-                      <span className="text-2xl text-slate-500 font-mono">/100</span>
+                      <span className="text-2xl text-slate-500 font-mono">
+                        /100
+                      </span>
                     </motion.div>
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -586,8 +699,12 @@ export function ReadinessScore() {
                       transition={{ delay: 0.7 }}
                       className="mt-6 p-4 rounded-xl border border-teal-500/30 bg-teal-500/5"
                     >
-                      <p className="text-xs font-mono text-teal-400 uppercase tracking-widest mb-1">Estimated Weekly Savings</p>
-                      <p className="text-2xl font-bold text-white font-mono">{result.estimatedSavings}</p>
+                      <p className="text-xs font-mono text-teal-400 uppercase tracking-widest mb-1">
+                        Estimated Weekly Savings
+                      </p>
+                      <p className="text-2xl font-bold text-white font-mono">
+                        {result.estimatedSavings}
+                      </p>
                     </motion.div>
                     {result.impactSummary && (
                       <motion.div
@@ -596,7 +713,9 @@ export function ReadinessScore() {
                         transition={{ delay: 0.9 }}
                         className="mt-4 p-4 rounded-xl border border-cyan-500/20 bg-cyan-500/5"
                       >
-                        <p className="text-sm text-slate-300 italic">"{result.impactSummary}"</p>
+                        <p className="text-sm text-slate-300 italic">
+                          "{result.impactSummary}"
+                        </p>
                       </motion.div>
                     )}
                   </div>
@@ -613,7 +732,13 @@ export function ReadinessScore() {
                       </p>
                       <ul className="space-y-3">
                         {result.topAutomations.map((item, i) => (
-                          <motion.li key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8 + i * 0.1 }} className="flex items-start gap-2 text-sm text-slate-300">
+                          <motion.li
+                            key={i}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.8 + i * 0.1 }}
+                            className="flex items-start gap-2 text-sm text-slate-300"
+                          >
                             <CheckCircleIcon className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
                             {item}
                           </motion.li>
@@ -631,7 +756,13 @@ export function ReadinessScore() {
                       </p>
                       <ul className="space-y-3">
                         {result.recommendations.map((item, i) => (
-                          <motion.li key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.0 + i * 0.1 }} className="flex items-start gap-2 text-sm text-slate-300">
+                          <motion.li
+                            key={i}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 1.0 + i * 0.1 }}
+                            className="flex items-start gap-2 text-sm text-slate-300"
+                          >
                             <ArrowRightIcon className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
                             {item}
                           </motion.li>
@@ -657,7 +788,9 @@ export function ReadinessScore() {
                       Get your full AI automation roadmap
                     </h3>
                     <p className="text-slate-400 mb-6">
-                      Book a free 15-minute discovery audit. We'll map out exactly what AI can automate for <em>your</em> business — no pitch, just practical advice.
+                      Book a free 30-minute discovery audit. We'll map out
+                      exactly what AI can automate for <em>your</em> business —
+                      no pitch, just practical advice.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                       <a
@@ -677,7 +810,7 @@ export function ReadinessScore() {
                       </a>
                     </div>
                     <p className="text-xs text-slate-500 mt-4 font-mono">
-                      &gt; 15 min call · zero pitch · personalized roadmap
+                      &gt; 30 min call · zero pitch · personalized roadmap
                     </p>
                   </div>
                   <button
