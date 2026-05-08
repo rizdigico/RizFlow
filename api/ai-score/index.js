@@ -78,6 +78,56 @@ async function tryModelsWithFallback(messages) {
   return null;
 }
 
+function isLazyResponse(parsed) {
+  const bannedPhrases = [
+    "specific1",
+    "specific2",
+    "specific3",
+    "specific4",
+    "item1",
+    "item2",
+    "item3",
+    "item4",
+    "example1",
+    "example2",
+    "example3",
+    "streamline operations",
+    "leverage ai",
+    "optimize workflows",
+    "harness technology",
+    "embrace ai",
+    "unlock potential",
+    "automation 1",
+    "automation 2",
+    "recommendation 1",
+    "recommendation 2",
+  ];
+  const allStrings = [
+    ...(parsed.topAutomations || []),
+    ...(parsed.recommendations || []),
+    parsed.impactSummary || "",
+    parsed.estimatedSavings || "",
+    parsed.level || "",
+  ].map((s) => (s || "").toLowerCase());
+
+  for (const phrase of bannedPhrases) {
+    for (const str of allStrings) {
+      if (str.includes(phrase.toLowerCase())) return true;
+    }
+  }
+
+  // Also reject if topAutomations has fewer than 3 items or all are under 20 chars
+  const autos = parsed.topAutomations || [];
+  if (autos.length < 3) return true;
+  if (autos.every((a) => (a || "").length < 20)) return true;
+
+  const recs = parsed.recommendations || [];
+  if (recs.length < 3) return true;
+  if (recs.every((r) => (r || "").length < 25)) return true;
+
+  return false;
+}
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -109,9 +159,15 @@ What they'd automate first: ${answers.automateFirst || "Not specified"}
 What's holding them back from automating: ${answers.automationBlocker || "Not specified"}
 
 Based on ALL their answers, respond with ONLY a JSON object. No explanation, no reasoning, no markdown. Just the raw JSON:
-{"score":0-100,"level":"Untapped Potential|Early Stage|Getting There|High Potential|AI-Ready","estimatedSavings":"X-Y hours/week","topAutomations":["specific1","specific2","specific3","specific4"],"recommendations":["specific1","specific2","specific3","specific4"],"impactSummary":"1-2 sentence personalized summary"}
+{"score":0-100,"level":"Untapped Potential|Early Stage|Getting There|High Potential|AI-Ready","estimatedSavings":"X-Y hours/week","topAutomations":["FIRST automation — name the exact task and tool, e.g. 'Auto-invoice processing between Shopify and Xero'","SECOND automation — specific to their industry and pain","THIRD automation — references their actual tools","FOURTH automation — ties to their stated goal"],"recommendations":["FIRST recommendation — actionable, references their specific pain point","SECOND recommendation — names their actual tools","THIRD recommendation — addresses their specific blocker","FOURTH recommendation — concrete next step tied to their goal"],"impactSummary":"1-2 sentence personalized summary referencing their industry, pain, and goal"}
 
-CRITICAL: Every single value must reference their SPECIFIC industry, tools, pain points, goals, and blockers. No generic advice. No template phrases. Name their actual tools and challenges.`;
+ABSOLUTE RULES — VIOLATIONS WILL CAUSE REJECTION:
+1. NEVER use generic phrases like "streamline operations", "leverage AI", "optimize workflows", "harness technology" — these are banned
+2. NEVER use placeholder text like "specific1", "item1", "example" — every string must be a real, specific recommendation
+3. Every topAutomation MUST name at least ONE of: their industry, their tools, their pain point, or their goal
+4. Every recommendation MUST reference something they specifically mentioned in their answers
+5. impactSummary MUST mention their industry AND their biggest pain AND their goal by name
+6. If you output any template/generic/placeholder text the entire response will be rejected`;
 
     const result = await tryModelsWithFallback([
       {
@@ -141,6 +197,12 @@ CRITICAL: Every single value must reference their SPECIFIC industry, tools, pain
     }
 
     if (!parsed || !parsed.score) {
+      // Will use fallback logic below
+    } else if (isLazyResponse(parsed)) {
+      parsed = null; // Force fallback to manual generation
+    }
+
+    if (!parsed) {
       const manualMap = { under5: 5, "5to15": 10, "15to30": 25, "30plus": 40 };
       const aiMap = { none: 0, dabbled: 10, some: 25, deep: 40 };
       const blockerMap = {

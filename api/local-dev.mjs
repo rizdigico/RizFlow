@@ -132,6 +132,55 @@ async function tryModelsWithFallback(messages) {
   return null;
 }
 
+function isLazyResponse(parsed) {
+  const bannedPhrases = [
+    "specific1",
+    "specific2",
+    "specific3",
+    "specific4",
+    "item1",
+    "item2",
+    "item3",
+    "item4",
+    "example1",
+    "example2",
+    "example3",
+    "streamline operations",
+    "leverage ai",
+    "optimize workflows",
+    "harness technology",
+    "embrace ai",
+    "unlock potential",
+    "automation 1",
+    "automation 2",
+    "recommendation 1",
+    "recommendation 2",
+  ];
+  const allStrings = [
+    ...(parsed.topAutomations || []),
+    ...(parsed.recommendations || []),
+    parsed.impactSummary || "",
+    parsed.estimatedSavings || "",
+    parsed.level || "",
+  ].map((s) => (s || "").toLowerCase());
+
+  for (const phrase of bannedPhrases) {
+    for (const str of allStrings) {
+      if (str.includes(phrase.toLowerCase())) return true;
+    }
+  }
+
+  const autos = parsed.topAutomations || [];
+  if (autos.length < 3) return true;
+  if (autos.every((a) => (a || "").length < 20)) return true;
+
+  const recs = parsed.recommendations || [];
+  if (recs.length < 3) return true;
+  if (recs.every((r) => (r || "").length < 25)) return true;
+
+  return false;
+}
+
 const server = http.createServer(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -162,7 +211,9 @@ const server = http.createServer(async (req, res) => {
   // ── AI Score Analysis Endpoint ──
   if (req.url === "/api/ai-score" && req.method === "POST") {
     let scoreBody = "";
-    req.on("data", (chunk) => { scoreBody += chunk; });
+    req.on("data", (chunk) => {
+      scoreBody += chunk;
+    });
     req.on("end", async () => {
       try {
         const { answers } = JSON.parse(scoreBody);
@@ -190,12 +241,22 @@ What they'd automate first: ${answers.automateFirst || "Not specified"}
 What's holding them back from automating: ${answers.automationBlocker || "Not specified"}
 
 Based on ALL their answers, respond with ONLY a JSON object. No explanation, no reasoning, no markdown. Just the raw JSON:
-{"score":0-100,"level":"Untapped Potential|Early Stage|Getting There|High Potential|AI-Ready","estimatedSavings":"X-Y hours/week","topAutomations":["specific1","specific2","specific3","specific4"],"recommendations":["specific1","specific2","specific3","specific4"],"impactSummary":"1-2 sentence personalized summary"}
+{"score":0-100,"level":"Untapped Potential|Early Stage|Getting There|High Potential|AI-Ready","estimatedSavings":"X-Y hours/week","topAutomations":["FIRST automation — name the exact task and tool, e.g. 'Auto-invoice processing between Shopify and Xero'","SECOND automation — specific to their industry and pain","THIRD automation — references their actual tools","FOURTH automation — ties to their stated goal"],"recommendations":["FIRST recommendation — actionable, references their specific pain point","SECOND recommendation — names their actual tools","THIRD recommendation — addresses their specific blocker","FOURTH recommendation — concrete next step tied to their goal"],"impactSummary":"1-2 sentence personalized summary referencing their industry, pain, and goal"}
 
-CRITICAL: Every single value must reference their SPECIFIC industry, tools, pain points, goals, and blockers. No generic advice. No template phrases. Name their actual tools and challenges.`;
+ABSOLUTE RULES — VIOLATIONS WILL CAUSE REJECTION:
+1. NEVER use generic phrases like "streamline operations", "leverage AI", "optimize workflows", "harness technology" — these are banned
+2. NEVER use placeholder text like "specific1", "item1", "example" — every string must be a real, specific recommendation
+3. Every topAutomation MUST name at least ONE of: their industry, their tools, their pain point, or their goal
+4. Every recommendation MUST reference something they specifically mentioned in their answers
+5. impactSummary MUST mention their industry AND their biggest pain AND their goal by name
+6. If you output any template/generic/placeholder text the entire response will be rejected`;
 
         const result = await tryModelsWithFallback([
-          { role: "system", content: "Output ONLY valid JSON. No explanation, no reasoning, no markdown fences, no thinking out loud. Just the JSON object." },
+          {
+            role: "system",
+            content:
+              "Output ONLY valid JSON. No explanation, no reasoning, no markdown fences, no thinking out loud. Just the JSON object.",
+          },
           { role: "user", content: prompt },
         ]);
 
@@ -207,7 +268,9 @@ CRITICAL: Every single value must reference their SPECIFIC industry, tools, pain
         let parsed;
         try {
           // Try to find JSON object in the response — free models are chatty
-          let cleaned = result.reply.replace(/```json\n?/g, "").replace(/```\n?/g, "");
+          let cleaned = result.reply
+            .replace(/```json\n?/g, "")
+            .replace(/```\n?/g, "");
           const firstBrace = cleaned.indexOf("{");
           const lastBrace = cleaned.lastIndexOf("}");
           if (firstBrace !== -1 && lastBrace > firstBrace) {
@@ -226,7 +289,11 @@ CRITICAL: Every single value must reference their SPECIFIC industry, tools, pain
             const closeBrackets = (fixed.match(/]/g) || []).length;
             // Close any unclosed strings (find last " and add closing quote + comma)
             const lastQuoteIdx = fixed.lastIndexOf('"');
-            if (lastQuoteIdx > 0 && fixed[lastQuoteIdx - 1] !== '\\' && fixed[lastQuoteIdx - 1] !== ':') {
+            if (
+              lastQuoteIdx > 0 &&
+              fixed[lastQuoteIdx - 1] !== "\\" &&
+              fixed[lastQuoteIdx - 1] !== ":"
+            ) {
               // Check if the string is unclosed — look for odd number of quotes after last colon
             }
             fixed += "]".repeat(Math.max(0, openBrackets - closeBrackets));
@@ -237,56 +304,107 @@ CRITICAL: Every single value must reference their SPECIFIC industry, tools, pain
           parsed = null;
         }
 
-        // If AI parsing failed, build fully personalized fallback from answers
+        // If AI parsing failed or returned lazy/template responses, build fully personalized fallback from answers
         if (!parsed || !parsed.score) {
-          const manualMap = { under5: 5, "5to15": 10, "15to30": 25, "30plus": 40 };
+          // Will use fallback logic below
+        } else if (isLazyResponse(parsed)) {
+          console.log(
+            "[ai-score] Model returned lazy/template response, using fallback",
+          );
+          parsed = null;
+        }
+
+        if (!parsed) {
+          const manualMap = {
+            under5: 5,
+            "5to15": 10,
+            "15to30": 25,
+            "30plus": 40,
+          };
           const aiMap = { none: 0, dabbled: 10, some: 25, deep: 40 };
-          const blockerMap = { dontKnowHow: 0, noTime: 5, cost: 5, triedFailed: 10, dontNeed: -5 };
+          const blockerMap = {
+            dontKnowHow: 0,
+            noTime: 5,
+            cost: 5,
+            triedFailed: 10,
+            dontNeed: -5,
+          };
           const mh = manualMap[answers.manualHours] || 10;
           const ai = aiMap[answers.aiTools] || 0;
           const blockerBonus = blockerMap[answers.automationBlocker] || 0;
-          const hasAiTools = answers.aiToolsUsed && answers.aiToolsUsed.length > 3 ? 5 : 0;
-          const baseScore = Math.min(65, mh + ai + blockerBonus + hasAiTools + 10);
-          const score = Math.min(100, Math.max(15, baseScore + Math.floor(Math.random() * 8)));
-          const level = score >= 80 ? "AI-Ready" : score >= 60 ? "High Potential" : score >= 40 ? "Getting There" : score >= 20 ? "Early Stage" : "Untapped Potential";
+          const hasAiTools =
+            answers.aiToolsUsed && answers.aiToolsUsed.length > 3 ? 5 : 0;
+          const baseScore = Math.min(
+            65,
+            mh + ai + blockerBonus + hasAiTools + 10,
+          );
+          const score = Math.min(
+            100,
+            Math.max(15, baseScore + Math.floor(Math.random() * 8)),
+          );
+          const level =
+            score >= 80
+              ? "AI-Ready"
+              : score >= 60
+                ? "High Potential"
+                : score >= 40
+                  ? "Getting There"
+                  : score >= 20
+                    ? "Early Stage"
+                    : "Untapped Potential";
           const ind = answers.industry || "business";
           const pain = answers.biggestPain || "repetitive tasks";
           const tools = answers.currentTools || "";
           const aiToolsStr = answers.aiToolsUsed || "";
           const goal = answers.biggestGoal || "growth";
           const firstTool = tools ? tools.split(",")[0].trim() : "";
-          const secondTool = tools.split(",").length > 1 ? tools.split(",")[1].trim() : "";
-          const topTools = [firstTool, secondTool].filter(Boolean).join(" and ") || "your existing tools";
+          const secondTool =
+            tools.split(",").length > 1 ? tools.split(",")[1].trim() : "";
+          const topTools =
+            [firstTool, secondTool].filter(Boolean).join(" and ") ||
+            "your existing tools";
 
           const blockerAdvice = {
             dontKnowHow: `Since you're unsure where to start with AI automation for ${ind}, a guided audit can map the highest-impact automations for your specific workflow`,
             noTime: `You don't have time to figure out automation — that's exactly why delegating the setup to specialists makes sense for your ${ind} business`,
-            cost: `AI automation doesn't have to be expensive — starting with ${firstTool || 'your existing tools'} integrations can deliver ROI within the first week`,
+            cost: `AI automation doesn't have to be expensive — starting with ${firstTool || "your existing tools"} integrations can deliver ROI within the first week`,
             triedFailed: `If past automation attempts didn't work for your ${ind} business, the issue was likely the approach, not the technology — a targeted strategy changes everything`,
-            dontNeed: `Even in ${ind}, businesses that stay manual are losing ${mh > 15 ? '20+' : '5-10'} hours/week to tasks AI agents handle better`,
+            dontNeed: `Even in ${ind}, businesses that stay manual are losing ${mh > 15 ? "20+" : "5-10"} hours/week to tasks AI agents handle better`,
           };
 
           parsed = {
             score,
             level,
-            estimatedSavings: mh > 20 ? "15-22 hours/week" : mh > 5 ? "6-12 hours/week" : "3-6 hours/week",
+            estimatedSavings:
+              mh > 20
+                ? "15-22 hours/week"
+                : mh > 5
+                  ? "6-12 hours/week"
+                  : "3-6 hours/week",
             topAutomations: [
-              `AI-powered ${pain.toLowerCase().split(" ").slice(0,3).join(" ")} automation for ${ind}`,
+              `AI-powered ${pain.toLowerCase().split(" ").slice(0, 3).join(" ")} automation for ${ind}`,
               `Auto-sync data between ${topTools} to eliminate manual entry`,
               `Intelligent ${ind} scheduling, reminders & follow-up sequences`,
-              aiToolsStr ? `Expand your ${aiToolsStr.split(",").slice(0,2).join(" and ")} setup with agent-driven ${pain.toLowerCase().split(" ").slice(0,2).join(" ")} workflows` : `Deploy AI agents to handle ${pain.toLowerCase().split(" ").slice(0,2).join(" ")} while you focus on ${goal.toLowerCase()}`,
+              aiToolsStr
+                ? `Expand your ${aiToolsStr.split(",").slice(0, 2).join(" and ")} setup with agent-driven ${pain.toLowerCase().split(" ").slice(0, 2).join(" ")} workflows`
+                : `Deploy AI agents to handle ${pain.toLowerCase().split(" ").slice(0, 2).join(" ")} while you focus on ${goal.toLowerCase()}`,
             ],
             recommendations: [
-              `Automate ${pain.toLowerCase().split(" ").slice(0,3).join(" ")} first — it's your biggest daily pain and the fastest win for your ${ind} business`,
-              firstTool ? `Connect ${firstTool} with AI agents to stop copy-pasting and free up ${mh > 15 ? '15+' : '5-10'} hours/week` : `Connect your core tools with AI agents to eliminate manual data entry`,
-              blockerAdvice[answers.automationBlocker] || `A free audit call can map the exact automation roadmap for your ${ind} business and ${goal.toLowerCase()}`,
-              `Your ${ind} peers who adopted AI automation are already saving ${mh > 15 ? '15-20' : '8-12'} hours/week — here's how to catch up`,
+              `Automate ${pain.toLowerCase().split(" ").slice(0, 3).join(" ")} first — it's your biggest daily pain and the fastest win for your ${ind} business`,
+              firstTool
+                ? `Connect ${firstTool} with AI agents to stop copy-pasting and free up ${mh > 15 ? "15+" : "5-10"} hours/week`
+                : `Connect your core tools with AI agents to eliminate manual data entry`,
+              blockerAdvice[answers.automationBlocker] ||
+                `A free audit call can map the exact automation roadmap for your ${ind} business and ${goal.toLowerCase()}`,
+              `Your ${ind} peers who adopted AI automation are already saving ${mh > 15 ? "15-20" : "8-12"} hours/week — here's how to catch up`,
             ],
-            impactSummary: `As a ${ind} business ${answers.teamSize ? `with ${answers.teamSize} team members` : ''} spending ${mh > 15 ? '15+' : '5-10'} hours/week on manual ${pain.toLowerCase().split(" ").slice(0,2).join(" ")}, AI agents could free up that time so you can focus on ${goal.toLowerCase()}.`,
+            impactSummary: `As a ${ind} business ${answers.teamSize ? `with ${answers.teamSize} team members` : ""} spending ${mh > 15 ? "15+" : "5-10"} hours/week on manual ${pain.toLowerCase().split(" ").slice(0, 2).join(" ")}, AI agents could free up that time so you can focus on ${goal.toLowerCase()}.`,
           };
         }
 
-        console.log(`[ai-score] Model ${result.model} succeeded, score: ${parsed.score}`);
+        console.log(
+          `[ai-score] Model ${result.model} succeeded, score: ${parsed.score}`,
+        );
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(parsed));
       } catch (err) {
