@@ -144,7 +144,7 @@ export function AuditForm({ className }: { className?: string }) {
         className="w-full font-mono uppercase tracking-widest mt-4"
         isLoading={false}
       >
-        {isSubmitting ? "Processing..." : "Get My Free Audit"}
+        Get My Free Audit
       </Button>
 
       <p className="text-xs font-mono text-teal-500/60 text-center uppercase tracking-wider flex items-center justify-center gap-2 mt-4">
