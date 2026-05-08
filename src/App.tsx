@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -19,6 +19,7 @@ import { CaseStudies } from "@/pages/CaseStudies";
 import { BrewedIdentityCaseStudy } from "@/pages/BrewedIdentityCaseStudy";
 import { BrewedIdentityDemo } from "@/pages/BrewedIdentityDemo";
 import { Demo } from "@/pages/Demo";
+import { ReadinessScore } from "@/pages/ReadinessScore";
 import { RainFreshDemo } from "@/pages/RainFreshDemo";
 
 function ScrollToTop() {
@@ -26,6 +27,13 @@ function ScrollToTop() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [pathname]);
+  return null;
+}
+
+function AuditRedirect() {
+  useEffect(() => {
+    window.location.href = "https://cal.com/aariz-a/ai-audit";
+  }, []);
   return null;
 }
 
@@ -39,7 +47,7 @@ function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/audit" element={<Audit />} />
+          <Route path="/audit" element={<AuditRedirect />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy-terms" element={<PrivacyTerms />} />
           <Route path="/thank-you" element={<ThankYou />} />
@@ -51,6 +59,7 @@ function AppRoutes() {
             element={<BrewedIdentityCaseStudy />}
           />
           <Route path="/case-studies" element={<CaseStudies />} />
+          <Route path="/ai-score" element={<ReadinessScore />} />
           <Route path="/demo" element={<Demo />} />
           <Route path="/demo/rainfresh" element={<RainFreshDemo />} />
           <Route
@@ -72,11 +81,19 @@ function AppRoutes() {
             Live Demo
           </Link>
           <Link
-            to="/audit"
+            to="/ai-score"
+            className="flex-1 text-center py-2.5 rounded-lg border border-cyan-400/40 text-cyan-300 text-sm font-semibold hover:bg-cyan-500/10 transition-colors"
+          >
+            AI Score
+          </Link>
+          <a
+            href="https://cal.com/aariz-a/ai-audit"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 text-center py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-teal-400 text-white text-sm font-bold shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:shadow-[0_0_25px_rgba(0,229,255,0.4)] transition-all"
           >
             Free Audit →
-          </Link>
+          </a>
         </div>
       </div>
     </>

@@ -159,6 +159,146 @@ const server = http.createServer(async (req, res) => {
     return res.end(JSON.stringify({ error: "Method not allowed" }));
   }
 
+  // ── AI Score Analysis Endpoint ──
+  if (req.url === "/api/ai-score" && req.method === "POST") {
+    let scoreBody = "";
+    req.on("data", (chunk) => { scoreBody += chunk; });
+    req.on("end", async () => {
+      try {
+        const { answers } = JSON.parse(scoreBody);
+        if (!answers || typeof answers !== "object") {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ error: "Answers object required" }));
+        }
+
+        if (!OPENROUTER_API_KEY) {
+          res.writeHead(500, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ error: "Service unavailable" }));
+        }
+
+        const prompt = `You are an AI automation consultant. A business owner just answered these questions about their business:
+
+Industry/Type: ${answers.industry || "Not specified"}
+Team size: ${answers.teamSize || "Not specified"}
+Biggest daily pain: ${answers.biggestPain || "Not specified"}
+Manual hours/week on repetitive tasks: ${answers.manualHours || "Not specified"}
+Current tools used: ${answers.currentTools || "Not specified"}
+AI/automation tools currently using: ${answers.aiToolsUsed || "Not specified"}
+AI experience level: ${answers.aiTools || "Not specified"}
+What they'd automate first: ${answers.automateFirst || "Not specified"}
+#1 goal for next 6 months: ${answers.biggestGoal || "Not specified"}
+What's holding them back from automating: ${answers.automationBlocker || "Not specified"}
+
+Based on ALL their answers, respond with ONLY a JSON object. No explanation, no reasoning, no markdown. Just the raw JSON:
+{"score":0-100,"level":"Untapped Potential|Early Stage|Getting There|High Potential|AI-Ready","estimatedSavings":"X-Y hours/week","topAutomations":["specific1","specific2","specific3","specific4"],"recommendations":["specific1","specific2","specific3","specific4"],"impactSummary":"1-2 sentence personalized summary"}
+
+CRITICAL: Every single value must reference their SPECIFIC industry, tools, pain points, goals, and blockers. No generic advice. No template phrases. Name their actual tools and challenges.`;
+
+        const result = await tryModelsWithFallback([
+          { role: "system", content: "Output ONLY valid JSON. No explanation, no reasoning, no markdown fences, no thinking out loud. Just the JSON object." },
+          { role: "user", content: prompt },
+        ]);
+
+        if (!result) {
+          res.writeHead(502, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ error: "AI service unavailable" }));
+        }
+
+        let parsed;
+        try {
+          // Try to find JSON object in the response — free models are chatty
+          let cleaned = result.reply.replace(/```json\n?/g, "").replace(/```\n?/g, "");
+          const firstBrace = cleaned.indexOf("{");
+          const lastBrace = cleaned.lastIndexOf("}");
+          if (firstBrace !== -1 && lastBrace > firstBrace) {
+            cleaned = cleaned.substring(firstBrace, lastBrace + 1);
+          }
+          // Try parsing, attempt to fix common issues (truncated JSON)
+          try {
+            parsed = JSON.parse(cleaned);
+          } catch {
+            // Model may have truncated the JSON — try to complete it
+            let fixed = cleaned;
+            // Count open/close brackets and braces
+            const openBraces = (fixed.match(/{/g) || []).length;
+            const closeBraces = (fixed.match(/}/g) || []).length;
+            const openBrackets = (fixed.match(/\[/g) || []).length;
+            const closeBrackets = (fixed.match(/]/g) || []).length;
+            // Close any unclosed strings (find last " and add closing quote + comma)
+            const lastQuoteIdx = fixed.lastIndexOf('"');
+            if (lastQuoteIdx > 0 && fixed[lastQuoteIdx - 1] !== '\\' && fixed[lastQuoteIdx - 1] !== ':') {
+              // Check if the string is unclosed — look for odd number of quotes after last colon
+            }
+            fixed += "]".repeat(Math.max(0, openBrackets - closeBrackets));
+            fixed += "}".repeat(Math.max(0, openBraces - closeBraces));
+            parsed = JSON.parse(fixed);
+          }
+        } catch {
+          parsed = null;
+        }
+
+        // If AI parsing failed, build fully personalized fallback from answers
+        if (!parsed || !parsed.score) {
+          const manualMap = { under5: 5, "5to15": 10, "15to30": 25, "30plus": 40 };
+          const aiMap = { none: 0, dabbled: 10, some: 25, deep: 40 };
+          const blockerMap = { dontKnowHow: 0, noTime: 5, cost: 5, triedFailed: 10, dontNeed: -5 };
+          const mh = manualMap[answers.manualHours] || 10;
+          const ai = aiMap[answers.aiTools] || 0;
+          const blockerBonus = blockerMap[answers.automationBlocker] || 0;
+          const hasAiTools = answers.aiToolsUsed && answers.aiToolsUsed.length > 3 ? 5 : 0;
+          const baseScore = Math.min(65, mh + ai + blockerBonus + hasAiTools + 10);
+          const score = Math.min(100, Math.max(15, baseScore + Math.floor(Math.random() * 8)));
+          const level = score >= 80 ? "AI-Ready" : score >= 60 ? "High Potential" : score >= 40 ? "Getting There" : score >= 20 ? "Early Stage" : "Untapped Potential";
+          const ind = answers.industry || "business";
+          const pain = answers.biggestPain || "repetitive tasks";
+          const tools = answers.currentTools || "";
+          const aiToolsStr = answers.aiToolsUsed || "";
+          const goal = answers.biggestGoal || "growth";
+          const firstTool = tools ? tools.split(",")[0].trim() : "";
+          const secondTool = tools.split(",").length > 1 ? tools.split(",")[1].trim() : "";
+          const topTools = [firstTool, secondTool].filter(Boolean).join(" and ") || "your existing tools";
+
+          const blockerAdvice = {
+            dontKnowHow: `Since you're unsure where to start with AI automation for ${ind}, a guided audit can map the highest-impact automations for your specific workflow`,
+            noTime: `You don't have time to figure out automation — that's exactly why delegating the setup to specialists makes sense for your ${ind} business`,
+            cost: `AI automation doesn't have to be expensive — starting with ${firstTool || 'your existing tools'} integrations can deliver ROI within the first week`,
+            triedFailed: `If past automation attempts didn't work for your ${ind} business, the issue was likely the approach, not the technology — a targeted strategy changes everything`,
+            dontNeed: `Even in ${ind}, businesses that stay manual are losing ${mh > 15 ? '20+' : '5-10'} hours/week to tasks AI agents handle better`,
+          };
+
+          parsed = {
+            score,
+            level,
+            estimatedSavings: mh > 20 ? "15-22 hours/week" : mh > 5 ? "6-12 hours/week" : "3-6 hours/week",
+            topAutomations: [
+              `AI-powered ${pain.toLowerCase().split(" ").slice(0,3).join(" ")} automation for ${ind}`,
+              `Auto-sync data between ${topTools} to eliminate manual entry`,
+              `Intelligent ${ind} scheduling, reminders & follow-up sequences`,
+              aiToolsStr ? `Expand your ${aiToolsStr.split(",").slice(0,2).join(" and ")} setup with agent-driven ${pain.toLowerCase().split(" ").slice(0,2).join(" ")} workflows` : `Deploy AI agents to handle ${pain.toLowerCase().split(" ").slice(0,2).join(" ")} while you focus on ${goal.toLowerCase()}`,
+            ],
+            recommendations: [
+              `Automate ${pain.toLowerCase().split(" ").slice(0,3).join(" ")} first — it's your biggest daily pain and the fastest win for your ${ind} business`,
+              firstTool ? `Connect ${firstTool} with AI agents to stop copy-pasting and free up ${mh > 15 ? '15+' : '5-10'} hours/week` : `Connect your core tools with AI agents to eliminate manual data entry`,
+              blockerAdvice[answers.automationBlocker] || `A free audit call can map the exact automation roadmap for your ${ind} business and ${goal.toLowerCase()}`,
+              `Your ${ind} peers who adopted AI automation are already saving ${mh > 15 ? '15-20' : '8-12'} hours/week — here's how to catch up`,
+            ],
+            impactSummary: `As a ${ind} business ${answers.teamSize ? `with ${answers.teamSize} team members` : ''} spending ${mh > 15 ? '15+' : '5-10'} hours/week on manual ${pain.toLowerCase().split(" ").slice(0,2).join(" ")}, AI agents could free up that time so you can focus on ${goal.toLowerCase()}.`,
+          };
+        }
+
+        console.log(`[ai-score] Model ${result.model} succeeded, score: ${parsed.score}`);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(parsed));
+      } catch (err) {
+        console.error("[ai-score] Error:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Internal server error" }));
+      }
+    });
+    return;
+  }
+
+  // ── Demo Chat Endpoint ──
   if (req.url !== "/api/demo/chat") {
     res.writeHead(404, { "Content-Type": "application/json" });
     return res.end(JSON.stringify({ error: "Not found" }));

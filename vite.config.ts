@@ -18,6 +18,10 @@ export default defineConfig({
         target: "http://localhost:3002",
         changeOrigin: true,
       },
+      "/api/ai-score": {
+        target: "http://localhost:3002",
+        changeOrigin: true,
+      },
     },
   },
   build: {

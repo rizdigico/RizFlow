@@ -9,12 +9,14 @@ const footerLinks = {
     { label: "Home", href: "/" },
     { label: "Services", href: "/services" },
     { label: "Free Audit", href: "/audit" },
+    { label: "AI Score", href: "/ai-score" },
     { label: "About", href: "/about" },
   ],
   Resources: [
     { label: "FAQ", href: "/faq" },
     { label: "Blog", href: "/blog" },
     { label: "Case Studies", href: "/case-studies" },
+    { label: "Live Demo", href: "/demo" },
   ],
   Legal: [{ label: "Privacy & Terms", href: "/privacy-terms" }],
 };

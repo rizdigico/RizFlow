@@ -1,13 +1,14 @@
 export const SITE_URL = "https://www.rizflow.co";
 export const SITE_NAME = "RizFlow";
 export const CALENDLY_LINK =
-  import.meta.env.VITE_CALENDLY_LINK || "https://cal.com/aariz-a/30min";
+  import.meta.env.VITE_CALENDLY_LINK || "https://cal.com/aariz-a/ai-audit";
 export const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || "";
 
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
+  { label: "AI Score", href: "/ai-score" },
   { label: "FAQ", href: "/faq" },
   { label: "Blog", href: "/blog" },
 ] as const;
