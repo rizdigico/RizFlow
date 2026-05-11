@@ -145,29 +145,71 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Service unavailable" });
     }
 
-    const prompt = `You are an AI automation consultant. A business owner answered these questions:
+    const ind = answers.industry || "business";
+    const pain = answers.biggestPain || "repetitive tasks";
+    const tools = answers.currentTools || "";
+    const aiToolsUsed = answers.aiToolsUsed || "";
+    const goal = answers.biggestGoal || "growth";
+    const autoFirst = answers.automateFirst || "";
+    const manualHrs = answers.manualHours || "under5";
+    const teamSz = answers.teamSize || "solo";
+    const aiExp = answers.aiToolsExperience || "none";
+    const blocker = answers.automationBlocker || "dontKnowHow";
 
-Industry/Type: ${answers.industry || "Not specified"}
-Team size: ${answers.teamSize || "Not specified"}
-Biggest daily pain: ${answers.biggestPain || "Not specified"}
-Manual hours/week on repetitive tasks: ${answers.manualHours || "Not specified"}
-Current tools used: ${answers.currentTools || "Not specified"}
-AI/automation tools currently using: ${answers.aiToolsUsed || "Not specified"}
-AI experience level: ${answers.aiTools || "Not specified"}
-What they'd automate first: ${answers.automateFirst || "Not specified"}
-#1 goal for next 6 months: ${answers.biggestGoal || "Not specified"}
-What's holding them back from automating: ${answers.automationBlocker || "Not specified"}
+    const expLabel =
+      {
+        none: "No AI experience",
+        dabbled: "Dabbled with ChatGPT",
+        some: "Uses a few AI tools",
+        deep: "AI-integrated workflows",
+      }[aiExp] || aiExp;
+    const hrsLabel =
+      {
+        under5: "Under 5 hrs/week",
+        "5to15": "5-15 hrs/week",
+        "15to30": "15-30 hrs/week",
+        "30plus": "30+ hrs/week",
+      }[manualHrs] || manualHrs;
+    const teamLabel =
+      {
+        solo: "Solo founder",
+        small: "2-5 people",
+        medium: "6-15 people",
+        large: "16-30 people",
+        bigger: "30+ people",
+      }[teamSz] || teamSz;
+    const blockerLabel =
+      {
+        dontKnowHow: "Doesn't know where to start",
+        noTime: "No time to set up",
+        cost: "Worried about cost",
+        triedFailed: "Tried before, didn't work",
+        dontNeed: "Not sure AI is relevant",
+      }[blocker] || blocker;
 
-Based on ALL their answers, respond with ONLY a JSON object. No explanation, no reasoning, no markdown. Just the raw JSON:
-{"score":0-100,"level":"Untapped Potential|Early Stage|Getting There|High Potential|AI-Ready","estimatedSavings":"X-Y hours/week","topAutomations":["FIRST automation — name the exact task and tool, e.g. 'Auto-invoice processing between Shopify and Xero'","SECOND automation — specific to their industry and pain","THIRD automation — references their actual tools","FOURTH automation — ties to their stated goal"],"recommendations":["FIRST recommendation — actionable, references their specific pain point","SECOND recommendation — names their actual tools","THIRD recommendation — addresses their specific blocker","FOURTH recommendation — concrete next step tied to their goal"],"impactSummary":"1-2 sentence personalized summary referencing their industry, pain, and goal"}
+    const prompt = `You are an expert AI automation consultant giving a personalized assessment. A real business owner answered these questions — give them genuinely useful, specific advice.
 
-ABSOLUTE RULES — VIOLATIONS WILL CAUSE REJECTION:
-1. NEVER use generic phrases like "streamline operations", "leverage AI", "optimize workflows", "harness technology" — these are banned
-2. NEVER use placeholder text like "specific1", "item1", "example" — every string must be a real, specific recommendation
-3. Every topAutomation MUST name at least ONE of: their industry, their tools, their pain point, or their goal
-4. Every recommendation MUST reference something they specifically mentioned in their answers
-5. impactSummary MUST mention their industry AND their biggest pain AND their goal by name
-6. If you output any template/generic/placeholder text the entire response will be rejected`;
+BUSINESS PROFILE:
+- Industry: ${ind}
+- Team size: ${teamLabel}
+- Biggest daily pain: "${pain}"
+- Hours/week on repetitive tasks: ${hrsLabel}
+- Current tools: "${tools}"
+- AI tools they already use: "${aiToolsUsed}"
+- AI experience: ${expLabel}
+- What they'd automate first: "${autoFirst}"
+- #1 goal for next 6 months: "${goal}"
+- What's holding them back: ${blockerLabel}
+
+PERSONALIZATION RULES (CRITICAL — responses that violate these will be rejected):
+1. Every automation MUST reference their SPECIFIC industry, tools, pain, or goal by name — no generic advice
+2. Every recommendation MUST be actionable and reference what they actually told you — no vague "streamline" or "leverage" language
+3. Use natural, conversational English — write like a consultant talking to a client, not a template
+4. impactSummary MUST mention their industry name, their exact pain, and their stated goal
+5. Score should genuinely reflect their readiness — high if they already use AI tools and have clear pain, low if they're just starting
+
+Respond with ONLY a JSON object (no markdown, no explanation):
+{"score":0-100,"level":"Untapped Potential|Early Stage|Getting There|High Potential|AI-Ready","estimatedSavings":"X-Y hours/week","topAutomations":["specific automation naming their actual tools and pain, e.g. 'Auto-invoice processing between Shopify and Xero'","another specific one tied to their industry","third one addressing their stated pain","fourth one connected to their 6-month goal"],"recommendations":["specific first step referencing their exact pain and tools","recommendation naming their actual tools","one addressing their specific blocker","concrete next step tied to their stated goal"],"impactSummary":"1-2 sentence personalized summary naming their industry, pain, and goal"}`;
 
     const result = await tryModelsWithFallback([
       {
@@ -213,7 +255,7 @@ ABSOLUTE RULES — VIOLATIONS WILL CAUSE REJECTION:
         dontNeed: -5,
       };
       const mh = manualMap[answers.manualHours] || 10;
-      const ai = aiMap[answers.aiTools] || 0;
+      const ai = aiMap[answers.aiToolsExperience] || 0;
       const blockerBonus = blockerMap[answers.automationBlocker] || 0;
       const hasAiTools =
         answers.aiToolsUsed && answers.aiToolsUsed.length > 3 ? 5 : 0;
@@ -234,23 +276,46 @@ ABSOLUTE RULES — VIOLATIONS WILL CAUSE REJECTION:
                 : "Untapped Potential";
       const ind = answers.industry || "business";
       const pain = answers.biggestPain || "repetitive tasks";
+      const painShort =
+        pain.length > 30 ? pain.split(" ").slice(0, 4).join(" ") : pain;
       const tools = answers.currentTools || "";
       const aiToolsStr = answers.aiToolsUsed || "";
       const goal = answers.biggestGoal || "growth";
       const firstTool = tools ? tools.split(",")[0].trim() : "";
       const secondTool =
         tools.split(",").length > 1 ? tools.split(",")[1].trim() : "";
-      const topTools =
-        [firstTool, secondTool].filter(Boolean).join(" and ") ||
-        "your existing tools";
+      const autoFirst = answers.automateFirst || "";
 
       const blockerAdvice = {
-        dontKnowHow: `Since you're unsure where to start with AI automation for ${ind}, a guided audit can map the highest-impact automations for your specific workflow`,
-        noTime: `You don't have time to figure out automation — that's exactly why delegating the setup to specialists makes sense for your ${ind} business`,
-        cost: `AI automation doesn't have to be expensive — starting with ${firstTool || "your existing tools"} integrations can deliver ROI within the first week`,
-        triedFailed: `If past automation attempts didn't work for your ${ind} business, the issue was likely the approach, not the technology — a targeted strategy changes everything`,
-        dontNeed: `Even in ${ind}, businesses that stay manual are losing ${mh > 15 ? "20+" : "5-10"} hours/week to tasks AI agents handle better`,
+        dontKnowHow: `A free audit call will map the exact automation roadmap for your ${ind} business — you'll know exactly where to start`,
+        noTime: `Since you're short on time, delegating the setup to specialists gets you automation without the learning curve`,
+        cost: `Starting with ${firstTool || "your existing tools"} integrations can deliver ROI within the first week — automation doesn't have to be expensive`,
+        triedFailed: `If past automation didn't work for your ${ind} business, it was likely the approach — a targeted strategy built around ${firstTool || "your actual tools"} makes the difference`,
+        dontNeed: `Even in ${ind}, businesses that stay manual are losing ${mh > 15 ? "20+" : "5-10"} hours/week to tasks AI handles better — and your competition is already automating`,
       };
+
+      const autos = [
+        autoFirst
+          ? `Set up ${autoFirst.toLowerCase()} automation — you already identified this as your top priority`
+          : `Automate ${painShort.toLowerCase()} end-to-end with AI agents tailored to ${ind} workflows`,
+        firstTool
+          ? `Connect ${firstTool}${secondTool ? ` and ${secondTool}` : ""} so orders, invoices, and customer data flow without manual re-entry`
+          : `Auto-sync your core business tools to eliminate copy-paste between systems`,
+        `Set up smart follow-up sequences for ${ind} — automatically chase leads, confirm bookings, and send reminders`,
+        aiToolsStr
+          ? `Build on your ${aiToolsStr.split(",").slice(0, 2).join(" and ")} setup with dedicated agents for ${painShort.toLowerCase()}`
+          : `Deploy AI agents that handle ${painShort.toLowerCase()} while you focus on ${goal.toLowerCase()}`,
+      ];
+
+      const recs = [
+        `Start with ${autoFirst ? autoFirst.toLowerCase() : painShort.toLowerCase()} — it's the quickest win for your ${ind} business${mh > 10 ? " and where you're losing the most hours" : ""}`,
+        firstTool
+          ? `Connect ${firstTool} to an AI agent so ${mh > 15 ? "the 15+ hours you spend on manual work" : "repetitive data entry"} gets handled automatically`
+          : `Plug your core tools into an AI agent pipeline — stop copy-pasting between systems`,
+        blockerAdvice[answers.automationBlocker] ||
+          `Book a free audit call to map the exact automation roadmap for your ${ind} business`,
+        `${ind} businesses using AI agents are already saving ${mh > 15 ? "15-20" : "8-12"} hours/week — the same is within reach for your ${goal.toLowerCase()} goal`,
+      ];
 
       parsed = {
         score,
@@ -261,24 +326,9 @@ ABSOLUTE RULES — VIOLATIONS WILL CAUSE REJECTION:
             : mh > 5
               ? "6-12 hours/week"
               : "3-6 hours/week",
-        topAutomations: [
-          `AI-powered ${pain.toLowerCase().split(" ").slice(0, 3).join(" ")} automation for ${ind}`,
-          `Auto-sync data between ${topTools} to eliminate manual entry`,
-          `Intelligent ${ind} scheduling, reminders & follow-up sequences`,
-          aiToolsStr
-            ? `Expand your ${aiToolsStr.split(",").slice(0, 2).join(" and ")} setup with agent-driven ${pain.toLowerCase().split(" ").slice(0, 2).join(" ")} workflows`
-            : `Deploy AI agents to handle ${pain.toLowerCase().split(" ").slice(0, 2).join(" ")} while you focus on ${goal.toLowerCase()}`,
-        ],
-        recommendations: [
-          `Automate ${pain.toLowerCase().split(" ").slice(0, 3).join(" ")} first — it's your biggest daily pain and the fastest win for your ${ind} business`,
-          firstTool
-            ? `Connect ${firstTool} with AI agents to stop copy-pasting and free up ${mh > 15 ? "15+" : "5-10"} hours/week`
-            : `Connect your core tools with AI agents to eliminate manual data entry`,
-          blockerAdvice[answers.automationBlocker] ||
-            `A free audit call can map the exact automation roadmap for your ${ind} business and ${goal.toLowerCase()}`,
-          `Your ${ind} peers who adopted AI automation are already saving ${mh > 15 ? "15-20" : "8-12"} hours/week — here's how to catch up`,
-        ],
-        impactSummary: `As a ${ind} business ${answers.teamSize ? `with ${answers.teamSize} team members` : ""} spending ${mh > 15 ? "15+" : "5-10"} hours/week on manual ${pain.toLowerCase().split(" ").slice(0, 2).join(" ")}, AI agents could free up that time so you can focus on ${goal.toLowerCase()}.`,
+        topAutomations: autos,
+        recommendations: recs,
+        impactSummary: `As a ${ind} business ${answers.teamSize ? `with a ${answers.teamSize} team` : ""} spending ${mh > 15 ? "15+" : mh > 5 ? "5-10" : "a few"} hours/week on ${painShort.toLowerCase()}, AI agents could reclaim that time so you can focus on ${goal.toLowerCase()}.`,
       };
     }
 
