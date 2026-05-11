@@ -228,6 +228,39 @@ export default async function handler(req, res) {
         // Email failure is non-critical — lead is still captured
         console.error("[lead-capture] Email send failed:", emailErr.message);
       }
+
+      // Notify business owner
+      try {
+        const ownerHtml = `
+          <div style="font-family:monospace;background:#0a0f1a;color:#e2e8f0;padding:24px;border-radius:8px;">
+            <h2 style="color:#00E5FF;margin:0 0 16px;">New Lead Captured</h2>
+            <table style="color:#cbd5e1;font-size:14px;">
+              <tr><td style="padding:4px 12px 4px 0;color:#64748b;">Email</td><td><strong>${email}</strong></td></tr>
+              <tr><td style="padding:4px 12px 4px 0;color:#64748b;">Score</td><td><strong style="color:${score >= 70 ? "#06B6D4" : score >= 45 ? "#22D3EE" : "#F59E0B"}">${score}/100</strong></td></tr>
+              <tr><td style="padding:4px 12px 4px 0;color:#64748b;">Level</td><td>${level}</td></tr>
+              <tr><td style="padding:4px 12px 4px 0;color:#64748b;">Savings</td><td>${estimatedSavings}</td></tr>
+              ${industry ? `<tr><td style="padding:4px 12px 4px 0;color:#64748b;">Industry</td><td>${industry}</td></tr>` : ""}
+              ${teamSize ? `<tr><td style="padding:4px 12px 4px 0;color:#64748b;">Team Size</td><td>${teamSize}</td></tr>` : ""}
+              ${biggestPain ? `<tr><td style="padding:4px 12px 4px 0;color:#64748b;">Biggest Pain</td><td>${biggestPain}</td></tr>` : ""}
+              <tr><td style="padding:4px 12px 4px 0;color:#64748b;">Source</td><td>${source || "ai-score-preview"}</td></tr>
+              <tr><td style="padding:4px 12px 4px 0;color:#64748b;">Time</td><td>${new Date().toISOString()}</td></tr>
+            </table>
+            <p style="margin:16px 0 0;font-size:12px;color:#475569;">— RizFlow Lead Capture</p>
+          </div>`;
+        await transport.sendMail({
+          from: `"RizFlow Leads" <${process.env.SMTP_USER}>`,
+          to: "main@rizflow.co",
+          subject: `New Lead: ${email} — Score ${score}/100`,
+          html: ownerHtml,
+          text: `New Lead: ${email}\nScore: ${score}/100 (${level})\nSavings: ${estimatedSavings}\nIndustry: ${industry || "N/A"}\nTeam: ${teamSize || "N/A"}\nPain: ${biggestPain || "N/A"}\nSource: ${source || "ai-score-preview"}\nTime: ${new Date().toISOString()}`,
+        });
+        console.log(`[lead-capture] Owner notification sent for ${email}`);
+      } catch (notifyErr) {
+        console.error(
+          "[lead-capture] Owner notification failed:",
+          notifyErr.message,
+        );
+      }
     } else {
       console.warn("[lead-capture] SMTP not configured — skipping email send");
     }
