@@ -357,6 +357,36 @@ Respond with ONLY a JSON object (no markdown, no explanation):
           parsed = null;
         }
 
+        // Clean up level — AI sometimes outputs "High Potential|AI-Ready"
+        if (parsed && parsed.level) {
+          const validLevels = [
+            "Untapped Potential",
+            "Early Stage",
+            "Getting There",
+            "High Potential",
+            "AI-Ready",
+          ];
+          if (parsed.level.includes("|")) {
+            const parts = parsed.level.split("|").map((s) => s.trim());
+            parsed.level = parts.sort(
+              (a, b) => validLevels.indexOf(b) - validLevels.indexOf(a),
+            )[0];
+          }
+          if (!validLevels.includes(parsed.level)) {
+            const s = parsed.score;
+            parsed.level =
+              s >= 80
+                ? "AI-Ready"
+                : s >= 60
+                  ? "High Potential"
+                  : s >= 40
+                    ? "Getting There"
+                    : s >= 20
+                      ? "Early Stage"
+                      : "Untapped Potential";
+          }
+        }
+
         if (!parsed) {
           const manualMap = {
             under5: 5,

@@ -244,6 +244,38 @@ Respond with ONLY a JSON object (no markdown, no explanation):
       parsed = null; // Force fallback to manual generation
     }
 
+    // Clean up level — AI sometimes outputs "High Potential|AI-Ready"
+    if (parsed && parsed.level) {
+      const validLevels = [
+        "Untapped Potential",
+        "Early Stage",
+        "Getting There",
+        "High Potential",
+        "AI-Ready",
+      ];
+      if (parsed.level.includes("|")) {
+        const parts = parsed.level.split("|").map((s) => s.trim());
+        // Pick the more advanced level
+        parsed.level = parts.sort(
+          (a, b) => validLevels.indexOf(b) - validLevels.indexOf(a),
+        )[0];
+      }
+      if (!validLevels.includes(parsed.level)) {
+        // Fallback based on score
+        const s = parsed.score;
+        parsed.level =
+          s >= 80
+            ? "AI-Ready"
+            : s >= 60
+              ? "High Potential"
+              : s >= 40
+                ? "Getting There"
+                : s >= 20
+                  ? "Early Stage"
+                  : "Untapped Potential";
+      }
+    }
+
     if (!parsed) {
       const manualMap = { under5: 5, "5to15": 10, "15to30": 25, "30plus": 40 };
       const aiMap = { none: 0, dabbled: 10, some: 25, deep: 40 };
