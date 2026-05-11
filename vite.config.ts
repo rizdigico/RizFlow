@@ -22,6 +22,10 @@ export default defineConfig({
         target: "http://localhost:3002",
         changeOrigin: true,
       },
+      "/api/lead-capture": {
+        target: "http://localhost:3002",
+        changeOrigin: true,
+      },
     },
   },
   build: {

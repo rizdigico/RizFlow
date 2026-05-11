@@ -4,6 +4,7 @@
 // In production, Vercel serverless functions handle this (with VPS proxy fallback)
 
 import http from "node:http";
+import nodemailer from "nodemailer";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const PORT = 3002;
@@ -409,6 +410,137 @@ ABSOLUTE RULES — VIOLATIONS WILL CAUSE REJECTION:
         res.end(JSON.stringify(parsed));
       } catch (err) {
         console.error("[ai-score] Error:", err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Internal server error" }));
+      }
+    });
+    return;
+  }
+
+  // ── Lead Capture Endpoint ──
+  if (req.url === "/api/lead-capture" && req.method === "POST") {
+    let leadBody = "";
+    req.on("data", (chunk) => {
+      leadBody += chunk;
+    });
+    req.on("end", async () => {
+      try {
+        const data = JSON.parse(leadBody);
+        const {
+          email,
+          score,
+          level,
+          estimatedSavings,
+          topAutomations,
+          recommendations,
+          industry,
+          teamSize,
+          biggestPain,
+          source,
+        } = data;
+
+        if (!email || !email.includes("@")) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ error: "Valid email required" }));
+        }
+
+        console.log(
+          `[lead-capture] New lead: ${email} | Score: ${score} | Level: ${level} | Source: ${source}`,
+        );
+
+        // Save to local leads file as backup
+        const fs = await import("fs/promises");
+        const leadsPath = new URL("../leads.json", import.meta.url);
+        let leads = [];
+        try {
+          const existing = await fs.readFile(leadsPath, "utf-8");
+          leads = JSON.parse(existing);
+        } catch {}
+        leads.push({
+          email,
+          score,
+          level,
+          estimatedSavings,
+          industry,
+          teamSize,
+          biggestPain,
+          source,
+          submittedAt: new Date().toISOString(),
+        });
+        await fs.writeFile(leadsPath, JSON.stringify(leads, null, 2));
+
+        // Send welcome email with results
+        const SMTP_USER = process.env.SMTP_USER;
+        const SMTP_PASS = process.env.SMTP_PASS;
+        if (SMTP_USER && SMTP_PASS) {
+          try {
+            const transporter = nodemailer.createTransport({
+              host: process.env.SMTP_HOST || "smtp.gmail.com",
+              port: parseInt(process.env.SMTP_PORT || "587", 10),
+              secure: (process.env.SMTP_PORT || "587") === "465",
+              auth: { user: SMTP_USER, pass: SMTP_PASS },
+            });
+
+            const scoreColor =
+              score >= 70 ? "#06B6D4" : score >= 45 ? "#22D3EE" : "#F59E0B";
+            const automationHtml = (topAutomations || [])
+              .map((a) => `<li style="margin-bottom:8px;">✅ ${a}</li>`)
+              .join("");
+            const recHtml = (recommendations || [])
+              .map((r) => `<li style="margin-bottom:8px;">→ ${r}</li>`)
+              .join("");
+
+            await transporter.sendMail({
+              from: `"RizFlow" <${SMTP_USER}>`,
+              to: email,
+              replyTo: "main@rizflow.co",
+              subject: `Your AI Readiness Score: ${score}/100 — Personalized Roadmap Inside`,
+              html: `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;background:#050A14;font-family:sans-serif;color:#e2e8f0;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#0A0F1A;border:1px solid rgba(0,229,255,0.2);border-radius:16px;overflow:hidden;">
+<tr><td style="padding:32px 28px 16px;text-align:center;background:linear-gradient(135deg,rgba(0,229,255,0.08),transparent);"><p style="margin:0;font-size:11px;font-family:monospace;color:#00E5FF;text-transform:uppercase;letter-spacing:3px;">AI Readiness Score</p><h1 style="margin:12px 0 0;font-size:28px;color:#fff;font-weight:800;">Your Results Are In</h1></td></tr>
+<tr><td style="padding:24px 28px;text-align:center;"><p style="margin:0;font-size:72px;font-weight:800;font-family:monospace;color:${scoreColor};line-height:1;">${score}</p><p style="margin:4px 0 0;font-size:16px;color:#64748b;font-family:monospace;">/100</p><p style="margin:16px 0 0;font-size:16px;font-weight:700;color:${scoreColor};">${level}</p><p style="margin:8px 0 0;font-size:14px;color:#94a3b8;">Estimated savings: <strong style="color:#fff;">${estimatedSavings}</strong></p></td></tr>
+<tr><td style="padding:0 28px;"><hr style="border:none;border-top:1px solid rgba(0,229,255,0.15);"></td></tr>
+${automationHtml ? `<tr><td style="padding:24px 28px;"><p style="margin:0 0 12px;font-size:11px;font-family:monospace;color:#00E5FF;text-transform:uppercase;letter-spacing:2px;">⚡ Top Automations for You</p><ul style="margin:0;padding-left:20px;list-style:none;font-size:14px;color:#cbd5e1;">${automationHtml}</ul></td></tr>` : ""}
+${recHtml ? `<tr><td style="padding:0 28px 24px;"><p style="margin:0 0 12px;font-size:11px;font-family:monospace;color:#00E5FF;text-transform:uppercase;letter-spacing:2px;">💡 Your Personalized Roadmap</p><ul style="margin:0;padding-left:20px;list-style:none;font-size:14px;color:#cbd5e1;">${recHtml}</ul></td></tr>` : ""}
+<tr><td style="padding:0 28px;"><hr style="border:none;border-top:1px solid rgba(0,229,255,0.15);"></td></tr>
+<tr><td style="padding:24px 28px 32px;text-align:center;"><p style="margin:0 0 16px;font-size:15px;color:#94a3b8;">Want to see these automations running in <em>your</em> business?</p><a href="https://cal.com/aariz-a/ai-audit" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#00E5FF,#06B6D4);color:#050A14;font-weight:700;font-size:16px;text-decoration:none;border-radius:12px;">Book Free AI Audit →</a><p style="margin:12px 0 0;font-size:11px;color:#475569;font-family:monospace;">30 min · zero pitch · personalized roadmap</p></td></tr>
+<tr><td style="padding:16px 28px;text-align:center;background:rgba(0,229,255,0.03);"><p style="margin:0;font-size:11px;color:#475569;">RizFlow · AI Automation for SMEs</p><p style="margin:4px 0 0;font-size:10px;color:#334155;">Singapore · <a href="https://rizflow.co" style="color:#00E5FF;text-decoration:none;">rizflow.co</a></p></td></tr>
+</table></body></html>`,
+              text: `Your AI Readiness Score: ${score}/100 (${level})\nEstimated weekly savings: ${estimatedSavings}\n\nBook your free AI Audit: https://cal.com/aariz-a/ai-audit\n\n— RizFlow · rizflow.co`,
+            });
+            console.log(`[lead-capture] Welcome email sent to ${email}`);
+          } catch (emailErr) {
+            console.error(
+              "[lead-capture] Email send failed:",
+              emailErr.message,
+            );
+          }
+        } else {
+          console.warn(
+            "[lead-capture] SMTP not configured — skipping email send",
+          );
+        }
+
+        // Forward to VPS webhook for Google Sheets + email nurture (non-blocking)
+        const WEBHOOK_URL = process.env.LEAD_WEBHOOK_URL;
+        if (WEBHOOK_URL) {
+          try {
+            await fetch(WEBHOOK_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+          } catch (e) {
+            console.error("[lead-capture] Webhook failed:", e.message);
+          }
+        }
+
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({ success: true, message: "Roadmap on its way!" }),
+        );
+      } catch (err) {
+        console.error("[lead-capture] Error:", err);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Internal server error" }));
       }

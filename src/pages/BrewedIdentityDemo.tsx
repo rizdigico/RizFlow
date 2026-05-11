@@ -199,7 +199,9 @@ function BrewedIdentityChat({
             className="w-7 h-7 rounded-full shadow-[0_0_10px_rgba(45,212,191,0.4)] object-cover"
           />
           <div>
-            <p className="text-xs font-semibold text-white">brewedidentity-agent</p>
+            <p className="text-xs font-semibold text-white">
+              brewedidentity-agent
+            </p>
             <p className="text-[10px] text-slate-500">brewed-identity</p>
           </div>
         </div>
@@ -363,10 +365,7 @@ export function BrewedIdentityDemo() {
           content="Watch how RizFlow's AI agents automate Brewed Identity's Etsy listings, customer responses, social campaigns, and Printify order fulfilment — live agent system demo."
         />
         <link rel="canonical" href={`${SITE_URL}/case-studies`} />
-        <meta
-          property="og:url"
-          content={`${SITE_URL}/case-studies`}
-        />
+        <meta property="og:url" content={`${SITE_URL}/case-studies`} />
       </Helmet>
 
       <section className="relative bg-navy-dark min-h-screen pt-16 md:pt-20">

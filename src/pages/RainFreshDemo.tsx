@@ -359,10 +359,7 @@ export function RainFreshDemo() {
           content="Watch how RizFlow's AI agents automate RainFreshSG's TikTok Shop orders, inventory alerts, social media, and customer inquiries — live agent system demo."
         />
         <link rel="canonical" href={`${SITE_URL}/case-studies`} />
-        <meta
-          property="og:url"
-          content={`${SITE_URL}/case-studies`}
-        />
+        <meta property="og:url" content={`${SITE_URL}/case-studies`} />
       </Helmet>
 
       <section className="relative bg-navy-dark min-h-screen pt-16 md:pt-20">

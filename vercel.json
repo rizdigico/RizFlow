@@ -6,6 +6,7 @@
   "rewrites": [
     { "source": "/api/demo/chat", "destination": "/api/demo/chat" },
     { "source": "/api/ai-score", "destination": "/api/ai-score" },
+    { "source": "/api/lead-capture", "destination": "/api/lead-capture" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
@@ -48,6 +49,9 @@
     },
     "api/ai-score/index.js": {
       "maxDuration": 60
+    },
+    "api/lead-capture/index.js": {
+      "maxDuration": 30
     }
   }
 }

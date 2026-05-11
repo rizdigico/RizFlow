@@ -26,3 +26,8 @@ dist-ssr
 # Environment files with secrets
 .env
 .vercel
+infographic.html
+rizflow-featured-post.png
+
+# Lead data (not committed)
+leads.json

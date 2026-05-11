@@ -179,7 +179,7 @@ const CAL_LINK = "https://cal.com/aariz-a/ai-audit";
 
 // ── Component ─────────────────────────────────────────────────────────────
 
-type Phase = "quiz" | "analyzing" | "results" | "error";
+type Phase = "quiz" | "analyzing" | "preview" | "email" | "results" | "error";
 
 export function ReadinessScore() {
   const [phase, setPhase] = useState<Phase>("quiz");
@@ -189,6 +189,9 @@ export function ReadinessScore() {
   const [showOtherInput, setShowOtherInput] = useState(false);
   const [otherText, setOtherText] = useState("");
   const [result, setResult] = useState<AIResult | null>(null);
+  const [email, setEmail] = useState("");
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [emailSubmitting, setEmailSubmitting] = useState(false);
 
   // Pre-fill text input when going back to a text question with a previous answer
   const goToQuestion = useCallback(
@@ -266,13 +269,41 @@ export function ReadinessScore() {
       const data = await res.json();
       if (data.score && data.level) {
         setResult(data);
-        setPhase("results");
+        setPhase("preview");
       } else {
         throw new Error("Invalid response");
       }
     } catch {
       setPhase("error");
     }
+  };
+
+  const handleEmailSubmit = async () => {
+    if (!email.trim() || !email.includes("@")) return;
+    setEmailSubmitting(true);
+    try {
+      await fetch("/api/lead-capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          score: result?.score,
+          level: result?.level,
+          estimatedSavings: result?.estimatedSavings,
+          topAutomations: result?.topAutomations,
+          recommendations: result?.recommendations,
+          industry: answers.industry,
+          teamSize: answers.teamSize,
+          biggestPain: answers.biggestPain,
+          source: "ai-score-preview",
+        }),
+      });
+    } catch {
+      // Non-critical — continue to results even if form submission fails
+    }
+    setEmailSubmitted(true);
+    setEmailSubmitting(false);
+    setPhase("results");
   };
 
   const handleRestart = () => {
@@ -283,6 +314,9 @@ export function ReadinessScore() {
     setShowOtherInput(false);
     setOtherText("");
     setResult(null);
+    setEmail("");
+    setEmailSubmitted(false);
+    setEmailSubmitting(false);
   };
 
   const handleBack = () => {
@@ -610,6 +644,178 @@ export function ReadinessScore() {
                     This takes about 10 seconds
                   </p>
                 </div>
+              </motion.div>
+            )}
+
+            {/* ── Preview Phase (score number + level, gated full results) ── */}
+            {phase === "preview" && result && (
+              <motion.div
+                key="preview"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="max-w-md mx-auto text-center"
+              >
+                <div className="bg-[#0A0F1A] rounded-2xl p-8 shadow-[0_0_30px_rgba(0,229,255,0.1)] border border-teal-500/20 relative overflow-hidden">
+                  <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/50 to-transparent" />
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.02)_1px,transparent_1px)] bg-[size:10px_10px]" />
+                  <div className="relative z-10">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+                      className="mb-4"
+                    >
+                      <span
+                        className="text-7xl font-bold font-mono drop-shadow-[0_0_20px_rgba(0,229,255,0.4)]"
+                        style={{ color: getScoreColor(result.score) }}
+                      >
+                        {result.score}
+                      </span>
+                      <span className="text-2xl text-slate-500 font-mono">/100</span>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-sm border ${getLevelColor(result.level).bg} ${getLevelColor(result.level).text} text-sm font-bold font-mono uppercase tracking-widest mb-6`}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+                      {result.level}
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.7 }}
+                      className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/5 mb-6"
+                    >
+                      <p className="text-xs font-mono text-teal-400 uppercase tracking-widest mb-1">
+                        Estimated Weekly Savings
+                      </p>
+                      <p className="text-2xl font-bold text-white font-mono">
+                        {result.estimatedSavings}
+                      </p>
+                    </motion.div>
+                    <div className="border-t border-white/10 pt-6">
+                      <p className="text-sm text-slate-400 mb-2">
+                        Your score is <span className="text-teal-400 font-bold">{result.score}/100</span> — <span className={`font-bold ${getLevelColor(result.level).text}`}>{result.level}</span>
+                      </p>
+                      <p className="text-xs text-slate-500 mb-6">
+                        Want your full breakdown with personalized automation roadmap?
+                      </p>
+                      <div className="space-y-3">
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="your@email.com"
+                          className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500/50 focus:bg-teal-500/5 focus:shadow-[0_0_15px_rgba(0,229,255,0.1)] transition-all font-medium text-center"
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleEmailSubmit();
+                          }}
+                        />
+                        <button
+                          onClick={handleEmailSubmit}
+                          disabled={!email.trim() || !email.includes("@") || emailSubmitting}
+                          className="w-full px-5 py-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 text-white font-bold hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center gap-2"
+                        >
+                          {emailSubmitting ? (
+                            <>
+                              <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                              Unlocking...
+                            </>
+                          ) : (
+                            <>
+                              Get My Free Roadmap
+                              <ArrowRightIcon className="w-4 h-4" />
+                            </>
+                          )}
+                        </button>
+                        <p className="text-[10px] text-slate-600 font-mono">
+                          No spam. Your personalized roadmap + case studies in 60 seconds.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setPhase("results")}
+                  className="mt-4 text-xs text-slate-600 hover:text-slate-400 transition-colors font-mono inline-flex items-center gap-1"
+                >
+                  Skip for now
+                </button>
+              </motion.div>
+            )}
+
+            {/* ── Email Phase (skipped if already submitted) ── */}
+            {phase === "email" && result && !emailSubmitted && (
+              <motion.div
+                key="email"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="max-w-md mx-auto text-center"
+              >
+                <div className="bg-[#0A0F1A]/95 backdrop-blur-3xl border border-teal-500/30 rounded-2xl p-8 shadow-[0_0_30px_rgba(0,229,255,0.15)] relative">
+                  <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/50 to-transparent" />
+                  <SparklesIcon className="w-10 h-10 text-teal-400 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-white mb-2 font-heading">
+                    Unlock Your Full Roadmap
+                  </h3>
+                  <p className="text-slate-400 text-sm mb-6">
+                    Get your personalized automation roadmap + real case studies showing how businesses like yours saved 10-14 hours/week.
+                  </p>
+                  <div className="space-y-3 mb-6 text-left">
+                    <div className="flex items-start gap-2 text-sm text-slate-300">
+                      <CheckCircleIcon className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
+                      Top 3 automation opportunities for your business
+                    </div>
+                    <div className="flex items-start gap-2 text-sm text-slate-300">
+                      <CheckCircleIcon className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
+                      Step-by-step implementation roadmap
+                    </div>
+                    <div className="flex items-start gap-2 text-sm text-slate-300">
+                      <CheckCircleIcon className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
+                      Real results: RainFresh SG saved 14+ hrs/week, BrewedIdentity cut listing time 93%
+                    </div>
+                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-teal-500/50 focus:bg-teal-500/5 focus:shadow-[0_0_15px_rgba(0,229,255,0.1)] transition-all font-medium text-center"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleEmailSubmit();
+                    }}
+                  />
+                  <button
+                    onClick={handleEmailSubmit}
+                    disabled={!email.trim() || !email.includes("@") || emailSubmitting}
+                    className="w-full mt-3 px-5 py-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 text-white font-bold hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center gap-2"
+                  >
+                    {emailSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        Get My Free Roadmap
+                        <ArrowRightIcon className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                  <p className="text-[10px] text-slate-600 mt-3 font-mono">
+                    No spam, ever. Unsubscribe anytime.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setPhase("results")}
+                  className="mt-4 text-xs text-slate-600 hover:text-slate-400 transition-colors font-mono inline-flex items-center gap-1"
+                >
+                  Skip for now
+                </button>
               </motion.div>
             )}
 
