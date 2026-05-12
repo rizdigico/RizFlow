@@ -23,7 +23,7 @@ function getTransporter() {
   transporter = nodemailer.createTransport({
     host: SMTP_HOST,
     port: parseInt(SMTP_PORT, 10),
-    secure: parseInt(SMTP_PORT, 10) === 465,
+    secure: true, // Always use SSL — port 587 STARTTLS is blocked on Vercel
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
 
