@@ -1,5 +1,5 @@
 /**
- * RizFlow Email Nurture Sequence API
+ * RizFlow Email Nurture Sequence API — Neon Postgres backed
  *
  * 5-email drip sequence triggered after AI Score quiz submission:
  *   Day 0:  Score + Top 3 automations (sent by lead-capture, not here)
@@ -8,11 +8,73 @@
  *   Day 8:  Industry-specific pain point email
  *   Day 12: Urgency CTA — limited audit spots
  *
- * Called by Vercel Cron or external scheduler.
- * Each call sends ALL due emails (checks scheduled_at <= now).
+ * Persistence: Neon Postgres (serverless). Tables auto-created on first request.
+ * Scheduler: Vercel Cron (backup) + VPS crontab (primary, more reliable).
  */
 
 import nodemailer from "nodemailer";
+import { neon } from "@neondatabase/serverless";
+
+// ── Database ──
+
+function getDb() {
+  if (!process.env.DATABASE_URL) {
+    console.warn(
+      "[nurture] DATABASE_URL not set — nurture persistence disabled",
+    );
+    return null;
+  }
+  return neon(process.env.DATABASE_URL);
+}
+
+const CREATE_TABLES = `
+  CREATE TABLE IF NOT EXISTS leads (
+    id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    score INTEGER,
+    level TEXT,
+    estimated_savings TEXT,
+    top_automations JSONB DEFAULT '[]',
+    recommendations JSONB DEFAULT '[]',
+    industry TEXT DEFAULT '',
+    team_size TEXT DEFAULT '',
+    biggest_pain TEXT DEFAULT '',
+    source TEXT DEFAULT 'ai-score-preview',
+    unsubscribed BOOLEAN DEFAULT FALSE,
+    registered_at TIMESTAMPTZ DEFAULT NOW()
+  );
+  CREATE TABLE IF NOT EXISTS nurture_emails (
+    id SERIAL PRIMARY KEY,
+    lead_id INTEGER REFERENCES leads(id) ON DELETE CASCADE,
+    email_day INTEGER NOT NULL,
+    subject TEXT,
+    sent_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(lead_id, email_day)
+  );
+  CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email);
+  CREATE INDEX IF NOT EXISTS idx_leads_unsubscribed ON leads(unsubscribed);
+  CREATE INDEX IF NOT EXISTS idx_nurture_emails_lead_day ON nurture_emails(lead_id, email_day);
+`;
+
+let tablesEnsured = false;
+
+async function ensureTables() {
+  if (tablesEnsured) return;
+  const sql = getDb();
+  if (!sql) return;
+  try {
+    await sql(CREATE_TABLES);
+    tablesEnsured = true;
+    console.log("[nurture] Database tables ensured");
+  } catch (err) {
+    console.error("[nurture] Failed to create tables:", err.message);
+  }
+}
+
+// ── In-memory fallback for development (no DATABASE_URL) ──
+const leadsFallback = new Map();
+
+// ── SMTP ──
 
 let transporter = null;
 
@@ -32,49 +94,6 @@ function getTransporter() {
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
   return transporter;
-}
-
-// ── In-memory store (production: replace with DB/Google Sheets) ──
-// Format: { email: { score, level, estimatedSavings, topAutomations, industry, biggestPain, sentEmails: Set } }
-const leads = new Map();
-
-/**
- * Register a lead for nurture sequence.
- * Called by lead-capture after sending the Day 0 welcome email.
- */
-export function registerLead(data) {
-  leads.set(data.email, {
-    ...data,
-    registeredAt: new Date().toISOString(),
-    sentEmails: new Set(["day0"]),
-  });
-  console.log(`[nurture] Registered lead: ${data.email}`);
-}
-
-/**
- * Send a single nurture email.
- */
-async function sendNurtureEmail(to, subject, html, text) {
-  const transport = getTransporter();
-  if (!transport) {
-    console.warn("[nurture] SMTP not configured — skipping email send");
-    return false;
-  }
-  try {
-    await transport.sendMail({
-      from: `"Aariz from RizFlow" <${process.env.SMTP_USER}>`,
-      to,
-      replyTo: "main@rizflow.co",
-      subject,
-      html,
-      text,
-    });
-    console.log(`[nurture] Sent email to ${to}: ${subject}`);
-    return true;
-  } catch (err) {
-    console.error(`[nurture] Failed to send to ${to}:`, err.message);
-    return false;
-  }
 }
 
 // ── Email Templates ──
@@ -140,7 +159,7 @@ function emailDay2(lead) {
         </div>
       </div>
       <div class="footer">
-        <p class="unsubscribe">RizFlow · AI Automation for SMEs · Singapore<br><a href="https://rizflow.co/unsubscribe?email={{EMAIL}}">Unsubscribe</a></p>
+        <p class="unsubscribe">RizFlow · AI Automation for SMEs · Singapore<br><a href="https://rizflow.co/api/nurture?action=unsubscribe&email={{EMAIL}}">Unsubscribe</a></p>
       </div>
     </div>`;
 
@@ -158,14 +177,14 @@ Your business${industryRef} could see similar results${painRef}.
 Read the full case study: https://www.rizflow.co/case-study/rainfresh-sg
 
 — Aariz from RizFlow
-Unsubscribe: https://rizflow.co/unsubscribe?email={{EMAIL}}`;
+Unsubscribe: https://rizflow.co/api/nurture?action=unsubscribe&email={{EMAIL}}`;
 
   return wrapEmail(html, text);
 }
 
 // ── Day 5: Brewed Identity Case Study ──
 function emailDay5(lead) {
-  const { estimatedSavings, industry } = lead;
+  const { estimatedSavings } = lead;
   const savingsRef = estimatedSavings
     ? ` You estimated ${estimatedSavings} potential savings — this case study shows what that looks like in practice.`
     : "";
@@ -178,7 +197,7 @@ function emailDay5(lead) {
         <p style="color:#94a3b8;">Another real business, another dramatic before/after.</p>
       </div>
       <div class="content">
-        <p>Last time I shared RainFresh's story. Today: <strong style="color:#fff;">Brewed Identity</strong>, a Singapore business that was drowning in manual listing work and slow response times.</p>
+        <p>Last time I shared RainFresh's story. Today: <strong style="color:#fff;">Brewed Identity</strong>, a Singapore business drowning in manual listing work and slow response times.</p>
         <div style="text-align:center;padding:16px 0;">
           <div class="stat-box"><div class="stat-number">93%</div><div class="stat-label">Faster Listings</div></div>
           <div class="stat-box"><div class="stat-number">99%</div><div class="stat-label">Faster Response</div></div>
@@ -186,14 +205,14 @@ function emailDay5(lead) {
         </div>
         <hr class="divider">
         <p>${savingsRef}</p>
-        <p>Here's the thing: both RainFresh and Brewed Identity started exactly where you are now — wondering if AI automation is worth it for <em>their</em> specific business. The answer was yes. For both of them.</p>
+        <p>Both RainFresh and Brewed Identity started exactly where you are now — wondering if AI automation is worth it for <em>their</em> specific business. The answer was yes. For both of them.</p>
         <div style="text-align:center;padding:20px 0;">
           <a href="https://www.rizflow.co/case-study/brewed-identity" class="cta-button">See How Brewed Identity Did It →</a>
           <p class="cta-subtext">Full breakdown: what they had, what changed, what they saved</p>
         </div>
       </div>
       <div class="footer">
-        <p class="unsubscribe">RizFlow · AI Automation for SMEs · Singapore<br><a href="https://rizflow.co/unsubscribe?email={{EMAIL}}">Unsubscribe</a></p>
+        <p class="unsubscribe">RizFlow · AI Automation for SMEs · Singapore<br><a href="https://rizflow.co/api/nurture?action=unsubscribe&email={{EMAIL}}">Unsubscribe</a></p>
       </div>
     </div>`;
 
@@ -210,7 +229,7 @@ Both RainFresh and Brewed Identity started exactly where you are now. The answer
 See the full breakdown: https://www.rizflow.co/case-study/brewed-identity
 
 — Aariz from RizFlow
-Unsubscribe: https://rizflow.co/unsubscribe?email={{EMAIL}}`;
+Unsubscribe: https://rizflow.co/api/nurture?action=unsubscribe&email={{EMAIL}}`;
 
   return wrapEmail(html, text);
 }
@@ -311,7 +330,7 @@ function emailDay8(lead) {
         </div>
       </div>
       <div class="footer">
-        <p class="unsubscribe">RizFlow · AI Automation for SMEs · Singapore<br><a href="https://rizflow.co/unsubscribe?email={{EMAIL}}">Unsubscribe</a></p>
+        <p class="unsubscribe">RizFlow · AI Automation for SMEs · Singapore<br><a href="https://rizflow.co/api/nurture?action=unsubscribe&email={{EMAIL}}">Unsubscribe</a></p>
       </div>
     </div>`;
 
@@ -330,7 +349,7 @@ That's ${pp.hours}+ hours/week back. Time for growth, not grunt work.
 Get your free 30-minute audit: https://www.rizflow.co/audit
 
 — Aariz from RizFlow
-Unsubscribe: https://rizflow.co/unsubscribe?email={{EMAIL}}`;
+Unsubscribe: https://rizflow.co/api/nurture?action=unsubscribe&email={{EMAIL}}`;
 
   return wrapEmail(html, text);
 }
@@ -378,7 +397,7 @@ function emailDay12(lead) {
         <p style="color:#475569;font-size:12px;text-align:center;margin-top:24px;">If you're not ready yet, that's fine — these emails stop here. No spam, ever.</p>
       </div>
       <div class="footer">
-        <p class="unsubscribe">RizFlow · AI Automation for SMEs · Singapore<br><a href="https://rizflow.co/unsubscribe?email={{EMAIL}}">Unsubscribe</a></p>
+        <p class="unsubscribe">RizFlow · AI Automation for SMEs · Singapore<br><a href="https://rizflow.co/api/nurture?action=unsubscribe&email={{EMAIL}}">Unsubscribe</a></p>
       </div>
     </div>`;
 
@@ -402,7 +421,7 @@ Only 5 free audit slots remain this month.
 Book now: https://cal.com/aariz-a/ai-audit
 
 — Aariz from RizFlow
-Unsubscribe: https://rizflow.co/unsubscribe?email={{EMAIL}}`;
+Unsubscribe: https://rizflow.co/api/nurture?action=unsubscribe&email={{EMAIL}}`;
 
   return wrapEmail(html, text);
 }
@@ -432,59 +451,218 @@ const NURTURE_EMAILS = [
   },
 ];
 
+// ── Email Sending ──
+
+async function sendNurtureEmail(to, subject, html, text) {
+  const transport = getTransporter();
+  if (!transport) {
+    console.warn("[nurture] SMTP not configured — skipping email send");
+    return false;
+  }
+  try {
+    await transport.sendMail({
+      from: `"Aariz from RizFlow" <${process.env.SMTP_USER}>`,
+      to,
+      replyTo: "main@rizflow.co",
+      subject,
+      html,
+      text,
+    });
+    console.log(`[nurture] Sent email to ${to}: ${subject}`);
+    return true;
+  } catch (err) {
+    console.error(`[nurture] Failed to send to ${to}:`, err.message);
+    return false;
+  }
+}
+
+// ── DB Operations ──
+
+/**
+ * Register a lead for the nurture sequence.
+ * Called by lead-capture after sending the Day 0 welcome email.
+ */
+export async function registerLead(data) {
+  const sql = getDb();
+
+  if (sql) {
+    await ensureTables();
+    try {
+      await sql`
+        INSERT INTO leads (email, score, level, estimated_savings, top_automations, recommendations, industry, team_size, biggest_pain, source)
+        VALUES (${data.email}, ${data.score || null}, ${data.level || null}, ${data.estimatedSavings || null},
+          ${JSON.stringify(data.topAutomations || [])}, ${JSON.stringify(data.recommendations || [])},
+          ${data.industry || ""}, ${data.teamSize || ""}, ${data.biggestPain || ""}, ${data.source || "ai-score-preview"})
+        ON CONFLICT (email) DO UPDATE SET
+          score = EXCLUDED.score,
+          level = EXCLUDED.level,
+          estimated_savings = EXCLUDED.estimated_savings,
+          top_automations = EXCLUDED.top_automations,
+          recommendations = EXCLUDED.recommendations,
+          industry = EXCLUDED.industry,
+          team_size = EXCLUDED.team_size,
+          biggest_pain = EXCLUDED.biggest_pain,
+          unsubscribed = FALSE,
+          registered_at = NOW()
+      `;
+      console.log(`[nurture] Registered lead in DB: ${data.email}`);
+    } catch (err) {
+      console.error("[nurture] DB register failed:", err.message);
+    }
+  } else {
+    // Fallback to in-memory for development
+    leadsFallback.set(data.email, {
+      ...data,
+      registeredAt: new Date().toISOString(),
+      sentEmails: new Set(["day0"]),
+    });
+    console.log(`[nurture] Registered lead in memory: ${data.email}`);
+  }
+}
+
 /**
  * Process nurture emails for all registered leads.
  * Called by Vercel Cron or external scheduler.
  * Sends emails that are due (day >= scheduled day) and not yet sent.
  */
 export async function processNurtureEmails() {
-  const now = Date.now();
+  const sql = getDb();
   let sent = 0;
   let skipped = 0;
 
-  for (const [email, lead] of leads) {
-    const registeredAt = new Date(lead.registeredAt).getTime();
-    const daysSince = Math.floor((now - registeredAt) / (1000 * 60 * 60 * 24));
+  if (sql) {
+    await ensureTables();
+    try {
+      // Get all active leads (not unsubscribed)
+      const leads = await sql`
+        SELECT id, email, score, level, estimated_savings, top_automations, recommendations,
+               industry, team_size, biggest_pain, registered_at
+        FROM leads
+        WHERE unsubscribed = FALSE
+      `;
 
-    for (const emailConfig of NURTURE_EMAILS) {
-      const emailKey = `day${emailConfig.day}`;
-      if (daysSince >= emailConfig.day && !lead.sentEmails.has(emailKey)) {
-        const { html, text } = emailConfig.templateFn(lead);
-        const personalizedHtml = html.replace(
-          /\{\{EMAIL\}\}/g,
-          encodeURIComponent(email),
+      for (const lead of leads) {
+        const registeredAt = new Date(lead.registered_at);
+        const daysSince = Math.floor(
+          (Date.now() - registeredAt.getTime()) / (1000 * 60 * 60 * 24),
         );
-        const personalizedText = text.replace(
-          /\{\{EMAIL\}\}/g,
-          encodeURIComponent(email),
-        );
-        const subject = emailConfig.subjectFn(lead);
 
-        const success = await sendNurtureEmail(
-          email,
-          subject,
-          personalizedHtml,
-          personalizedText,
-        );
-        if (success) {
-          lead.sentEmails.add(emailKey);
-          sent++;
-        } else {
-          skipped++;
+        for (const emailConfig of NURTURE_EMAILS) {
+          if (daysSince >= emailConfig.day) {
+            // Check if already sent
+            const existing = await sql`
+              SELECT id FROM nurture_emails
+              WHERE lead_id = ${lead.id} AND email_day = ${emailConfig.day}
+            `;
+            if (existing.length > 0) continue;
+
+            // Build lead data for template
+            const leadData = {
+              email: lead.email,
+              score: lead.score,
+              level: lead.level,
+              estimatedSavings: lead.estimated_savings,
+              topAutomations: lead.top_automations || [],
+              recommendations: lead.recommendations || [],
+              industry: lead.industry,
+              teamSize: lead.team_size,
+              biggestPain: lead.biggest_pain,
+            };
+
+            const { html, text } = emailConfig.templateFn(leadData);
+            const personalizedHtml = html.replace(
+              /\{\{EMAIL\}\}/g,
+              encodeURIComponent(lead.email),
+            );
+            const personalizedText = text.replace(
+              /\{\{EMAIL\}\}/g,
+              encodeURIComponent(lead.email),
+            );
+            const subject = emailConfig.subjectFn(leadData);
+
+            const success = await sendNurtureEmail(
+              lead.email,
+              subject,
+              personalizedHtml,
+              personalizedText,
+            );
+            if (success) {
+              await sql`
+                INSERT INTO nurture_emails (lead_id, email_day, subject)
+                VALUES (${lead.id}, ${emailConfig.day}, ${subject})
+                ON CONFLICT (lead_id, email_day) DO NOTHING
+              `;
+              sent++;
+            } else {
+              skipped++;
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error("[nurture] DB process error:", err.message);
+    }
+  } else {
+    // In-memory fallback
+    for (const [email, lead] of leadsFallback) {
+      const registeredAt = new Date(lead.registeredAt).getTime();
+      const daysSince = Math.floor(
+        (Date.now() - registeredAt) / (1000 * 60 * 60 * 24),
+      );
+
+      for (const emailConfig of NURTURE_EMAILS) {
+        const emailKey = `day${emailConfig.day}`;
+        if (daysSince >= emailConfig.day && !lead.sentEmails.has(emailKey)) {
+          const { html, text } = emailConfig.templateFn(lead);
+          const personalizedHtml = html.replace(
+            /\{\{EMAIL\}\}/g,
+            encodeURIComponent(email),
+          );
+          const personalizedText = text.replace(
+            /\{\{EMAIL\}\}/g,
+            encodeURIComponent(email),
+          );
+          const subject = emailConfig.subjectFn(lead);
+
+          const success = await sendNurtureEmail(
+            email,
+            subject,
+            personalizedHtml,
+            personalizedText,
+          );
+          if (success) {
+            lead.sentEmails.add(emailKey);
+            sent++;
+          } else {
+            skipped++;
+          }
         }
       }
     }
   }
 
-  return { sent, skipped, totalLeads: leads.size };
+  return {
+    sent,
+    skipped,
+    totalLeads: sql
+      ? (
+          await sql`SELECT COUNT(*) as count FROM leads WHERE unsubscribed = FALSE`
+        )[0].count
+      : leadsFallback.size,
+  };
 }
 
-/**
- * Vercel Cron endpoint — triggers nurture email processing.
- * Add to vercel.json: { "crons": [{ "path": "/api/nurture", "schedule": "0 9 * * *" }] }
- */
+// ── API Handler ──
+
 export default async function handler(req, res) {
-  // Only allow GET from Vercel Cron or POST with auth
+  // CORS
+  res.setHeader("Access-Control-Allow-Origin", "https://rizflow.co");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") return res.status(204).end();
+
+  // ── POST: Register lead or manual send ──
   if (req.method === "POST") {
     const { action, ...data } = req.body;
 
@@ -493,14 +671,14 @@ export default async function handler(req, res) {
       if (!data.email) {
         return res.status(400).json({ error: "Email required" });
       }
-      registerLead(data);
+      await registerLead(data);
       return res.status(200).json({
         success: true,
         message: "Lead registered for nurture sequence",
       });
     }
 
-    // Send a specific email manually
+    // Manual send
     if (action === "send") {
       const { email: to, day, subject, html, text } = req.body;
       if (!to || !day || !subject || !html) {
@@ -517,9 +695,46 @@ export default async function handler(req, res) {
       .json({ error: "Unknown action. Use 'register' or 'send'." });
   }
 
-  // GET — Vercel Cron trigger: process all due nurture emails
+  // ── GET: Cron trigger / unsubscribe ──
   if (req.method === "GET") {
-    // Verify cron secret if set
+    // Unsubscribe endpoint
+    const { email: unsubEmail } = req.query;
+    if (unsubEmail) {
+      const decodedEmail = decodeURIComponent(unsubEmail);
+      const sql = getDb();
+
+      if (sql) {
+        await ensureTables();
+        try {
+          const result = await sql`
+            UPDATE leads SET unsubscribed = TRUE WHERE email = ${decodedEmail}
+          `;
+          const wasUnsubscribed = result.count > 0;
+          return res.status(200).send(`
+            <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+            <body style="margin:0;padding:40px;background:#050A14;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e2e8f0;text-align:center;">
+              <div style="max-width:480px;margin:0 auto;background:#0A0F1A;border:1px solid rgba(0,229,255,0.2);border-radius:16px;padding:48px 32px;">
+                <h1 style="color:#fff;font-size:24px;margin:0 0 16px;font-weight:800;">${wasUnsubscribed ? "You're Unsubscribed" : "Not Found"}</h1>
+                <p style="color:#94a3b8;font-size:14px;line-height:1.6;">${wasUnsubscribed ? `You won't receive any more emails from RizFlow at <strong style="color:#fff;">${decodedEmail}</strong>. If you change your mind, just take the AI Score quiz again.` : `We couldn't find <strong style="color:#fff;">${decodedEmail}</strong> in our list. You may have already unsubscribed or the email was different.`}</p>
+                <a href="https://rizflow.co" style="display:inline-block;margin-top:24px;padding:12px 24px;background:linear-gradient(135deg,#00E5FF,#06B6D4);color:#050A14;font-weight:700;text-decoration:none;border-radius:12px;">Back to RizFlow</a>
+              </div>
+            </body></html>
+          `);
+        } catch (err) {
+          console.error("[nurture] Unsubscribe DB error:", err.message);
+          return res.status(500).json({ error: "Unsubscribe failed" });
+        }
+      } else {
+        // In-memory fallback
+        const lead = leadsFallback.get(decodedEmail);
+        if (lead) {
+          lead.unsubscribed = true;
+        }
+        return res.status(200).send("Unsubscribed (in-memory mode)");
+      }
+    }
+
+    // Cron trigger: process all due nurture emails
     const cronSecret = process.env.CRON_SECRET;
     if (cronSecret && req.headers.authorization !== `Bearer ${cronSecret}`) {
       return res.status(401).json({ error: "Unauthorized" });

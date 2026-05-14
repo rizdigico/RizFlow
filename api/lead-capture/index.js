@@ -301,21 +301,18 @@ export default async function handler(req, res) {
       }
     }
 
-    // Register lead for 5-email nurture sequence (Day 2, 5, 8, 12)
+    // Register lead for nurture sequence via direct DB insert (more reliable than HTTP call)
     try {
-      await fetch("https://rizflow.co/api/nurture", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "register",
-          email,
-          score,
-          level,
-          estimatedSavings,
-          industry: industry || "",
-          teamSize: teamSize || "",
-          biggestPain: biggestPain || "",
-        }),
+      const { registerLead } = await import("../nurture/index.js");
+      await registerLead({
+        email,
+        score,
+        level,
+        estimatedSavings,
+        industry: industry || "",
+        teamSize: teamSize || "",
+        biggestPain: biggestPain || "",
+        source: source || "ai-score-preview",
       });
       console.log(`[lead-capture] Registered ${email} for nurture sequence`);
     } catch (nurtureErr) {

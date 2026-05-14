@@ -21,25 +21,120 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const DIST = join(__dirname, "..", "dist");
 
 const ROUTES = [
-  { path: "/", title: "RizFlow — Custom Agentic-AI for Businesses & SMEs", description: "RizFlow builds custom agentic-AI systems tailored to your business. Automate workflows, communications, invoicing, and more — run your business from your phone. Free Discovery Audit. Based in Singapore, serving SEA." },
-  { path: "/about", title: "About RizFlow — AI Automation for Singapore SMEs", description: "Founded by Aariz Arfan, RizFlow builds custom AI agent systems that automate operations for Singapore businesses. 90-day guarantee, no lock-in contracts." },
-  { path: "/services", title: "Custom AI Agent Services & Pricing — RizFlow", description: "Full-stack agentic-AI systems starting from $1,800/mo with 90-day guarantee. Starter, Growth, and Scale tiers for Singapore SMEs." },
-  { path: "/audit", title: "Free Discovery Audit — RizFlow", description: "Book a free 30-minute audit to discover how AI automation can save your business 10+ hours per week. No pitch, just a personalized roadmap." },
-  { path: "/demo", title: "Live AI Demo — See RizFlow Agents in Action", description: "Interact with live AI agents built for your industry. See how RizFlow automates reservations, orders, leads, and more — in real-time." },
-  { path: "/ai-score", title: "AI Readiness Score — How Ready Is Your Business?", description: "Take the free 2-minute AI readiness quiz and get a personalized score, savings estimate, and automation roadmap for your business." },
-  { path: "/case-studies", title: "Case Studies — RizFlow Client Results", description: "See how RainFresh and Brewed Identity saved 14+ hours/week with custom RizFlow AI agents. Real metrics, real businesses." },
-  { path: "/case-study/rainfresh-sg", title: "RainFresh Case Study — 99% Faster Processing with AI", description: "RainFresh cut processing time by 99% and saved 14+ hours/week with RizFlow AI agents. See the full before/after breakdown." },
-  { path: "/case-study/brewed-identity", title: "Brewed Identity Case Study — 93% Faster Listings with AI", description: "Brewed Identity reduced listing time by 93% and response time by 99% with RizFlow AI agents. See how." },
-  { path: "/blog", title: "Blog — AI Automation Insights for SMEs | RizFlow", description: "Practical guides on agentic-AI, business automation ROI, and Singapore tech trends. Written for business owners who want to save time." },
-  { path: "/blog/agentic-ai-explained", title: "What Is Agentic AI? — Explained for Business Owners", description: "Agentic-AI differs from chatbots and basic automation. Learn what agentic-AI is, how it works, and why it matters for SMEs." },
-  { path: "/blog/business-automation-roi", title: "Business Automation ROI — Data-Driven Analysis", description: "Data-driven analysis of return on investment from business automation. Real cost savings and time recovery figures for SMEs." },
-  { path: "/blog/ai-operations-for-agencies-guide", title: "AI Operations for Businesses: The Complete Guide", description: "A comprehensive guide to implementing custom agentic-AI systems. Learn how AI agents automate manual work and save 15-25 hours/week." },
-  { path: "/blog/singapore-business-tech-trends", title: "Singapore Business Tech Trends 2026", description: "Technology adoption trends, digital transformation statistics, and AI readiness data for Singapore SMEs." },
-  { path: "/blog/client-onboarding-automation", title: "Client Onboarding Automation with AI Agents", description: "How AI agents automate the client onboarding workflow — from inquiry to activation in minutes instead of days." },
-  { path: "/blog/email-management-ai", title: "Email Management AI — How AI Agents Handle Your Inbox", description: "How AI agents manage business email and communications, triaging priorities and drafting responses." },
-  { path: "/faq", title: "FAQ — RizFlow AI Services Questions Answered", description: "Common questions about RizFlow's AI services, pricing, onboarding, 90-day guarantee, and how agentic-AI differs from chatbots." },
-  { path: "/privacy-terms", title: "Privacy Policy & Terms of Service — RizFlow", description: "RizFlow's data handling practices, PDPA compliance, and terms of service." },
-  { path: "/thank-you", title: "Thank You — RizFlow", description: "Your audit request was received. Book your free 30-minute Discovery Audit call with RizFlow." },
+  {
+    path: "/",
+    title: "RizFlow — Custom Agentic-AI for Businesses & SMEs",
+    description:
+      "RizFlow builds custom agentic-AI systems tailored to your business. Automate workflows, communications, invoicing, and more — run your business from your phone. Free Discovery Audit. Based in Singapore, serving SEA.",
+  },
+  {
+    path: "/about",
+    title: "About RizFlow — AI Automation for Singapore SMEs",
+    description:
+      "Founded by Aariz Arfan, RizFlow builds custom AI agent systems that automate operations for Singapore businesses. 90-day guarantee, no lock-in contracts.",
+  },
+  {
+    path: "/services",
+    title: "Custom AI Agent Services & Pricing — RizFlow",
+    description:
+      "Full-stack agentic-AI systems starting from $1,800/mo with 90-day guarantee. Starter, Growth, and Scale tiers for Singapore SMEs.",
+  },
+  {
+    path: "/audit",
+    title: "Free Discovery Audit — RizFlow",
+    description:
+      "Book a free 30-minute audit to discover how AI automation can save your business 10+ hours per week. No pitch, just a personalized roadmap.",
+  },
+  {
+    path: "/demo",
+    title: "Live AI Demo — See RizFlow Agents in Action",
+    description:
+      "Interact with live AI agents built for your industry. See how RizFlow automates reservations, orders, leads, and more — in real-time.",
+  },
+  {
+    path: "/ai-score",
+    title: "AI Readiness Score — How Ready Is Your Business?",
+    description:
+      "Take the free 2-minute AI readiness quiz and get a personalized score, savings estimate, and automation roadmap for your business.",
+  },
+  {
+    path: "/case-studies",
+    title: "Case Studies — RizFlow Client Results",
+    description:
+      "See how RainFresh and Brewed Identity saved 14+ hours/week with custom RizFlow AI agents. Real metrics, real businesses.",
+  },
+  {
+    path: "/case-study/rainfresh-sg",
+    title: "RainFresh Case Study — 99% Faster Processing with AI",
+    description:
+      "RainFresh cut processing time by 99% and saved 14+ hours/week with RizFlow AI agents. See the full before/after breakdown.",
+  },
+  {
+    path: "/case-study/brewed-identity",
+    title: "Brewed Identity Case Study — 93% Faster Listings with AI",
+    description:
+      "Brewed Identity reduced listing time by 93% and response time by 99% with RizFlow AI agents. See how.",
+  },
+  {
+    path: "/blog",
+    title: "Blog — AI Automation Insights for SMEs | RizFlow",
+    description:
+      "Practical guides on agentic-AI, business automation ROI, and Singapore tech trends. Written for business owners who want to save time.",
+  },
+  {
+    path: "/blog/agentic-ai-explained",
+    title: "What Is Agentic AI? — Explained for Business Owners",
+    description:
+      "Agentic-AI differs from chatbots and basic automation. Learn what agentic-AI is, how it works, and why it matters for SMEs.",
+  },
+  {
+    path: "/blog/business-automation-roi",
+    title: "Business Automation ROI — Data-Driven Analysis",
+    description:
+      "Data-driven analysis of return on investment from business automation. Real cost savings and time recovery figures for SMEs.",
+  },
+  {
+    path: "/blog/ai-operations-for-agencies-guide",
+    title: "AI Operations for Businesses: The Complete Guide",
+    description:
+      "A comprehensive guide to implementing custom agentic-AI systems. Learn how AI agents automate manual work and save 15-25 hours/week.",
+  },
+  {
+    path: "/blog/singapore-business-tech-trends",
+    title: "Singapore Business Tech Trends 2026",
+    description:
+      "Technology adoption trends, digital transformation statistics, and AI readiness data for Singapore SMEs.",
+  },
+  {
+    path: "/blog/client-onboarding-automation",
+    title: "Client Onboarding Automation with AI Agents",
+    description:
+      "How AI agents automate the client onboarding workflow — from inquiry to activation in minutes instead of days.",
+  },
+  {
+    path: "/blog/email-management-ai",
+    title: "Email Management AI — How AI Agents Handle Your Inbox",
+    description:
+      "How AI agents manage business email and communications, triaging priorities and drafting responses.",
+  },
+  {
+    path: "/faq",
+    title: "FAQ — RizFlow AI Services Questions Answered",
+    description:
+      "Common questions about RizFlow's AI services, pricing, onboarding, 90-day guarantee, and how agentic-AI differs from chatbots.",
+  },
+  {
+    path: "/privacy-terms",
+    title: "Privacy Policy & Terms of Service — RizFlow",
+    description:
+      "RizFlow's data handling practices, PDPA compliance, and terms of service.",
+  },
+  {
+    path: "/thank-you",
+    title: "Thank You — RizFlow",
+    description:
+      "Your audit request was received. Book your free 30-minute Discovery Audit call with RizFlow.",
+  },
 ];
 
 const SITE_URL = "https://www.rizflow.co";
@@ -54,7 +149,9 @@ async function generateStaticShell(route) {
   try {
     baseHtml = await readFile(join(DIST, "index.html"), "utf-8");
   } catch {
-    console.error("[prerender] Could not read dist/index.html. Run `vite build` first.");
+    console.error(
+      "[prerender] Could not read dist/index.html. Run `vite build` first.",
+    );
     process.exit(1);
   }
 
@@ -99,14 +196,20 @@ async function generateStaticShell(route) {
         : null;
 
     if (jsonLd) {
-      html = html.replace("</head>", `<script type="application/ld+json">${jsonLd}</script>\n</head>`);
+      html = html.replace(
+        "</head>",
+        `<script type="application/ld+json">${jsonLd}</script>\n</head>`,
+      );
     }
   }
 
   // Add FAQ schema for /faq
   if (routePath === "/faq") {
     const faqJsonLd = `{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is agentic-AI?","acceptedAnswer":{"@type":"Answer","text":"Agentic-AI systems are autonomous AI agents that can reason, decide, and act on behalf of your business — handling workflows, communications, and operations without constant human oversight."}},{"@type":"Question","name":"How much does RizFlow cost?","acceptedAnswer":{"@type":"Answer","text":"RizFlow offers three tiers: Starter at $1,800/mo SGD, Growth at $3,200/mo SGD, and Scale at $5,000/mo SGD. All include a 90-day guarantee and no lock-in contracts."}},{"@type":"Question","name":"What's the 90-day guarantee?","acceptedAnswer":{"@type":"Answer","text":"If RizFlow doesn't deliver the results we promise within 90 days, you can cancel with no further obligation. No lock-in contracts."}}]}`;
-    html = html.replace("</head>", `<script type="application/ld+json">${faqJsonLd}</script>\n</head>`);
+    html = html.replace(
+      "</head>",
+      `<script type="application/ld+json">${faqJsonLd}</script>\n</head>`,
+    );
   }
 
   return html;
@@ -120,9 +223,10 @@ async function main() {
     // Verify all pre-rendered files exist
     let missing = 0;
     for (const route of ROUTES) {
-      const filePath = route.path === "/"
-        ? join(DIST, "index.html")
-        : join(DIST, route.path, "index.html");
+      const filePath =
+        route.path === "/"
+          ? join(DIST, "index.html")
+          : join(DIST, route.path, "index.html");
       try {
         await access(filePath);
       } catch {
@@ -131,15 +235,21 @@ async function main() {
       }
     }
     if (missing > 0) {
-      console.error(`[prerender] ${missing} route(s) missing. Run: node scripts/prerender.mjs`);
+      console.error(
+        `[prerender] ${missing} route(s) missing. Run: node scripts/prerender.mjs`,
+      );
       process.exit(1);
     }
-    console.log(`[prerender] All ${ROUTES.length} routes have pre-rendered HTML.`);
+    console.log(
+      `[prerender] All ${ROUTES.length} routes have pre-rendered HTML.`,
+    );
     process.exit(0);
   }
 
   // Generate static HTML shells for each route
-  console.log(`[prerender] Generating static HTML for ${ROUTES.length} routes...`);
+  console.log(
+    `[prerender] Generating static HTML for ${ROUTES.length} routes...`,
+  );
 
   for (const route of ROUTES) {
     const html = await generateStaticShell(route);
