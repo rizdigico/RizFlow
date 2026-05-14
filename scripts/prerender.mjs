@@ -155,36 +155,42 @@ async function generateStaticShell(route) {
     process.exit(1);
   }
 
+  // Escape $ in replacement strings to prevent regex backreference interpretation
+  // ($1 in "$1,800" would be treated as capture group reference otherwise)
+  const escTitle = title.replace(/\$/g, "$$$$");
+  const escDescription = description.replace(/\$/g, "$$$$");
+  const escCanonicalUrl = canonicalUrl.replace(/\$/g, "$$$$");
+
   // Replace title and description for this route
   let html = baseHtml
-    .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
+    .replace(/<title>[^<]*<\/title>/, `<title>${escTitle}</title>`)
     .replace(
       /(<meta\s+name="description"\s+content=")[^"]*(")/,
-      `$1${description}$2`,
+      `$1${escDescription}$2`,
     )
     .replace(
       /(<meta\s+property="og:url"\s+content=")[^"]*(")/,
-      `$1${canonicalUrl}$2`,
+      `$1${escCanonicalUrl}$2`,
     )
     .replace(
       /(<meta\s+property="og:title"\s+content=")[^"]*(")/,
-      `$1${title}$2`,
+      `$1${escTitle}$2`,
     )
     .replace(
       /(<meta\s+property="og:description"\s+content=")[^"]*(")/,
-      `$1${description}$2`,
+      `$1${escDescription}$2`,
     )
     .replace(
       /(<meta\s+name="twitter:title"\s+content=")[^"]*(")/,
-      `$1${title}$2`,
+      `$1${escTitle}$2`,
     )
     .replace(
       /(<meta\s+name="twitter:description"\s+content=")[^"]*(")/,
-      `$1${description}$2`,
+      `$1${escDescription}$2`,
     )
     .replace(
       /(<link\s+rel="canonical"\s+href=")[^"]*(")/,
-      `$1${canonicalUrl}$2`,
+      `$1${escCanonicalUrl}$2`,
     );
 
   // Add route-specific JSON-LD if it's a case study
