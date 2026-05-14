@@ -52,6 +52,15 @@
     },
     "api/lead-capture/index.js": {
       "maxDuration": 30
+    },
+    "api/nurture/index.js": {
+      "maxDuration": 60
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/nurture",
+      "schedule": "0 9 * * *"
+    }
+  ]
 }

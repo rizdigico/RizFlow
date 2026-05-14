@@ -663,7 +663,12 @@ export function ReadinessScore() {
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 15,
+                        delay: 0.2,
+                      }}
                       className="mb-4"
                     >
                       <span
@@ -672,7 +677,9 @@ export function ReadinessScore() {
                       >
                         {result.score}
                       </span>
-                      <span className="text-2xl text-slate-500 font-mono">/100</span>
+                      <span className="text-2xl text-slate-500 font-mono">
+                        /100
+                      </span>
                     </motion.div>
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -698,10 +705,20 @@ export function ReadinessScore() {
                     </motion.div>
                     <div className="border-t border-white/10 pt-6">
                       <p className="text-sm text-slate-400 mb-2">
-                        Your score is <span className="text-teal-400 font-bold">{result.score}/100</span> — <span className={`font-bold ${getLevelColor(result.level).text}`}>{result.level}</span>
+                        Your score is{" "}
+                        <span className="text-teal-400 font-bold">
+                          {result.score}/100
+                        </span>{" "}
+                        —{" "}
+                        <span
+                          className={`font-bold ${getLevelColor(result.level).text}`}
+                        >
+                          {result.level}
+                        </span>
                       </p>
                       <p className="text-xs text-slate-500 mb-6">
-                        Want your full breakdown with personalized automation roadmap?
+                        Want your full breakdown with personalized automation
+                        roadmap?
                       </p>
                       <div className="space-y-3">
                         <input
@@ -716,7 +733,11 @@ export function ReadinessScore() {
                         />
                         <button
                           onClick={handleEmailSubmit}
-                          disabled={!email.trim() || !email.includes("@") || emailSubmitting}
+                          disabled={
+                            !email.trim() ||
+                            !email.includes("@") ||
+                            emailSubmitting
+                          }
                           className="w-full px-5 py-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 text-white font-bold hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center gap-2"
                         >
                           {emailSubmitting ? (
@@ -732,7 +753,8 @@ export function ReadinessScore() {
                           )}
                         </button>
                         <p className="text-[10px] text-slate-600 font-mono">
-                          No spam. Your personalized roadmap + case studies in 60 seconds.
+                          No spam. Your personalized roadmap + case studies in
+                          60 seconds.
                         </p>
                       </div>
                     </div>
@@ -763,12 +785,13 @@ export function ReadinessScore() {
                     Unlock Your Full Roadmap
                   </h3>
                   <p className="text-slate-400 text-sm mb-6">
-                    Get your personalized automation roadmap + real case studies showing how businesses like yours saved 10-14 hours/week.
+                    Get your personalized automation roadmap + real case studies
+                    showing how businesses like yours saved 10-14 hours/week.
                   </p>
                   <div className="space-y-3 mb-6 text-left">
                     <div className="flex items-start gap-2 text-sm text-slate-300">
                       <CheckCircleIcon className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
-                      Top 3 automation opportunities for your business
+                      Your top automation opportunities
                     </div>
                     <div className="flex items-start gap-2 text-sm text-slate-300">
                       <CheckCircleIcon className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
@@ -776,7 +799,8 @@ export function ReadinessScore() {
                     </div>
                     <div className="flex items-start gap-2 text-sm text-slate-300">
                       <CheckCircleIcon className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
-                      Real results: RainFresh SG saved 14+ hrs/week, BrewedIdentity cut listing time 93%
+                      Real results: RainFresh SG saved 14+ hrs/week,
+                      BrewedIdentity cut listing time 93%
                     </div>
                   </div>
                   <input
@@ -791,7 +815,9 @@ export function ReadinessScore() {
                   />
                   <button
                     onClick={handleEmailSubmit}
-                    disabled={!email.trim() || !email.includes("@") || emailSubmitting}
+                    disabled={
+                      !email.trim() || !email.includes("@") || emailSubmitting
+                    }
                     className="w-full mt-3 px-5 py-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 text-white font-bold hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center gap-2"
                   >
                     {emailSubmitting ? (

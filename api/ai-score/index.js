@@ -9,7 +9,7 @@ const MODEL_CHAIN = [
   "z-ai/glm-4.5-air:free",
 ];
 
-const REQUEST_TIMEOUT_MS = 18000;
+const REQUEST_TIMEOUT_MS = 22000;
 
 function cleanModelResponse(content) {
   if (!content) return "";
@@ -39,7 +39,7 @@ async function callModel(messages, model) {
         body: JSON.stringify({
           model,
           messages,
-          max_tokens: 800,
+          max_tokens: 1000,
           temperature: 0.7,
         }),
         signal: controller.signal,
@@ -202,14 +202,14 @@ BUSINESS PROFILE:
 - What's holding them back: ${blockerLabel}
 
 PERSONALIZATION RULES (CRITICAL — responses that violate these will be rejected):
-1. Every automation MUST reference their SPECIFIC industry, tools, pain, or goal by name — no generic advice
-2. Every recommendation MUST be actionable and reference what they actually told you — no vague "streamline" or "leverage" language
+1. Every automation MUST reference their SPECIFIC industry, tools, pain, or goal by name AND include estimated hours saved (e.g. "~3 hrs/week")
+2. Every recommendation MUST include a timeline prefix (e.g. "Week 1:", "Within 2 weeks:", "Month 1:") and reference their actual tools/pain — no vague "streamline" or "leverage" language
 3. Use natural, conversational English — write like a consultant talking to a client, not a template
 4. impactSummary MUST mention their industry name, their exact pain, and their stated goal
 5. Score should genuinely reflect their readiness — high if they already use AI tools and have clear pain, low if they're just starting
 
 Respond with ONLY a JSON object (no markdown, no explanation):
-{"score":0-100,"level":"Untapped Potential|Early Stage|Getting There|High Potential|AI-Ready","estimatedSavings":"X-Y hours/week","topAutomations":["specific automation naming their actual tools and pain, e.g. 'Auto-invoice processing between Shopify and Xero'","another specific one tied to their industry","third one addressing their stated pain","fourth one connected to their 6-month goal"],"recommendations":["specific first step referencing their exact pain and tools","recommendation naming their actual tools","one addressing their specific blocker","concrete next step tied to their stated goal"],"impactSummary":"1-2 sentence personalized summary naming their industry, pain, and goal"}`;
+{"score":0-100,"level":"Untapped Potential|Early Stage|Getting There|High Potential|AI-Ready","estimatedSavings":"X-Y hours/week","topAutomations":["specific automation with tool names + hours saved, e.g. 'Auto-invoice processing between Shopify and Xero — saves ~3 hrs/week'","another tied to their industry + hours saved","third addressing their stated pain + hours saved","fourth connected to their 6-month goal + hours saved"],"recommendations":["Week 1: specific first step referencing their exact pain and tools","Within 2 weeks: recommendation naming their actual tools","Month 1: one addressing their specific blocker","Next step: concrete action tied to their stated goal"],"impactSummary":"1-2 sentence personalized summary naming their industry, pain, and goal"}`;
 
     const result = await tryModelsWithFallback([
       {
@@ -328,25 +328,26 @@ Respond with ONLY a JSON object (no markdown, no explanation):
 
       const autos = [
         autoFirst
-          ? `Set up ${autoFirst.toLowerCase()} automation — you already identified this as your top priority`
-          : `Automate ${painShort.toLowerCase()} end-to-end with AI agents tailored to ${ind} workflows`,
+          ? `Set up ${autoFirst.toLowerCase()} automation — saves ~${mh > 15 ? 4 : 2} hrs/week, your #1 priority`
+          : `Automate ${painShort.toLowerCase()} end-to-end with AI agents — saves ~${mh > 15 ? 5 : 3} hrs/week for ${ind}`,
         firstTool
-          ? `Connect ${firstTool}${secondTool ? ` and ${secondTool}` : ""} so orders, invoices, and customer data flow without manual re-entry`
-          : `Auto-sync your core business tools to eliminate copy-paste between systems`,
-        `Set up smart follow-up sequences for ${ind} — automatically chase leads, confirm bookings, and send reminders`,
+          ? `Connect ${firstTool}${secondTool ? ` and ${secondTool}` : ""} so data flows without re-entry — saves ~${mh > 15 ? 3 : 2} hrs/week`
+          : `Auto-sync your core tools to eliminate copy-paste — saves ~${mh > 15 ? 3 : 2} hrs/week`,
+        `Smart follow-up sequences for ${ind} — auto-chase leads, confirm bookings, send reminders — saves ~${mh > 15 ? 2 : 1} hrs/week`,
         aiToolsStr
-          ? `Build on your ${aiToolsStr.split(",").slice(0, 2).join(" and ")} setup with dedicated agents for ${painShort.toLowerCase()}`
-          : `Deploy AI agents that handle ${painShort.toLowerCase()} while you focus on ${goal.toLowerCase()}`,
+          ? `Build on your ${aiToolsStr.split(",").slice(0, 2).join(" and ")} setup with dedicated agents for ${painShort.toLowerCase()} — saves ~${mh > 15 ? 3 : 2} hrs/week`
+          : `Deploy AI agents for ${painShort.toLowerCase()} while you focus on ${goal.toLowerCase()} — saves ~${mh > 15 ? 3 : 2} hrs/week`,
       ];
 
       const recs = [
-        `Start with ${autoFirst ? autoFirst.toLowerCase() : painShort.toLowerCase()} — it's the quickest win for your ${ind} business${mh > 10 ? " and where you're losing the most hours" : ""}`,
+        `Week 1: Start with ${autoFirst ? autoFirst.toLowerCase() : painShort.toLowerCase()} — quickest win for your ${ind} business${mh > 10 ? " and where you're losing the most hours" : ""}`,
         firstTool
-          ? `Connect ${firstTool} to an AI agent so ${mh > 15 ? "the 15+ hours you spend on manual work" : "repetitive data entry"} gets handled automatically`
-          : `Plug your core tools into an AI agent pipeline — stop copy-pasting between systems`,
-        blockerAdvice[answers.automationBlocker] ||
-          `Book a free audit call to map the exact automation roadmap for your ${ind} business`,
-        `${ind} businesses using AI agents are already saving ${mh > 15 ? "15-20" : "8-12"} hours/week — the same is within reach for your ${goal.toLowerCase()} goal`,
+          ? `Within 2 weeks: Connect ${firstTool} to an AI agent so ${mh > 15 ? "the 15+ hours you spend on manual work" : "repetitive data entry"} gets handled automatically`
+          : `Within 2 weeks: Plug your core tools into an AI agent pipeline — stop copy-pasting`,
+        blockerAdvice[answers.automationBlocker]
+          ? `Month 1: ${blockerAdvice[answers.automationBlocker]}`
+          : `Month 1: Book a free audit call to map the exact automation roadmap for your ${ind} business`,
+        `Next step: ${ind} businesses using AI agents are already saving ${mh > 15 ? "15-20" : "8-12"} hrs/week — the same is within reach for your ${goal.toLowerCase()} goal`,
       ];
 
       parsed = {

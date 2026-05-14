@@ -57,6 +57,9 @@ function buildEmailHtml(data) {
     .map((r) => `<li style="margin-bottom:8px;padding-left:4px;">→ ${r}</li>`)
     .join("");
 
+  const ctaButton = `<a href="https://cal.com/aariz-a/ai-audit" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#00E5FF,#06B6D4);color:#050A14;font-weight:700;font-size:16px;text-decoration:none;border-radius:12px;">Book Free AI Audit →</a>`;
+  const ctaSubtext = `<p style="margin:10px 0 0;font-size:11px;color:#475569;font-family:monospace;">30 min · zero pitch · personalized roadmap</p>`;
+
   return `
 <!DOCTYPE html>
 <html>
@@ -84,6 +87,15 @@ function buildEmailHtml(data) {
         </table>
         <p style="margin:16px 0 0;font-size:16px;font-weight:700;color:${scoreColor};">${levelEmoji} ${level}</p>
         <p style="margin:8px 0 0;font-size:14px;color:#94a3b8;">Estimated savings: <strong style="color:#fff;">${estimatedSavings}</strong></p>
+      </td>
+    </tr>
+
+    <!-- Primary CTA — above the fold, right after score -->
+    <tr>
+      <td style="padding:12px 28px 20px;text-align:center;">
+        <p style="margin:0 0 14px;font-size:15px;color:#94a3b8;">Ready to reclaim those hours?</p>
+        ${ctaButton}
+        ${ctaSubtext}
       </td>
     </tr>
 
@@ -125,12 +137,12 @@ function buildEmailHtml(data) {
     <!-- Divider -->
     <tr><td style="padding:0 28px;"><hr style="border:none;border-top:1px solid rgba(0,229,255,0.15);"></td></tr>
 
-    <!-- CTA -->
+    <!-- Secondary CTA — after full content, for readers who needed proof -->
     <tr>
       <td style="padding:24px 28px 32px;text-align:center;">
         <p style="margin:0 0 16px;font-size:15px;color:#94a3b8;">Want to see these automations running in <em>your</em> business?</p>
-        <a href="https://cal.com/aariz-a/ai-audit" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#00E5FF,#06B6D4);color:#050A14;font-weight:700;font-size:16px;text-decoration:none;border-radius:12px;">Book Free AI Audit →</a>
-        <p style="margin:12px 0 0;font-size:11px;color:#475569;font-family:monospace;">30 min · zero pitch · personalized roadmap</p>
+        ${ctaButton}
+        ${ctaSubtext}
       </td>
     </tr>
 
@@ -265,7 +277,7 @@ export default async function handler(req, res) {
       console.warn("[lead-capture] SMTP not configured — skipping email send");
     }
 
-    // Forward to VPS webhook for Google Sheets + email nurture
+    // Forward to VPS webhook for Google Sheets
     const WEBHOOK_URL = process.env.LEAD_WEBHOOK_URL;
     if (WEBHOOK_URL) {
       try {
@@ -287,6 +299,31 @@ export default async function handler(req, res) {
       } catch (webhookErr) {
         console.error("[lead-capture] Webhook failed:", webhookErr.message);
       }
+    }
+
+    // Register lead for 5-email nurture sequence (Day 2, 5, 8, 12)
+    try {
+      await fetch("https://rizflow.co/api/nurture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "register",
+          email,
+          score,
+          level,
+          estimatedSavings,
+          industry: industry || "",
+          teamSize: teamSize || "",
+          biggestPain: biggestPain || "",
+        }),
+      });
+      console.log(`[lead-capture] Registered ${email} for nurture sequence`);
+    } catch (nurtureErr) {
+      // Nurture registration failure is non-critical — lead is still captured
+      console.error(
+        "[lead-capture] Nurture registration failed:",
+        nurtureErr.message,
+      );
     }
 
     res.status(200).json({ success: true, message: "Roadmap on its way!" });

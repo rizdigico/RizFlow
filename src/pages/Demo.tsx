@@ -756,7 +756,7 @@ Rules:
 
                   {/* Trust metrics */}
                   <div className="mt-12 text-center">
-                    <div className="inline-flex items-center gap-6 text-sm text-slate-500">
+                    <div className="inline-flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-500">
                       <span className="flex items-center gap-1.5">
                         <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
                         Real AI responses
@@ -769,7 +769,86 @@ Rules:
                         <ChatBubbleLeftRightIcon className="w-4 h-4 text-cyan-400" />
                         6 industries
                       </span>
+                      <span className="flex items-center gap-1.5">
+                        <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
+                        2 Singapore businesses
+                      </span>
                     </div>
+                  </div>
+
+                  {/* Social proof: Case study cards */}
+                  <div className="mt-10 max-w-4xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="rounded-xl border border-teal-500/20 bg-[#0A0F1A] p-5">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center text-lg">
+                            🥬
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-white">RainFreshSG</p>
+                            <p className="text-xs text-slate-500">Fresh produce · Singapore</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4 mb-3">
+                          <div>
+                            <p className="text-xl font-bold text-teal-400">-99%</p>
+                            <p className="text-[10px] text-slate-500">Processing time</p>
+                          </div>
+                          <div>
+                            <p className="text-xl font-bold text-teal-400">14+</p>
+                            <p className="text-[10px] text-slate-500">Hrs/week saved</p>
+                          </div>
+                          <div>
+                            <p className="text-xl font-bold text-teal-400">100%</p>
+                            <p className="text-[10px] text-slate-500">More buyer emails</p>
+                          </div>
+                        </div>
+                        <Link to="/case-study/rainfresh-sg" className="text-xs text-teal-400 hover:text-teal-300 transition-colors">
+                          Read case study →
+                        </Link>
+                      </div>
+                      <div className="rounded-xl border border-cyan-500/20 bg-[#0A0F1A] p-5">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center text-lg">
+                            ☕
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-white">Brewed Identity</p>
+                            <p className="text-xs text-slate-500">Listings & comms · Singapore</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4 mb-3">
+                          <div>
+                            <p className="text-xl font-bold text-cyan-400">-93%</p>
+                            <p className="text-[10px] text-slate-500">Listing time</p>
+                          </div>
+                          <div>
+                            <p className="text-xl font-bold text-cyan-400">10+</p>
+                            <p className="text-[10px] text-slate-500">Hrs/week saved</p>
+                          </div>
+                          <div>
+                            <p className="text-xl font-bold text-cyan-400">-99%</p>
+                            <p className="text-[10px] text-slate-500">Response time</p>
+                          </div>
+                        </div>
+                        <Link to="/case-study/brewed-identity" className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
+                          Read case study →
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom CTA strip */}
+                  <div className="mt-8 max-w-4xl mx-auto text-center">
+                    <p className="text-slate-400 text-sm mb-4">
+                      Want agents like these running <em>your</em> business? Book a free 30-minute audit.
+                    </p>
+                    <Link to="/audit">
+                      <Button variant="cta" size="lg">
+                        Book Your Free Audit
+                        <ArrowRightIcon className="w-5 h-5" />
+                      </Button>
+                    </Link>
                   </div>
                 </Container>
               </section>
@@ -1021,20 +1100,16 @@ Rules:
                         </motion.div>
                       )}
 
-                      {/* Social proof banner */}
-                      {sessionStats.messagesHandled > 0 && (
+                      {/* Social proof banner — enhanced with case study metrics */}
+                      {sessionStats.messagesHandled > 0 && sessionStats.messagesHandled <= 3 && (
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          className="mt-3 flex items-center justify-center gap-3 py-2 px-4 rounded-lg bg-emerald-500/5 border border-emerald-500/20"
+                          className="mt-3 py-2 px-4 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-center"
                         >
-                          <CheckCircleIcon className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                           <p className="text-xs text-emerald-300/80">
-                            This exact workflow saves businesses{" "}
-                            <strong className="text-emerald-300">
-                              14+ hours/week
-                            </strong>{" "}
-                            on average.{" "}
+                            <CheckCircleIcon className="w-4 h-4 text-emerald-400 inline -mt-0.5 mr-1" />
+                            RainFresh saved <strong className="text-emerald-300">14+ hours/week</strong> with agents like these.{" "}
                             <Link
                               to="/case-studies"
                               className="text-teal-400 hover:text-teal-300 underline"
@@ -1042,6 +1117,41 @@ Rules:
                               See verified results
                             </Link>
                           </p>
+                        </motion.div>
+                      )}
+
+                      {/* Conversion CTA — appears after 4+ messages (user is engaged) */}
+                      {sessionStats.messagesHandled >= 4 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4 }}
+                          className="mt-4 rounded-xl border border-teal-500/30 bg-gradient-to-br from-teal-500/10 to-cyan-500/5 p-5 text-center"
+                        >
+                          <p className="text-sm text-slate-300 mb-2">
+                            Want agents like this running <strong className="text-white">your</strong> business?
+                          </p>
+                          <p className="text-xs text-slate-500 mb-4">
+                            2 Singapore businesses already automating with RizFlow · Free 30-min audit
+                          </p>
+                          <Link to="/audit" className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-400 text-white text-sm font-bold shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] transition-all">
+                            Get Your Free Audit
+                            <ArrowRightIcon className="w-4 h-4" />
+                          </Link>
+                          <div className="mt-3 flex items-center justify-center gap-4 text-[10px] text-slate-500">
+                            <span className="flex items-center gap-1">
+                              <CheckCircleIcon className="w-3 h-3 text-emerald-400" />
+                              No lock-in
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <CheckCircleIcon className="w-3 h-3 text-emerald-400" />
+                              90-day guarantee
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <CheckCircleIcon className="w-3 h-3 text-emerald-400" />
+                              SGD pricing
+                            </span>
+                          </div>
                         </motion.div>
                       )}
                     </div>
