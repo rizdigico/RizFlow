@@ -24,21 +24,20 @@ const VPS_PROXY = process.env.VPS_PROXY_URL || "";
 const REQUEST_TIMEOUT_MS = 20000;
 const PROXY_TIMEOUT_MS = 25000;
 
+const ALLOWED_ORIGINS = ["https://rizflow.co", "https://www.rizflow.co"];
+
 export default async function handler(req, res) {
+  const origin = req.headers.origin || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin)
+    ? origin
+    : ALLOWED_ORIGINS[1];
+
   if (req.method === "GET") {
-    const key = process.env.OPENROUTER_API_KEY;
-    const keyStatus = key
-      ? `set (${key.slice(0, 8)}...${key.slice(-4)})`
-      : "NOT SET";
-    return res.status(200).json({
-      status: key ? "key-configured" : "key-missing",
-      keyStatus,
-      models: MODEL_CHAIN,
-    });
+    return res.status(200).json({ status: "ok" });
   }
 
   if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Max-Age", "86400");
@@ -69,7 +68,7 @@ export default async function handler(req, res) {
       });
     }
 
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
     return res.status(200).json(result);
   } catch (err) {
     console.error("Demo chat API error:", err.message || err);

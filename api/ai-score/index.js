@@ -128,8 +128,14 @@ function isLazyResponse(parsed) {
   return false;
 }
 
+const ALLOWED_ORIGINS = ["https://rizflow.co", "https://www.rizflow.co"];
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const origin = req.headers.origin || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin)
+    ? origin
+    : ALLOWED_ORIGINS[1];
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
@@ -141,20 +147,55 @@ export default async function handler(req, res) {
     const { answers } = req.body;
     if (!answers) return res.status(400).json({ error: "Answers required" });
 
+    // Validate answer fields against expected enums to prevent prompt injection
+    const VALID_INDUSTRY = [
+      "business",
+      "ecommerce",
+      "food",
+      "services",
+      "health",
+      "realestate",
+      "creative",
+      "tech",
+      "other",
+    ];
+    const VALID_GOALS = ["growth", "efficiency", "cost", "quality"];
+    const VALID_HOURS = ["under5", "5to10", "10to20", "20plus"];
+    const VALID_TEAMS = ["solo", "small", "medium", "large"];
+    const VALID_EXP = ["none", "dabbled", "intermediate", "advanced"];
+    const VALID_BLOCKERS = [
+      "dontKnowHow",
+      "cost",
+      "time",
+      "trust",
+      "complexity",
+    ];
+
+    const sanitize = (val, maxLen = 500) =>
+      typeof val === "string"
+        ? val.slice(0, maxLen).replace(/[<>'"]/g, "")
+        : "";
+    const validateEnum = (val, validVals, defaultVal) =>
+      validVals.includes(val) ? val : defaultVal;
+
     if (!process.env.OPENROUTER_API_KEY) {
       return res.status(500).json({ error: "Service unavailable" });
     }
 
-    const ind = answers.industry || "business";
-    const pain = answers.biggestPain || "repetitive tasks";
-    const tools = answers.currentTools || "";
-    const aiToolsUsed = answers.aiToolsUsed || "";
-    const goal = answers.biggestGoal || "growth";
-    const autoFirst = answers.automateFirst || "";
-    const manualHrs = answers.manualHours || "under5";
-    const teamSz = answers.teamSize || "solo";
-    const aiExp = answers.aiToolsExperience || "none";
-    const blocker = answers.automationBlocker || "dontKnowHow";
+    const ind = validateEnum(answers.industry, VALID_INDUSTRY, "business");
+    const pain = sanitize(answers.biggestPain, 200) || "repetitive tasks";
+    const tools = sanitize(answers.currentTools, 200);
+    const aiToolsUsed = sanitize(answers.aiToolsUsed, 200);
+    const goal = validateEnum(answers.biggestGoal, VALID_GOALS, "growth");
+    const autoFirst = sanitize(answers.automateFirst, 200);
+    const manualHrs = validateEnum(answers.manualHours, VALID_HOURS, "under5");
+    const teamSz = validateEnum(answers.teamSize, VALID_TEAMS, "solo");
+    const aiExp = validateEnum(answers.aiToolsExperience, VALID_EXP, "none");
+    const blocker = validateEnum(
+      answers.automationBlocker,
+      VALID_BLOCKERS,
+      "dontKnowHow",
+    );
 
     const expLabel =
       {

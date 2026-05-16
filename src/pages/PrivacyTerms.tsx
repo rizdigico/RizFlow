@@ -282,7 +282,7 @@ export function PrivacyTerms() {
           property="og:description"
           content="RizFlow's Privacy Policy and Terms of Service. Learn how we protect your data and the terms of our agentic-AI implementation service."
         />
-        <meta property="og:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.jpg`} />
         <meta property="og:site_name" content="RizFlow" />
         <link rel="canonical" href={`${SITE_URL}/privacy-terms`} />
         <meta name="twitter:card" content="summary" />

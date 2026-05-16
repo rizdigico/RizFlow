@@ -609,7 +609,7 @@ Rules:
         />
         <meta property="og:url" content={`${SITE_URL}/demo`} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.jpg`} />
         <meta property="og:site_name" content="RizFlow" />
         <link rel="canonical" href={`${SITE_URL}/demo`} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -621,7 +621,7 @@ Rules:
           name="twitter:description"
           content="Choose your industry and chat with a real AI agent. No simulation — real responses, real automation."
         />
-        <meta name="twitter:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta name="twitter:image" content={`${SITE_URL}/og-banner.jpg`} />
       </Helmet>
 
       <div className="relative min-h-screen bg-[#050A14] text-white overflow-hidden">
@@ -785,25 +785,44 @@ Rules:
                             🥬
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-white">RainFreshSG</p>
-                            <p className="text-xs text-slate-500">Fresh produce · Singapore</p>
+                            <p className="text-sm font-semibold text-white">
+                              RainFreshSG
+                            </p>
+                            <p className="text-xs text-slate-500">
+                              Fresh produce · Singapore
+                            </p>
                           </div>
                         </div>
                         <div className="flex gap-4 mb-3">
                           <div>
-                            <p className="text-xl font-bold text-teal-400">-99%</p>
-                            <p className="text-[10px] text-slate-500">Processing time</p>
+                            <p className="text-xl font-bold text-teal-400">
+                              -99%
+                            </p>
+                            <p className="text-[10px] text-slate-500">
+                              Processing time
+                            </p>
                           </div>
                           <div>
-                            <p className="text-xl font-bold text-teal-400">14+</p>
-                            <p className="text-[10px] text-slate-500">Hrs/week saved</p>
+                            <p className="text-xl font-bold text-teal-400">
+                              14+
+                            </p>
+                            <p className="text-[10px] text-slate-500">
+                              Hrs/week saved
+                            </p>
                           </div>
                           <div>
-                            <p className="text-xl font-bold text-teal-400">100%</p>
-                            <p className="text-[10px] text-slate-500">More buyer emails</p>
+                            <p className="text-xl font-bold text-teal-400">
+                              100%
+                            </p>
+                            <p className="text-[10px] text-slate-500">
+                              More buyer emails
+                            </p>
                           </div>
                         </div>
-                        <Link to="/case-study/rainfresh-sg" className="text-xs text-teal-400 hover:text-teal-300 transition-colors">
+                        <Link
+                          to="/case-study/rainfresh-sg"
+                          className="text-xs text-teal-400 hover:text-teal-300 transition-colors"
+                        >
                           Read case study →
                         </Link>
                       </div>
@@ -813,25 +832,44 @@ Rules:
                             ☕
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-white">Brewed Identity</p>
-                            <p className="text-xs text-slate-500">Listings & comms · Singapore</p>
+                            <p className="text-sm font-semibold text-white">
+                              Brewed Identity
+                            </p>
+                            <p className="text-xs text-slate-500">
+                              Listings & comms · Singapore
+                            </p>
                           </div>
                         </div>
                         <div className="flex gap-4 mb-3">
                           <div>
-                            <p className="text-xl font-bold text-cyan-400">-93%</p>
-                            <p className="text-[10px] text-slate-500">Listing time</p>
+                            <p className="text-xl font-bold text-cyan-400">
+                              -93%
+                            </p>
+                            <p className="text-[10px] text-slate-500">
+                              Listing time
+                            </p>
                           </div>
                           <div>
-                            <p className="text-xl font-bold text-cyan-400">10+</p>
-                            <p className="text-[10px] text-slate-500">Hrs/week saved</p>
+                            <p className="text-xl font-bold text-cyan-400">
+                              10+
+                            </p>
+                            <p className="text-[10px] text-slate-500">
+                              Hrs/week saved
+                            </p>
                           </div>
                           <div>
-                            <p className="text-xl font-bold text-cyan-400">-99%</p>
-                            <p className="text-[10px] text-slate-500">Response time</p>
+                            <p className="text-xl font-bold text-cyan-400">
+                              -99%
+                            </p>
+                            <p className="text-[10px] text-slate-500">
+                              Response time
+                            </p>
                           </div>
                         </div>
-                        <Link to="/case-study/brewed-identity" className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
+                        <Link
+                          to="/case-study/brewed-identity"
+                          className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                        >
                           Read case study →
                         </Link>
                       </div>
@@ -841,7 +879,8 @@ Rules:
                   {/* Bottom CTA strip */}
                   <div className="mt-8 max-w-4xl mx-auto text-center">
                     <p className="text-slate-400 text-sm mb-4">
-                      Want agents like these running <em>your</em> business? Book a free 30-minute audit.
+                      Want agents like these running <em>your</em> business?
+                      Book a free 30-minute audit.
                     </p>
                     <Link to="/audit">
                       <Button variant="cta" size="lg">
@@ -1101,24 +1140,29 @@ Rules:
                       )}
 
                       {/* Social proof banner — enhanced with case study metrics */}
-                      {sessionStats.messagesHandled > 0 && sessionStats.messagesHandled <= 3 && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="mt-3 py-2 px-4 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-center"
-                        >
-                          <p className="text-xs text-emerald-300/80">
-                            <CheckCircleIcon className="w-4 h-4 text-emerald-400 inline -mt-0.5 mr-1" />
-                            RainFresh saved <strong className="text-emerald-300">14+ hours/week</strong> with agents like these.{" "}
-                            <Link
-                              to="/case-studies"
-                              className="text-teal-400 hover:text-teal-300 underline"
-                            >
-                              See verified results
-                            </Link>
-                          </p>
-                        </motion.div>
-                      )}
+                      {sessionStats.messagesHandled > 0 &&
+                        sessionStats.messagesHandled <= 3 && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="mt-3 py-2 px-4 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-center"
+                          >
+                            <p className="text-xs text-emerald-300/80">
+                              <CheckCircleIcon className="w-4 h-4 text-emerald-400 inline -mt-0.5 mr-1" />
+                              RainFresh saved{" "}
+                              <strong className="text-emerald-300">
+                                14+ hours/week
+                              </strong>{" "}
+                              with agents like these.{" "}
+                              <Link
+                                to="/case-studies"
+                                className="text-teal-400 hover:text-teal-300 underline"
+                              >
+                                See verified results
+                              </Link>
+                            </p>
+                          </motion.div>
+                        )}
 
                       {/* Conversion CTA — appears after 4+ messages (user is engaged) */}
                       {sessionStats.messagesHandled >= 4 && (
@@ -1129,12 +1173,18 @@ Rules:
                           className="mt-4 rounded-xl border border-teal-500/30 bg-gradient-to-br from-teal-500/10 to-cyan-500/5 p-5 text-center"
                         >
                           <p className="text-sm text-slate-300 mb-2">
-                            Want agents like this running <strong className="text-white">your</strong> business?
+                            Want agents like this running{" "}
+                            <strong className="text-white">your</strong>{" "}
+                            business?
                           </p>
                           <p className="text-xs text-slate-500 mb-4">
-                            2 Singapore businesses already automating with RizFlow · Free 30-min audit
+                            2 Singapore businesses already automating with
+                            RizFlow · Free 30-min audit
                           </p>
-                          <Link to="/audit" className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-400 text-white text-sm font-bold shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] transition-all">
+                          <Link
+                            to="/audit"
+                            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-400 text-white text-sm font-bold shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] transition-all"
+                          >
                             Get Your Free Audit
                             <ArrowRightIcon className="w-4 h-4" />
                           </Link>

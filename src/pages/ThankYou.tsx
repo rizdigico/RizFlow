@@ -40,7 +40,22 @@ export function ThankYou() {
         />
         <link rel="canonical" href={`${SITE_URL}/thank-you`} />
         <meta property="og:url" content={`${SITE_URL}/thank-you`} />
-        <meta name="robots" content="noindex" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content={
+            booked
+              ? "System Standing By | RizFlow"
+              : "Transmission Received | RizFlow"
+          }
+        />
+        <meta
+          property="og:description"
+          content="Your audit request was received. Book your free 30-minute Discovery Audit call with RizFlow."
+        />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.jpg`} />
+        <meta property="og:site_name" content="RizFlow" />
+        <meta name="robots" content="noindex, follow" />
       </Helmet>
 
       <section className="min-h-screen bg-[#050A14] pt-24 pb-16 relative overflow-hidden flex flex-col justify-center">

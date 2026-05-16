@@ -298,7 +298,7 @@ export function BrewedIdentityCaseStudy() {
           content={`${SITE_URL}/case-study/brewed-identity`}
         />
         <meta property="og:type" content="article" />
-        <meta property="og:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.jpg`} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
@@ -309,7 +309,7 @@ export function BrewedIdentityCaseStudy() {
           name="twitter:description"
           content="How a POD Etsy shop cut listing time by 93% with custom AI agents."
         />
-        <meta name="twitter:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta name="twitter:image" content={`${SITE_URL}/og-banner.jpg`} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -358,7 +358,7 @@ export function BrewedIdentityCaseStudy() {
               url: SITE_URL,
               logo: `${SITE_URL}/agency-logo-square.png`,
             },
-            image: `${SITE_URL}/og-banner.png`,
+            image: `${SITE_URL}/og-banner.jpg`,
           })}
         </script>
       </Helmet>

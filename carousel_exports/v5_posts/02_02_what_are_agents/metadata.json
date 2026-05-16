@@ -2,7 +2,7 @@
   "post_num": 2,
   "id": "02_what_are_agents",
   "theme": "hud",
-  "caption": "AI agents \u2260 chatbots \ud83e\udd16\u26a1\n\nChatbots answer questions. AI agents DO things.\n\nHandle customer intake. Track workflows. Send invoices. Manage comms. All 24/7.\n\nThis is the future of operations. And it's already here. \u2192\n\n#aiagents #automationtools #aitools #digitaltransformation #techstartup",
+  "caption": "AI agents \u2260 chatbots \ud83e\udd16\u26a1\n\nChatbots answer questions. AI agents DO things.\n\nAn AI agent can:\n\u2705 Handle customer intake automatically\n\u2705 Track your workflows end-to-end\n\u2705 Send invoices and follow up on payments\n\u2705 Manage communications across channels\n\nThey work 24/7, never call in sick, and learn your processes in days.\n\nThis is the future of operations. And it's already here. \u2192",
   "hashtags": [
     "#aiagents",
     "#automationtools",
@@ -10,6 +10,11 @@
     "#digitaltransformation",
     "#techstartup"
   ],
-  "hashtag_string": "#aiagents #automationtools #aitools #digitaltransformation #techstartup",
-  "image": "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/02_02_what_are_agents/infographic.jpg"
+  "slides": [
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/02_02_what_are_agents/slide_1_hud_sci-fi.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/02_02_what_are_agents/slide_2_hud_sci-fi.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/02_02_what_are_agents/slide_3_hud_sci-fi.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/02_02_what_are_agents/slide_4_hud_sci-fi.jpg"
+  ],
+  "hashtag_string": "#aiagents #automationtools #aitools #digitaltransformation #techstartup"
 }

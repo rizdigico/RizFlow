@@ -30,7 +30,7 @@ const jsonLd = {
       "@id": `${SITE_URL}/#organization`,
       name: "RizFlow",
       url: SITE_URL,
-      logo: `${SITE_URL}/og-banner.png`,
+      logo: `${SITE_URL}/og-banner.jpg`,
       foundingDate: "2026",
       founder: { "@type": "Person", name: "Aariz Arfan" },
       description:

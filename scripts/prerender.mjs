@@ -142,7 +142,7 @@ const SITE_URL = "https://www.rizflow.co";
 async function generateStaticShell(route) {
   const { title, description, path: routePath } = route;
   const canonicalUrl = `${SITE_URL}${routePath}`;
-  const ogImage = `${SITE_URL}/og-banner.png`;
+  const ogImage = `${SITE_URL}/og-banner.jpg`;
 
   // Read the built index.html as base
   let baseHtml;

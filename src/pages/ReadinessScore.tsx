@@ -181,6 +181,70 @@ const CAL_LINK = "https://cal.com/aariz-a/ai-audit";
 
 type Phase = "quiz" | "analyzing" | "preview" | "email" | "results" | "error";
 
+const aiScoreBreadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "AI Readiness Score",
+      item: `${SITE_URL}/ai-score`,
+    },
+  ],
+};
+
+const quizSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${SITE_URL}/ai-score`,
+  url: `${SITE_URL}/ai-score`,
+  name: "AI Readiness Score — Free Business Automation Assessment | RizFlow",
+  description:
+    "Score your business AI readiness in 60 seconds. Get personalized automation recommendations and see how many hours AI can save you each week. Based in Singapore.",
+  provider: {
+    "@type": "Organization",
+    name: "RizFlow",
+    url: SITE_URL,
+    logo: `${SITE_URL}/og-banner.jpg`,
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "SG",
+      addressLocality: "Singapore",
+    },
+  },
+  mainEntity: {
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What is an AI Readiness Score?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "The AI Readiness Score is a free 60-second assessment that evaluates how prepared your business is for AI automation. It analyzes your current workflows, team size, pain points, and goals to give you a personalized score out of 100.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How accurate is the AI Readiness Score?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "The assessment is designed for Singapore SMEs and uses real industry benchmarks. Your score reflects your current automation potential based on team size, manual hours spent, and existing tools.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What do I get after completing the AI Score?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "You receive a personalized score out of 100, your automation readiness level, estimated weekly time savings, top 4 automation recommendations for your industry, a 4-step implementation roadmap, and an optional free 30-minute Discovery Audit call.",
+        },
+      },
+    ],
+  },
+};
+
 export function ReadinessScore() {
   const [phase, setPhase] = useState<Phase>("quiz");
   const [currentQ, setCurrentQ] = useState(0);
@@ -368,35 +432,44 @@ export function ReadinessScore() {
     <>
       <Helmet>
         <title>
-          AI Readiness Score — Find Out How Much AI Can Transform Your Business
-          | RizFlow
+          AI Readiness Score — Free Business Automation Assessment | RizFlow Singapore
         </title>
         <meta
           name="description"
-          content="Score your business AI readiness in 60 seconds. Get personalized automation recommendations and see how many hours AI can save you each week."
+          content="Free 60-second AI Readiness Score for Singapore SMEs. Discover how much time AI automation can save your business each week. Get personalized recommendations instantly."
+        />
+        <meta
+          name="keywords"
+          content="AI readiness score Singapore, business automation assessment, SME AI readiness test, free AI audit Singapore, how ready is my business for AI, AI automation score, small business AI assessment, Singapore AI readiness checker"
         />
         <link rel="canonical" href={`${SITE_URL}/ai-score`} />
+        <link rel="alternate" hrefLang="en-SG" href={`${SITE_URL}/ai-score`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/ai-score`} />
         <meta
           property="og:title"
-          content="AI Readiness Score — How Ready Is Your Business for AI?"
+          content="AI Readiness Score — Free Business Automation Assessment | RizFlow Singapore"
         />
         <meta
           property="og:description"
-          content="Score your business AI readiness in 60 seconds. Free assessment with personalized automation recommendations."
+          content="Free 60-second AI Readiness Score for Singapore SMEs. Discover how much time AI automation can save your business each week. Get personalized recommendations instantly."
         />
         <meta property="og:image" content={SEO_DEFAULTS.ogImage} />
+        <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="AI Readiness Score — How Ready Is Your Business for AI?"
+          content="AI Readiness Score — Free Business Automation Assessment | RizFlow Singapore"
         />
         <meta
           name="twitter:description"
-          content="Score your business AI readiness in 60 seconds. Free assessment with personalized automation recommendations."
+          content="Free 60-second AI Readiness Score for Singapore SMEs. Discover how much time AI automation can save your business each week."
         />
         <meta name="twitter:image" content={SEO_DEFAULTS.ogImage} />
+        <script type="application/ld+json">
+          {JSON.stringify(aiScoreBreadcrumb)}
+        </script>
+        <script type="application/ld+json">{JSON.stringify(quizSchema)}</script>
       </Helmet>
 
       <section className="pt-32 pb-24 min-h-screen relative overflow-hidden bg-[#050A14] bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px]">

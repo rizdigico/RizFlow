@@ -27,35 +27,6 @@ function getDb() {
   return neon(process.env.DATABASE_URL);
 }
 
-const CREATE_TABLES = `
-  CREATE TABLE IF NOT EXISTS leads (
-    id SERIAL PRIMARY KEY,
-    email TEXT UNIQUE NOT NULL,
-    score INTEGER,
-    level TEXT,
-    estimated_savings TEXT,
-    top_automations JSONB DEFAULT '[]',
-    recommendations JSONB DEFAULT '[]',
-    industry TEXT DEFAULT '',
-    team_size TEXT DEFAULT '',
-    biggest_pain TEXT DEFAULT '',
-    source TEXT DEFAULT 'ai-score-preview',
-    unsubscribed BOOLEAN DEFAULT FALSE,
-    registered_at TIMESTAMPTZ DEFAULT NOW()
-  );
-  CREATE TABLE IF NOT EXISTS nurture_emails (
-    id SERIAL PRIMARY KEY,
-    lead_id INTEGER REFERENCES leads(id) ON DELETE CASCADE,
-    email_day INTEGER NOT NULL,
-    subject TEXT,
-    sent_at TIMESTAMPTZ DEFAULT NOW(),
-    UNIQUE(lead_id, email_day)
-  );
-  CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email);
-  CREATE INDEX IF NOT EXISTS idx_leads_unsubscribed ON leads(unsubscribed);
-  CREATE INDEX IF NOT EXISTS idx_nurture_emails_lead_day ON nurture_emails(lead_id, email_day);
-`;
-
 let tablesEnsured = false;
 
 async function ensureTables() {
@@ -63,7 +34,32 @@ async function ensureTables() {
   const sql = getDb();
   if (!sql) return;
   try {
-    await sql(CREATE_TABLES);
+    await sql`CREATE TABLE IF NOT EXISTS leads (
+      id SERIAL PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      score INTEGER,
+      level TEXT,
+      estimated_savings TEXT,
+      top_automations JSONB DEFAULT '[]',
+      recommendations JSONB DEFAULT '[]',
+      industry TEXT DEFAULT '',
+      team_size TEXT DEFAULT '',
+      biggest_pain TEXT DEFAULT '',
+      source TEXT DEFAULT 'ai-score-preview',
+      unsubscribed BOOLEAN DEFAULT FALSE,
+      registered_at TIMESTAMPTZ DEFAULT NOW()
+    )`;
+    await sql`CREATE TABLE IF NOT EXISTS nurture_emails (
+      id SERIAL PRIMARY KEY,
+      lead_id INTEGER REFERENCES leads(id) ON DELETE CASCADE,
+      email_day INTEGER NOT NULL,
+      subject TEXT,
+      sent_at TIMESTAMPTZ DEFAULT NOW(),
+      UNIQUE(lead_id, email_day)
+    )`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_leads_unsubscribed ON leads(unsubscribed)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_nurture_emails_lead_day ON nurture_emails(lead_id, email_day)`;
     tablesEnsured = true;
     console.log("[nurture] Database tables ensured");
   } catch (err) {
@@ -488,7 +484,7 @@ export async function registerLead(data) {
   if (sql) {
     await ensureTables();
     try {
-      await sql`
+      const insertResult = await sql`
         INSERT INTO leads (email, score, level, estimated_savings, top_automations, recommendations, industry, team_size, biggest_pain, source)
         VALUES (${data.email}, ${data.score || null}, ${data.level || null}, ${data.estimatedSavings || null},
           ${JSON.stringify(data.topAutomations || [])}, ${JSON.stringify(data.recommendations || [])},
@@ -504,8 +500,11 @@ export async function registerLead(data) {
           biggest_pain = EXCLUDED.biggest_pain,
           unsubscribed = FALSE,
           registered_at = NOW()
+        RETURNING id
       `;
-      console.log(`[nurture] Registered lead in DB: ${data.email}`);
+      console.log(
+        `[nurture] Registered lead in DB: ${data.email} (id: ${insertResult[0]?.id})`,
+      );
     } catch (err) {
       console.error("[nurture] DB register failed:", err.message);
     }
@@ -707,9 +706,9 @@ export default async function handler(req, res) {
         await ensureTables();
         try {
           const result = await sql`
-            UPDATE leads SET unsubscribed = TRUE WHERE email = ${decodedEmail}
+            UPDATE leads SET unsubscribed = TRUE WHERE email = ${decodedEmail} RETURNING id
           `;
-          const wasUnsubscribed = result.count > 0;
+          const wasUnsubscribed = result.length > 0;
           return res.status(200).send(`
             <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
             <body style="margin:0;padding:40px;background:#050A14;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e2e8f0;text-align:center;">

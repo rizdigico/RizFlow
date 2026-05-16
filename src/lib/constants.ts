@@ -24,5 +24,5 @@ export const SEO_DEFAULTS = {
     "RizFlow – Custom Agentic-AI Systems for Businesses & SMEs | Run Your Business From Your Phone",
   description:
     "RizFlow builds custom agentic-AI systems tailored to your business. Choose the agents you need, automate your operations, and run your business from your phone. Free Discovery Audit. Based in Singapore, serving SEA.",
-  ogImage: `${SITE_URL}/og-banner.png`,
+  ogImage: `${SITE_URL}/og-banner.jpg`,
 };

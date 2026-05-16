@@ -2,7 +2,7 @@
   "post_num": 5,
   "id": "05_how_it_works",
   "theme": "agency_core",
-  "caption": "3 steps. That's it. \ud83c\udfaf\n\n1\ufe0f\u20e3 DISCOVER \u2014 We map your workflows and find every time leak\n2\ufe0f\u20e3 DEPLOY \u2014 Custom AI agents built for YOUR processes\n3\ufe0f\u20e3 SCALE \u2014 Watch it run. Adjust. Grow.\n\nNo coding. No learning curve. Just results.\n\nDM 'AUDIT' to start \u2192\n\n#howitworks #aiautomation #businessprocess #scaleyourbusiness #workflow",
+  "caption": "3 steps. That's it. \ud83c\udfaf\n\nMost agencies make AI sound complicated. We make it simple:\n\n1\ufe0f\u20e3 DISCOVERY \u2014 We map your workflows and find every time leak\n2\ufe0f\u20e3 DEPLOY \u2014 Custom AI agents built for YOUR processes\n3\ufe0f\u20e3 SCALE \u2014 Watch it run. Adjust. Grow.\n\nNo coding required. No learning curve. Just results.\n\nReady to start? DM 'AUDIT' \u2192",
   "hashtags": [
     "#howitworks",
     "#aiautomation",
@@ -10,6 +10,11 @@
     "#scaleyourbusiness",
     "#workflow"
   ],
-  "hashtag_string": "#howitworks #aiautomation #businessprocess #scaleyourbusiness #workflow",
-  "image": "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/05_05_how_it_works/infographic.jpg"
+  "slides": [
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/05_05_how_it_works/slide_1_agency_core.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/05_05_how_it_works/slide_2_agency_core.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/05_05_how_it_works/slide_3_agency_core.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/05_05_how_it_works/slide_4_agency_core.jpg"
+  ],
+  "hashtag_string": "#howitworks #aiautomation #businessprocess #scaleyourbusiness #workflow"
 }

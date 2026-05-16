@@ -358,8 +358,29 @@ export function RainFreshDemo() {
           name="description"
           content="Watch how RizFlow's AI agents automate RainFreshSG's TikTok Shop orders, inventory alerts, social media, and customer inquiries — live agent system demo."
         />
-        <link rel="canonical" href={`${SITE_URL}/case-studies`} />
-        <meta property="og:url" content={`${SITE_URL}/case-studies`} />
+        <link rel="canonical" href={`${SITE_URL}/demo/rainfresh`} />
+        <meta property="og:url" content={`${SITE_URL}/demo/rainfresh`} />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content="RainFreshSG Agent System — See RizFlow AI in Action"
+        />
+        <meta
+          property="og:description"
+          content="Watch how RizFlow's AI agents automate RainFreshSG's TikTok Shop orders, inventory alerts, social media, and customer inquiries — live agent system demo."
+        />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.jpg`} />
+        <meta property="og:site_name" content="RizFlow" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="RainFreshSG Agent System — See RizFlow AI in Action"
+        />
+        <meta
+          name="twitter:description"
+          content="Watch how RizFlow's AI agents automate RainFreshSG's TikTok Shop orders, inventory alerts, social media, and customer inquiries."
+        />
+        <meta name="twitter:image" content={`${SITE_URL}/og-banner.jpg`} />
       </Helmet>
 
       <section className="relative bg-navy-dark min-h-screen pt-16 md:pt-20">

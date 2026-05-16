@@ -477,7 +477,7 @@ export function CaseStudies() {
         />
         <meta property="og:url" content={`${SITE_URL}/case-studies`} />
         <meta property="og:type" content="article" />
-        <meta property="og:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.jpg`} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
@@ -488,7 +488,7 @@ export function CaseStudies() {
           name="twitter:description"
           content="Real businesses, real results. See how RizFlow custom AI agents save 15-25 hours/week."
         />
-        <meta name="twitter:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta name="twitter:image" content={`${SITE_URL}/og-banner.jpg`} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",

@@ -2,7 +2,7 @@
   "post_num": 6,
   "id": "06_professional_services",
   "theme": "cyberpunk",
-  "caption": "Consultants, agencies, freelancers \u2014 you're billing hours but working more. \ud83d\ude24\n\nThe client work you love? Buried under admin you hate.\n\nAI agents handle lead intake, email, reports, and scheduling. You focus on high-value work.\n\n#consultantlife #agencyowner #aiautomation #productivityhacks #freelancer",
+  "caption": "Consultants, agencies, freelancers \u2014 you're billing hours but working more.\n\nThe client work you love? Buried under admin you hate.\n\nAI agents can take over:\n\ud83d\udccb Lead qualification & intake\n\ud83d\udce7 Email management & follow-ups\n\ud83d\udcca Report generation & delivery\n\ud83d\uddd3\ufe0f Scheduling & calendar management\n\nFocus on high-value work. Let AI handle the rest. \u2192",
   "hashtags": [
     "#consultantlife",
     "#agencyowner",
@@ -10,6 +10,11 @@
     "#productivityhacks",
     "#freelancer"
   ],
-  "hashtag_string": "#consultantlife #agencyowner #aiautomation #productivityhacks #freelancer",
-  "image": "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/06_06_professional_services/infographic.jpg"
+  "slides": [
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/06_06_professional_services/slide_1_cyberpunk.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/06_06_professional_services/slide_2_cyberpunk.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/06_06_professional_services/slide_3_cyberpunk.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/06_06_professional_services/slide_4_cyberpunk.jpg"
+  ],
+  "hashtag_string": "#consultantlife #agencyowner #aiautomation #productivityhacks #freelancer"
 }

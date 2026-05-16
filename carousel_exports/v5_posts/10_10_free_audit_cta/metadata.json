@@ -2,7 +2,7 @@
   "post_num": 10,
   "id": "10_free_audit_cta",
   "theme": "agency_core",
-  "caption": "You're still doing this manually? \ud83e\udd14\n\nEvery week you wait = 20+ hours lost forever.\n\nOur free discovery audit takes 15 minutes and shows you EXACTLY which tasks AI can take off your plate.\n\nNo commitment. No pressure. Just clarity.\n\nDM 'AUDIT' \u2192 or visit rizflow.co\n\n#freeaudit #aiautomation #businessautomation #scaleyourbusiness #rizflow",
+  "caption": "You're still doing this manually? \ud83e\udd14\n\nEvery week you wait = 20+ hours lost forever.\n\nOur free discovery audit takes 15 minutes and shows you EXACTLY which tasks AI can take off your plate.\n\nNo commitment. No pressure. Just clarity.\n\nDM 'AUDIT' and let's find your bottlenecks \u2192\n\n\ud83d\udd17 Or visit rizflow.co",
   "hashtags": [
     "#freeaudit",
     "#aiautomation",
@@ -10,6 +10,11 @@
     "#scaleyourbusiness",
     "#rizflow"
   ],
-  "hashtag_string": "#freeaudit #aiautomation #businessautomation #scaleyourbusiness #rizflow",
-  "image": "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/10_10_free_audit_cta/infographic.jpg"
+  "slides": [
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/10_10_free_audit_cta/slide_1_agency_core.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/10_10_free_audit_cta/slide_2_agency_core.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/10_10_free_audit_cta/slide_3_agency_core.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/10_10_free_audit_cta/slide_4_agency_core.jpg"
+  ],
+  "hashtag_string": "#freeaudit #aiautomation #businessautomation #scaleyourbusiness #rizflow"
 }

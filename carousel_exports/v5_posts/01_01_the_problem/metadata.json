@@ -2,7 +2,7 @@
   "post_num": 1,
   "id": "01_the_problem",
   "theme": "cyberpunk",
-  "caption": "You didn't start your business to do THIS all day. \ud83d\ude24\n\nThe average SME owner spends 20+ hours a week on manual work that AI could handle in minutes.\n\nWhat if you could get those hours back? \ud83d\udd04\n\nSlide to see what's really costing you \u2192\n\n#aiautomation #entrepreneurlife #smallbusinessowner #futureofwork #bottleneck",
+  "caption": "You didn't start your business to do THIS all day. \ud83d\ude24\n\nRepetitive tasks, endless follow-ups, manual data entry \u2014 it's draining your time, energy, and revenue.\n\nThe average SME owner spends 20+ hours a week on work that an AI agent could do in minutes.\n\nWhat if you could get those hours back? \ud83d\udd04\n\nSlide to see what's really costing you \u2192",
   "hashtags": [
     "#aiautomation",
     "#entrepreneurlife",
@@ -10,6 +10,11 @@
     "#futureofwork",
     "#bottleneck"
   ],
-  "hashtag_string": "#aiautomation #entrepreneurlife #smallbusinessowner #futureofwork #bottleneck",
-  "image": "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/01_01_the_problem/infographic.jpg"
+  "slides": [
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/01_01_the_problem/slide_1_cyberpunk.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/01_01_the_problem/slide_2_cyberpunk.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/01_01_the_problem/slide_3_cyberpunk.jpg",
+    "/home/rizflow/Agency_HQ/RizFlow/carousel_exports/v5_posts/01_01_the_problem/slide_4_cyberpunk.jpg"
+  ],
+  "hashtag_string": "#aiautomation #entrepreneurlife #smallbusinessowner #futureofwork #bottleneck"
 }

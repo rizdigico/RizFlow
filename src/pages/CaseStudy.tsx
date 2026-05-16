@@ -299,7 +299,7 @@ export function CaseStudy() {
           content={`${SITE_URL}/case-study/rainfresh-sg`}
         />
         <meta property="og:type" content="article" />
-        <meta property="og:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta property="og:image" content={`${SITE_URL}/og-banner.jpg`} />
         <meta property="og:site_name" content="RizFlow" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
@@ -310,7 +310,7 @@ export function CaseStudy() {
           name="twitter:description"
           content="How a Singapore brand cut order processing time by 99% with custom AI agents."
         />
-        <meta name="twitter:image" content={`${SITE_URL}/og-banner.png`} />
+        <meta name="twitter:image" content={`${SITE_URL}/og-banner.jpg`} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -359,7 +359,7 @@ export function CaseStudy() {
               url: SITE_URL,
               logo: `${SITE_URL}/agency-logo-square.png`,
             },
-            image: `${SITE_URL}/og-banner.png`,
+            image: `${SITE_URL}/og-banner.jpg`,
           })}
         </script>
       </Helmet>
